@@ -4,7 +4,9 @@ namespace App\Providers;
 
 use App\Http\Middleware\EnsurePermission;
 use App\Models\Option;
+use Illuminate\Database\QueryException;
 use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Facades\View;
 use Illuminate\Support\ServiceProvider;
 
@@ -34,7 +36,13 @@ class AppServiceProvider extends ServiceProvider
             'site_favicon' => '',
         ];
 
-        $settings = Option::getSettings($names, $defaults);
+        try {
+            $settings = Schema::hasTable('options')
+                ? Option::getSettings($names, $defaults)
+                : $defaults;
+        } catch (QueryException) {
+            $settings = $defaults;
+        }
 
         View::share('settings', $settings);
     }
