@@ -6,7 +6,6 @@ use App\Http\Controllers\Controller;
 use App\Models\Option;
 use App\Services\Admin\SettingsService;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Log;
 
 class SettingsController extends Controller
 {
@@ -15,7 +14,7 @@ class SettingsController extends Controller
     public function __construct(SettingsService $service)
     {
         $this->service = $service;
-        $this->authorizeResource(Option::class, 'user');
+        $this->authorizeResource(Option::class, 'option');
     }
 
     public function index()
