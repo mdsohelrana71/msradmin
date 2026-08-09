@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Models\Option;
 use App\Services\Admin\SettingsService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
@@ -14,6 +15,7 @@ class SettingsController extends Controller
     public function __construct(SettingsService $service)
     {
         $this->service = $service;
+        $this->authorizeResource(Option::class, 'user');
     }
 
     public function index()
@@ -34,12 +36,6 @@ class SettingsController extends Controller
 
     public function update(Request $request)
     {
-        Log::info('Settings update request', [
-            'data' => $request->except(['site_logo', 'site_favicon', '_token', '_method']),
-            'has_site_logo' => $request->hasFile('site_logo'),
-            'has_site_favicon' => $request->hasFile('site_favicon'),
-        ]);
-
         $validated = $request->validate([
             'site_name' => 'required|string|max:255',
             'site_email' => 'required|email|max:255',
