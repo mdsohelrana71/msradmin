@@ -18,6 +18,9 @@ class User extends Authenticatable
     /** @use HasFactory<UserFactory> */
     use HasFactory, Notifiable;
 
+    /** @var array<int, string>|null Cached permission names for the current request. */
+    protected ?array $permissionNames = null;
+
     public function assignedRole()
     {
         return $this->belongsTo(Role::class, 'role_id');
@@ -29,7 +32,9 @@ class User extends Authenticatable
             return false;
         }
 
-        return $this->assignedRole->permissions()->where('name', $permission)->exists();
+        $this->permissionNames ??= $this->assignedRole->permissions()->pluck('name')->all();
+
+        return in_array($permission, $this->permissionNames, true);
     }
 
     /**

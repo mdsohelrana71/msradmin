@@ -198,6 +198,34 @@ protected $policies = [
 @endcan
 ```
 
+### Step 4.1 — UI-তে বাটন/মেনু লুকানোর সবচেয়ে সহজ নিয়ম
+
+`Gate::before` থাকার কারণে **Policy ছাড়াই permission নাম সরাসরি `@can`-এ দেওয়া যায়** — এটাই সবচেয়ে কম কোডের উপায়:
+
+```blade
+@can('settings.edit')
+    <button type="submit" class="btn btn-primary">Save Settings</button>
+@endcan
+
+@can('products.export')
+    <a href="{{ route('admin.products.export') }}">Export</a>
+@endcan
+
+{{-- একাধিকের যেকোনো একটা থাকলে (যেমন পুরো মেনু গ্রুপ) --}}
+@canany(['users.view', 'users.create'])
+    <li class="nav-item">...</li>
+@endcanany
+```
+
+মডেল-নির্ভর চেকে (row-per-row বাটন) Policy ব্যবহার করুন, কারণ ওখানে অতিরিক্ত নিয়ম থাকতে পারে (যেমন Admin role এডিট করা যাবে না):
+
+```blade
+@can('update', $user)  <a href="...">Edit</a>  @endcan
+@can('delete', $role)  <button>Delete</button> @endcan
+```
+
+> মনে রাখুন: `@can` শুধু UI লুকায়, সুরক্ষা দেয় না। সার্ভার-সাইডে middleware/`authorize()` অবশ্যই রাখতে হবে।
+
 ### Step 5 — অন্য role-গুলোতে assign করুন
 
 `/admin/roles/{id}/edit` → নতুন permission-টা তার group-এর নিচে checkbox হিসেবে দেখাবে → টিক দিয়ে Save। (`create/edit` ভিউ DB থেকে `Permission::all()` নিয়ে `groupBy('group')` করে, তাই আলাদা কোনো UI চেঞ্জ লাগবে না।)
@@ -241,7 +269,7 @@ php artisan config:clear   # config cache থাকলে
 ## ৭. খেয়াল রাখার মতো কিছু বিষয় / সম্ভাব্য ইস্যু
 
 1. **`settings.view` / `settings.edit` কেন কাজ করছিল না (এখন ঠিক করা হয়েছে)।** `SettingsController` এ `authorizeResource(Option::class, 'option')` ছিল, যা `index → viewAny` এবং `update → update` ability চেক করে — permission নাম দুটো নয়। `Gate::before` তখন `hasPermission('viewAny')` খুঁজত (এটা কোনো permission নয়) → `null`, আর `OptionPolicy` না থাকায় Gate সব সময় deny করত। ফলে **সব permission থাকা Admin-ও `/admin/settings` এ 403 পেত**, আর `settings.view` / `settings.edit` কখনোই চেক হতো না। ফিক্স: `OptionPolicy` (`viewAny → settings.view`, `update → settings.edit`) যোগ করা, `AuthServiceProvider::$policies` এ ম্যাপ করা, এবং কন্ট্রোলারে `authorizeResource` এর বদলে সরাসরি `$this->authorize('viewAny', Option::class)` / `$this->authorize('update', Option::class)` কল করা (settings route গুলো resource route নয়, তাই `option` নামে কোনো route-model binding নেই)।
-2. **কোনো caching নেই।** প্রতিটি `hasPermission()` কল = ১টি query। মেনু/টেবিলে অনেক `@can` থাকলে N+1 হবে। সহজ ফিক্স: request-scoped memoization বা `$user->assignedRole->permissions->pluck('name')` একবার লোড করে cache করা।
+2. **`hasPermission()` এখন per-request cached।** প্রথম কলে role-এর সব permission নাম একবার লোড হয়ে `$permissionNames`-এ রাখা হয়, তাই মেনু/টেবিলে অনেকগুলো `@can` থাকলেও একটাই query হয়। Role-এর permission রানটাইমে বদলালে সেই request-এ পুরনো মান দেখাবে (পরের request-এ ঠিক হয়ে যাবে)।
 3. **`Gate::before` সবকিছুর আগে চলে।** কোনো Policy যদি ইচ্ছাকৃতভাবে deny করতে চায় (যেমন `RolePolicy::update()` Admin role এডিট আটকায়), সেটা তখনই কাজ করে যখন ability নামটা permission নাম নয় (`update`, `delete` — এগুলো permission নাম নয়, তাই নিরাপদ)। কিন্তু ভবিষ্যতে কোনো permission-এর নাম যদি `update`-এর মতো plain হয়, guard bypass হয়ে যাবে — তাই সবসময় `module.action` কনভেনশন মেনে চলুন।
 4. **Admin role protected**: `RolePolicy` Admin নামের role-কে edit/delete করতে দেয় না, কিন্তু `roles` টেবিলে `id=1`-এর বদলে নাম দিয়ে চেক হয় (`strcasecmp`)। Admin role রিনেম করলে সুরক্ষা চলে যাবে।
 5. **একজন user-এর একটাই role।** একাধিক role দরকার হলে `role_user` pivot বানিয়ে `hasPermission()` রিরাইট করতে হবে।
