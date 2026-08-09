@@ -7,15 +7,29 @@ use App\Models\Permission;
 use App\Models\Role;
 use App\Services\Admin\RoleService;
 use Illuminate\Http\Request;
+use Illuminate\Routing\Controllers\HasMiddleware;
+use Illuminate\Routing\Controllers\Middleware;
 
-class RoleController extends Controller
+class RoleController extends Controller implements HasMiddleware
 {
     protected RoleService $service;
 
     public function __construct(RoleService $service)
     {
         $this->service = $service;
-        $this->authorizeResource(Role::class, 'role');
+    }
+
+    /**
+     * @return array<int, Middleware>
+     */
+    public static function middleware(): array
+    {
+        return [
+            new Middleware('permission:roles.view', only: ['index', 'show']),
+            new Middleware('permission:roles.create', only: ['create', 'store']),
+            new Middleware('permission:roles.edit', only: ['edit', 'update']),
+            new Middleware('permission:roles.delete', only: ['destroy']),
+        ];
     }
 
     public function index(Request $request)
@@ -57,6 +71,8 @@ class RoleController extends Controller
 
     public function edit(Role $role)
     {
+        $this->authorize('update', $role);
+
         $permissions = Permission::all();
         $role->load('permissions');
 
@@ -65,6 +81,8 @@ class RoleController extends Controller
 
     public function update(Request $request, Role $role)
     {
+        $this->authorize('update', $role);
+
         $data = $request->validate([
             'name' => 'required|string|max:255|unique:roles,name,' . $role->id,
             'permission_ids' => 'nullable|array',
@@ -78,6 +96,8 @@ class RoleController extends Controller
 
     public function destroy(Role $role)
     {
+        $this->authorize('delete', $role);
+
         $this->service->delete($role);
 
         return redirect()->route('admin.roles.index')->with('success', 'Role deleted successfully.');

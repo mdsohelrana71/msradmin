@@ -21,7 +21,7 @@ roles টেবিল              →  Admin / Manager / Moderator / Staff ...
 User::hasPermission()    →  role → permissions → নাম মিলিয়ে true/false
         │
         ├── Gate::before()  (AuthServiceProvider)  → সব Gate/Policy চেকে permission নাম কাজ করে
-        ├── Policy ক্লাস    (RolePolicy, UserPolicy) → authorizeResource / @can
+        ├── Policy ক্লাস    (শুধু RolePolicy) → row-নির্ভর extra rule-এর জন্য
         └── `permission:` middleware (EnsurePermission) → route-level গার্ড
 ```
 
@@ -46,8 +46,8 @@ User::hasPermission()    →  role → permissions → নাম মিলিয
 | `app/Providers/AuthServiceProvider.php` | Policy ম্যাপিং + `Gate::before()` যেখানে ability নামকে সরাসরি permission নাম হিসেবে চেক করা হয়। |
 | `app/Providers/AppServiceProvider.php` | `permission` alias middleware রেজিস্টার করে। |
 | `app/Http/Middleware/EnsurePermission.php` | `$user->can($permission)` না হলে `abort(403)`। |
-| `app/Policies/RolePolicy.php`, `UserPolicy.php` | CRUD ability → `hasPermission('roles.view')` ইত্যাদি। |
-| `app/Http/Controllers/Admin/RoleController.php` | Role CRUD UI; কনস্ট্রাক্টরে `authorizeResource(Role::class, 'role')`। |
+| `app/Policies/RolePolicy.php` | শুধু `update()` / `delete()` — Admin role protect করার row-নির্ভর নিয়ম। |
+| `app/Http/Controllers/Admin/RoleController.php` | Role CRUD UI; `HasMiddleware` দিয়ে per-action `permission:roles.*` middleware। |
 | `app/Services/Admin/RoleService.php` | Role create/update-এ `permissions()->sync($permission_ids)`। |
 | `resources/views/admin/Role/create|edit.blade.php` | permission গুলো `groupBy('group')` করে checkbox হিসেবে দেখায়। |
 
@@ -88,8 +88,24 @@ Gate::before(function (User $user, string $ability) {
    Route::get('products', [ProductController::class, 'index'])
        ->middleware('permission:products.view');
    ```
-2. **Controller / Policy** — `authorizeResource(Role::class, 'role')` দিলে `index → viewAny`, `create/store → create`, `show → view`, `edit/update → update`, `destroy → delete` ম্যাপ হয় এবং সংশ্লিষ্ট Policy মেথড কল হয়।
-3. **Blade** — `@can('update', $role)` (policy) বা `@can('products.create')` (Gate::before দিয়ে সরাসরি permission নাম)।
+2. **Controller middleware** (এই প্রজেক্টের ডিফল্ট) — `HasMiddleware` ইন্টারফেস ইমপ্লিমেন্ট করে static `middleware()` মেথডে per-action permission ম্যাপ করা হয়:
+   ```php
+   class ProductController extends Controller implements HasMiddleware
+   {
+       public static function middleware(): array
+       {
+           return [
+               new Middleware('permission:products.view', only: ['index', 'show']),
+               new Middleware('permission:products.create', only: ['create', 'store']),
+               new Middleware('permission:products.edit', only: ['edit', 'update']),
+               new Middleware('permission:products.delete', only: ['destroy']),
+           ];
+       }
+   }
+   ```
+   > Laravel 11+ এ base controller-এ `$this->middleware()` নেই, তাই কনস্ট্রাক্টরে middleware দেওয়া যায় না — `HasMiddleware` ব্যবহার করতে হবে।
+3. **Policy** — শুধু তখন, যখন সিদ্ধান্ত **কোন row** তার উপর নির্ভর করে (যেমন `RolePolicy::update()` — Admin role এডিট করা যাবে না)। তখন মেথডের ভেতরে `$this->authorize('update', $role)` কল করুন।
+4. **Blade** — `@can('products.create')` (permission নাম, Policy লাগে না) বা `@can('update', $role)` (মডেল পাস করলে Policy লাগবে)।
 
 ---
 
@@ -174,7 +190,7 @@ $this->authorize('products.export');            // Gate::before দিয়ে 
 abort_unless(auth()->user()->can('products.export'), 403);
 ```
 
-**(গ) Policy মেথড** (resource CRUD-এর জন্য প্রেফারড):
+**(গ) Policy মেথড** (শুধু row-নির্ভর নিয়ম থাকলে):
 ```php
 // app/Policies/ProductPolicy.php
 public function export(User $user, Product $product): bool
@@ -185,7 +201,6 @@ public function export(User $user, Product $product): bool
 নতুন Policy বানালে `AuthServiceProvider::$policies`-এ ম্যাপ করে দিন:
 ```php
 protected $policies = [
-    User::class => UserPolicy::class,
     Role::class => RolePolicy::class,
     Product::class => ProductPolicy::class,   // ← নতুন
 ];
@@ -217,12 +232,14 @@ protected $policies = [
 @endcanany
 ```
 
-মডেল-নির্ভর চেকে (row-per-row বাটন) Policy ব্যবহার করুন, কারণ ওখানে অতিরিক্ত নিয়ম থাকতে পারে (যেমন Admin role এডিট করা যাবে না):
+শুধু যেখানে **কোন row** তার উপর সিদ্ধান্ত নির্ভর করে, সেখানে মডেল পাস করুন (তখন Policy লাগবে) — যেমন Admin role এডিট/ডিলিট করা যাবে না:
 
 ```blade
-@can('update', $user)  <a href="...">Edit</a>  @endcan
-@can('delete', $role)  <button>Delete</button> @endcan
+@can('update', $role)  <a href="...">Edit</a>     @endcan
+@can('delete', $role)  <button>Delete</button>  @endcan
 ```
+
+অর্থাৎ **মডেল পাস করলে Policy লাগবে, permission নাম লিখলে লাগবে না**। Users/Settings-এর মতো সাধারণ CRUD-এ permission নামই যথেষ্ট।
 
 > মনে রাখুন: `@can` শুধু UI লুকায়, সুরক্ষা দেয় না। সার্ভার-সাইডে middleware/`authorize()` অবশ্যই রাখতে হবে।
 
@@ -268,7 +285,8 @@ php artisan config:clear   # config cache থাকলে
 
 ## ৭. খেয়াল রাখার মতো কিছু বিষয় / সম্ভাব্য ইস্যু
 
-1. **`settings.view` / `settings.edit` কেন কাজ করছিল না (এখন ঠিক করা হয়েছে)।** `SettingsController` এ `authorizeResource(Option::class, 'option')` ছিল, যা `index → viewAny` এবং `update → update` ability চেক করে — permission নাম দুটো নয়। `Gate::before` তখন `hasPermission('viewAny')` খুঁজত (এটা কোনো permission নয়) → `null`, আর `OptionPolicy` না থাকায় Gate সব সময় deny করত। ফলে **সব permission থাকা Admin-ও `/admin/settings` এ 403 পেত**, আর `settings.view` / `settings.edit` কখনোই চেক হতো না। ফিক্স: `OptionPolicy` (`viewAny → settings.view`, `update → settings.edit`) যোগ করা, `AuthServiceProvider::$policies` এ ম্যাপ করা, এবং কন্ট্রোলারে `authorizeResource` এর বদলে সরাসরি `$this->authorize('viewAny', Option::class)` / `$this->authorize('update', Option::class)` কল করা (settings route গুলো resource route নয়, তাই `option` নামে কোনো route-model binding নেই)।
+1. **`settings.view` / `settings.edit` কেন কাজ করছিল না (এখন ঠিক করা হয়েছে)।** `SettingsController` এ `authorizeResource(Option::class, 'option')` ছিল, যা `index → viewAny` এবং `update → update` ability চেক করে — permission নাম দুটো নয়। `Gate::before` তখন `hasPermission('viewAny')` খুঁজত (এটা কোনো permission নয়) → `null`, আর `OptionPolicy` না থাকায় Gate সব সময় deny করত। ফলে **সব permission থাকা Admin-ও `/admin/settings` এ 403 পেত**। ফিক্স: `authorizeResource` বাদ দিয়ে `HasMiddleware` দিয়ে `permission:settings.view` / `permission:settings.edit` সরাসরি এনফোর্স করা হয়েছে — এতে `OptionPolicy` এর দরকার পড়ে না।
+   - **অপ্রয়োজনীয় Policy সরানো হয়েছে।** `UserPolicy` ও `OptionPolicy` এর প্রতিটা মেথড শুধু `hasPermission('...')` wrap করত — যা middleware + `@can('users.edit')` দিয়েই হয়। `RolePolicy`-তে শুধু `update()` / `delete()` রাখা হয়েছে, কারণ ওখানে সতিয়িকার row-নির্ভর নিয়ম আছে (Admin role protected)।
 2. **`hasPermission()` এখন per-request cached।** প্রথম কলে role-এর সব permission নাম একবার লোড হয়ে `$permissionNames`-এ রাখা হয়, তাই মেনু/টেবিলে অনেকগুলো `@can` থাকলেও একটাই query হয়। Role-এর permission রানটাইমে বদলালে সেই request-এ পুরনো মান দেখাবে (পরের request-এ ঠিক হয়ে যাবে)।
 3. **`Gate::before` সবকিছুর আগে চলে।** কোনো Policy যদি ইচ্ছাকৃতভাবে deny করতে চায় (যেমন `RolePolicy::update()` Admin role এডিট আটকায়), সেটা তখনই কাজ করে যখন ability নামটা permission নাম নয় (`update`, `delete` — এগুলো permission নাম নয়, তাই নিরাপদ)। কিন্তু ভবিষ্যতে কোনো permission-এর নাম যদি `update`-এর মতো plain হয়, guard bypass হয়ে যাবে — তাই সবসময় `module.action` কনভেনশন মেনে চলুন।
 4. **Admin role protected**: `RolePolicy` Admin নামের role-কে edit/delete করতে দেয় না, কিন্তু `roles` টেবিলে `id=1`-এর বদলে নাম দিয়ে চেক হয় (`strcasecmp`)। Admin role রিনেম করলে সুরক্ষা চলে যাবে।

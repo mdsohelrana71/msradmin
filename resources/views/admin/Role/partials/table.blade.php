@@ -13,7 +13,7 @@
                     <td>{{ ucfirst($role->name) }}</td>
                     <td>{{ $role->created_at->format('Y-m-d') }}</td>
                     <td>
-                        @can('view', $role)
+                        @can('roles.view')
                         <a href="{{ route('admin.roles.show', $role) }}" class="btn btn-info btn-sm" title="View">
                             <i class="fa fa-eye"></i>
                         </a>
