@@ -1,311 +1,300 @@
-# Role & Permission Module — কিভাবে কাজ করে
+# Role & Permission Module
 
-এই ডকুমেন্টে msradmin প্রজেক্টের role/permission (RBAC) সিস্টেম কিভাবে কাজ করে সেটা ব্যাখ্যা করা হয়েছে, এবং শেষে নতুন permission যোগ করার step-by-step প্রসেস দেওয়া আছে।
+msradmin প্রজেক্টের RBAC (role based access control) সিস্টেম কিভাবে কাজ করে, এবং **নতুন permission কিভাবে যোগ করবেন** — সব এখানে।
 
 ---
 
-## ১. এক নজরে আর্কিটেকচার
+## ১. আর্কিটেকচার এক নজরে
 
 ```
-config/permissions.php   →  permission-এর source of truth (গ্রুপ + নাম + লেবেল)
-        │  (php artisan db:seed --class=PermissionSeeder)
-        ▼
-permissions টেবিল        →  DB-তে প্রতিটি permission-এর একটি row
+config/permissions.php          ← ★ source of truth (আপনি এখানে লিখবেন)
         │
-        │  permission_role (pivot টেবিল)
+        │  php artisan db:seed --class=PermissionSeeder
         ▼
-roles টেবিল              →  Admin / Manager / Moderator / Staff ...
+permissions টেবিল               ← DB-তে প্রতিটি permission একটা row
         │
-        │  users.role_id  (একজন user = একটি role)
+        │  permission_role (pivot)   ← Role edit page থেকে টিক দিয়ে সেট হয়
         ▼
-User::hasPermission()    →  role → permissions → নাম মিলিয়ে true/false
+roles টেবিল                     ← Admin / Manager / Staff ...
         │
-        ├── Gate::before()  (AuthServiceProvider)  → সব Gate/Policy চেকে permission নাম কাজ করে
-        ├── Policy ক্লাস    (শুধু RolePolicy) → row-নির্ভর extra rule-এর জন্য
-        └── `permission:` middleware (EnsurePermission) → route-level গার্ড
+        │  users.role_id             ← এক user = এক role
+        ▼
+User::hasPermission('brands.edit')  → true / false
+        │
+        ├── @can('brands.edit')                  → Blade-এ বাটন/মেনু লুকায়   (UX)
+        ├── permission:brands.edit  middleware   → রিকোয়েস্ট আটকে 403 দেয়   (Security)
+        └── RolePolicy                           → row-নির্ভর extra rule (দরকার হলে)
 ```
 
-মডেলটা ইচ্ছাকৃতভাবে সিম্পল: **user-এর direct permission নেই, শুধু role-এর permission আছে**, এবং **এক user-এর এক role** (`users.role_id`)।
+> ডিজাইনটা ইচ্ছাকৃতভাবে সিম্পল: user-এর direct permission নেই, শুধু role-এর permission আছে; আর এক user-এর একটাই role।
 
 ---
 
-## ২. ফাইলগুলো কী করে
+## ২. নতুন permission যোগ করা — Step by Step
 
-| ফাইল | দায়িত্ব |
-| --- | --- |
-| `config/permissions.php` | সব permission-এর ডিফিনিশন। গ্রুপ (products/users/roles/settings) → `label` + `permissions` map (`name => label`)। |
-| `database/migrations/..._create_permissions_table.php` | `permissions` টেবিল: `name` (unique), `label`, `group`। |
-| `database/migrations/..._create_roles_table.php` | `roles` টেবিল: `name` (unique)। |
-| `database/migrations/..._create_permission_role_table.php` | pivot: `role_id` + `permission_id`, composite primary key, cascade delete। |
-| `database/migrations/..._add_role_id_to_users_table.php` | `users.role_id` FK, nullable, `nullOnDelete`। |
-| `database/seeders/PermissionSeeder.php` | `config/permissions.php` পড়ে `Permission::updateOrCreate()` করে — অর্থাৎ **config-ই সত্য, seeder শুধু DB-তে sync করে**। |
-| `database/seeders/RoleSeeder.php` | ডিফল্ট role তৈরি করে এবং **Admin role-এ সব permission `sync()` করে**। |
-| `app/Models/Permission.php` | `roles()` belongsToMany। |
-| `app/Models/Role.php` | `permissions()` belongsToMany, `users()` hasMany। |
-| `app/Models/User.php` | `assignedRole()` belongsTo + `hasPermission(string $name): bool`। |
-| `app/Providers/AuthServiceProvider.php` | Policy ম্যাপিং + `Gate::before()` যেখানে ability নামকে সরাসরি permission নাম হিসেবে চেক করা হয়। |
-| `app/Providers/AppServiceProvider.php` | `permission` alias middleware রেজিস্টার করে। |
-| `app/Http/Middleware/EnsurePermission.php` | `$user->can($permission)` না হলে `abort(403)`। |
-| `app/Policies/RolePolicy.php` | শুধু `update()` / `delete()` — Admin role protect করার row-নির্ভর নিয়ম। |
-| `app/Http/Controllers/Admin/RoleController.php` | Role CRUD UI; `HasMiddleware` দিয়ে per-action `permission:roles.*` middleware। |
-| `app/Services/Admin/RoleService.php` | Role create/update-এ `permissions()->sync($permission_ids)`। |
-| `resources/views/admin/Role/create|edit.blade.php` | permission গুলো `groupBy('group')` করে checkbox হিসেবে দেখায়। |
+উদাহরণ: একটা **Brand** module বানাচ্ছেন, তার CRUD permission লাগবে।
+
+```
+Step 1  config/permissions.php এ লিখুন
+Step 2  seeder চালান  →  DB-তে permission তৈরি
+Step 3  Controller-এ middleware  →  সার্ভার-সাইড সুরক্ষা
+Step 4  Blade-এ @can           →  বাটন/মেনু লুকানো
+Step 5  Role edit page থেকে assign করুন
+Step 6  দুইটা ভিন্ন user দিয়ে যাচাই করুন
+```
 
 ---
 
-## ৩. রানটাইমে চেকটা আসলে কিভাবে হয়
+### Step 1 — `config/permissions.php` এ গ্রুপ যোগ করুন
 
-### ৩.১ মূল ফাংশন
+নাম সবসময় **`module.action`** ফরম্যাটে (নিচে "সতর্কতা" দেখুন, এটা জরুরি)।
 
 ```php
-// app/Models/User.php
-public function hasPermission(string $permission): bool
-{
-    if (! $this->assignedRole) return false;
-    return $this->assignedRole->permissions()->where('name', $permission)->exists();
-}
-```
+// config/permissions.php
+return [
+    // ... আগের গ্রুপগুলো
 
-প্রতিবার একটা DB query হয় (কোনো cache নেই) — একই রিকোয়েস্টে অনেকবার চেক করলে অনেকগুলো query হবে।
-
-### ৩.২ Gate::before — সবচেয়ে গুরুত্বপূর্ণ অংশ
-
-```php
-// app/Providers/AuthServiceProvider.php
-Gate::before(function (User $user, string $ability) {
-    if ($user->hasPermission($ability)) {
-        return true;
-    }
-});
-```
-
-এর মানে **যেকোনো** `$user->can('X')` / `@can('X')` কলে যদি `X` একটা permission নাম হয় (যেমন `products.view`) এবং role-এ সেটা থাকে, তাহলে policy ক্লাস ছাড়াই allow হয়ে যায়। `null` রিটার্ন করলে (permission নেই) Laravel স্বাভাবিক Policy/Gate চেকে চলে যায়।
-
-### ৩.৩ তিনটা এনফোর্সমেন্ট লেয়ার
-
-1. **Route middleware**
-   ```php
-   Route::get('products', [ProductController::class, 'index'])
-       ->middleware('permission:products.view');
-   ```
-2. **Controller middleware** (এই প্রজেক্টের ডিফল্ট) — `HasMiddleware` ইন্টারফেস ইমপ্লিমেন্ট করে static `middleware()` মেথডে per-action permission ম্যাপ করা হয়:
-   ```php
-   class ProductController extends Controller implements HasMiddleware
-   {
-       public static function middleware(): array
-       {
-           return [
-               new Middleware('permission:products.view', only: ['index', 'show']),
-               new Middleware('permission:products.create', only: ['create', 'store']),
-               new Middleware('permission:products.edit', only: ['edit', 'update']),
-               new Middleware('permission:products.delete', only: ['destroy']),
-           ];
-       }
-   }
-   ```
-   > Laravel 11+ এ base controller-এ `$this->middleware()` নেই, তাই কনস্ট্রাক্টরে middleware দেওয়া যায় না — `HasMiddleware` ব্যবহার করতে হবে।
-3. **Policy** — শুধু তখন, যখন সিদ্ধান্ত **কোন row** তার উপর নির্ভর করে (যেমন `RolePolicy::update()` — Admin role এডিট করা যাবে না)। তখন মেথডের ভেতরে `$this->authorize('update', $role)` কল করুন।
-4. **Blade** — `@can('products.create')` (permission নাম, Policy লাগে না) বা `@can('update', $role)` (মডেল পাস করলে Policy লাগবে)।
-
----
-
-## ৪. একজন user কিভাবে permission পায়
-
-1. `users.role_id` → একটি Role।
-2. Role → `permission_role` pivot → Permissions।
-3. Admin role-কে `RoleSeeder` সব permission দিয়ে দেয়, তাই **নতুন permission seed করার পর Admin স্বয়ংক্রিয়ভাবে পাবে (seeder আবার চালালে)** — অন্য role-গুলোতে UI থেকে টিক দিতে হবে।
-4. Role UI (`/admin/roles/{id}/edit`) থেকে checkbox দিয়ে permission assign হয়, `RoleService::update()` → `permissions()->sync()`।
-
-ডিফল্ট লগইন (`DatabaseSeeder`): `admin@gmail.com` / `12345678`, `role_id = 1` (Admin)।
-
----
-
-## ৫. নতুন Permission যোগ করার প্রসেস (step by step)
-
-উদাহরণ: **Products module-এ একটা নতুন `products.export` permission** যোগ করবো।
-
-### Step 1 — `config/permissions.php`-এ ডিফাইন করুন
-
-```php
-'products' => [
-    'label' => 'Products',
-    'permissions' => [
-        'products.view' => 'View products',
-        'products.create' => 'Create products',
-        'products.edit' => 'Edit products',
-        'products.delete' => 'Delete products',
-        'products.approve' => 'Approve products',
-        'products.export' => 'Export products',   // ← নতুন
+    'brands' => [
+        'label' => 'Brands',                       // Role edit page-এ গ্রুপের হেডিং
+        'permissions' => [
+            'brands.view'   => 'View brands',
+            'brands.create' => 'Create brands',
+            'brands.edit'   => 'Edit brands',
+            'brands.delete' => 'Delete brands',
+        ],
     ],
-],
-```
-
-নতুন module হলে পুরো নতুন গ্রুপ যোগ করুন:
-
-```php
-'orders' => [
-    'label' => 'Orders',
-    'permissions' => [
-        'orders.view' => 'View orders',
-        'orders.create' => 'Create orders',
-        'orders.edit' => 'Edit orders',
-        'orders.delete' => 'Delete orders',
-    ],
-],
-```
-
-নামকরণের কনভেনশন: `module.action` — ছোট হাতের অক্ষর, dot দিয়ে আলাদা।
-
-### Step 2 — Seeder চালিয়ে DB-তে sync করুন
-
-```bash
-php artisan db:seed --class=PermissionSeeder
-```
-
-`updateOrCreate` ব্যবহার হয়, তাই বারবার চালানো নিরাপদ (কোনো ডুপ্লিকেট হবে না)।
-
-### Step 3 — Admin role-কে নতুন permission দিন
-
-```bash
-php artisan db:seed --class=RoleSeeder
-```
-
-এটা Admin role-এ সব permission আবার `sync()` করে। (শুধু `PermissionSeeder` চালালে permission DB-তে থাকবে ঠিকই, কিন্তু কোনো role-এ attach হবে না — তখন Admin-ও 403 পাবে।)
-
-### Step 4 — কোডে এনফোর্স করুন
-
-যেভাবে দরকার, যেকোনো একটা/একাধিক:
-
-**(ক) Route middleware:**
-```php
-Route::get('products/export', [ProductController::class, 'export'])
-    ->name('products.export')
-    ->middleware('permission:products.export');
-```
-
-**(খ) Controller-এর ভেতরে:**
-```php
-$this->authorize('products.export');            // Gate::before দিয়ে কাজ করবে
-// অথবা
-abort_unless(auth()->user()->can('products.export'), 403);
-```
-
-**(গ) Policy মেথড** (শুধু row-নির্ভর নিয়ম থাকলে):
-```php
-// app/Policies/ProductPolicy.php
-public function export(User $user, Product $product): bool
-{
-    return $user->hasPermission('products.export');
-}
-```
-নতুন Policy বানালে `AuthServiceProvider::$policies`-এ ম্যাপ করে দিন:
-```php
-protected $policies = [
-    Role::class => RolePolicy::class,
-    Product::class => ProductPolicy::class,   // ← নতুন
 ];
 ```
 
-**(ঘ) Blade UI (বাটন/মেনু লুকানো):**
-```blade
-@can('products.export')
-    <a href="{{ route('admin.products.export') }}" class="btn btn-secondary">Export</a>
-@endcan
+এই ফাইলটাই **একমাত্র জায়গা** যেখানে permission ডিফাইন হয়। কোনো migration লিখতে হবে না।
+
+---
+
+### Step 2 — Seeder চালিয়ে DB-তে নিয়ে আসুন
+
+```bash
+php artisan config:clear                          # config cache থাকলে জরুরি
+php artisan db:seed --class=PermissionSeeder      # config পড়ে permissions টেবিলে updateOrCreate
+php artisan db:seed --class=RoleSeeder            # Admin role-এ সব permission sync করে
 ```
 
-### Step 4.1 — UI-তে বাটন/মেনু লুকানোর সবচেয়ে সহজ নিয়ম
+`PermissionSeeder` **idempotent** — যতবার খুশি চালানো যায়, ডুপ্লিকেট হবে না।
 
-`Gate::before` থাকার কারণে **Policy ছাড়াই permission নাম সরাসরি `@can`-এ দেওয়া যায়** — এটাই সবচেয়ে কম কোডের উপায়:
+যাচাই:
+```bash
+php artisan tinker
+>>> App\Models\Permission::where('group','Brands')->pluck('name');
+# group কলামে গ্রুপের `label` সেভ হয় (key নয়) — তাই 'Brands'
+```
+
+---
+
+### Step 3 — Controller-এ middleware (★ আসল সুরক্ষা)
+
+```php
+// app/Http/Controllers/Admin/BrandController.php
+use Illuminate\Routing\Controllers\HasMiddleware;
+use Illuminate\Routing\Controllers\Middleware;
+
+class BrandController extends Controller implements HasMiddleware
+{
+    public static function middleware(): array
+    {
+        return [
+            new Middleware('permission:brands.view',   only: ['index', 'show']),
+            new Middleware('permission:brands.create', only: ['create', 'store']),
+            new Middleware('permission:brands.edit',   only: ['edit', 'update']),
+            new Middleware('permission:brands.delete', only: ['destroy']),
+        ];
+    }
+}
+```
+
+Route ফাইলে কিছু বদলাতে হবে না:
+```php
+Route::resource('brands', BrandController::class);
+```
+
+চেক করুন সব route-এ middleware বসেছে কিনা:
+```bash
+php artisan route:list --path=admin/brands
+```
+
+> **কেন কনস্ট্রাক্টরে নয়?** Laravel 11+ এ base controller থেকে `$this->middleware()` সরিয়ে ফেলা হয়েছে। তাই এই প্রজেক্টে `HasMiddleware` ইন্টারফেস + static `middleware()` মেথড ব্যবহার করা হয় (`UserController`, `RoleController`, `SettingsController` — সবগুলোই এই প্যাটার্নে)।
+
+---
+
+### Step 4 — Blade-এ `@can` দিয়ে বাটন/মেনু লুকান
 
 ```blade
-@can('settings.edit')
-    <button type="submit" class="btn btn-primary">Save Settings</button>
+@can('brands.create')
+    <a href="{{ route('admin.brands.create') }}" class="btn btn-primary">Add Brand</a>
 @endcan
 
-@can('products.export')
-    <a href="{{ route('admin.products.export') }}">Export</a>
+@can('brands.edit')
+    <a href="{{ route('admin.brands.edit', $brand) }}" class="btn btn-warning">Edit</a>
 @endcan
 
-{{-- একাধিকের যেকোনো একটা থাকলে (যেমন পুরো মেনু গ্রুপ) --}}
-@canany(['users.view', 'users.create'])
+@can('brands.delete')
+    <button type="submit" class="btn btn-danger">Delete</button>
+@endcan
+
+{{-- মেনু গ্রুপ: যেকোনো একটা permission থাকলেই দেখাবে --}}
+@canany(['brands.view', 'brands.create'])
     <li class="nav-item">...</li>
 @endcanany
 ```
 
-শুধু যেখানে **কোন row** তার উপর সিদ্ধান্ত নির্ভর করে, সেখানে মডেল পাস করুন (তখন Policy লাগবে) — যেমন Admin role এডিট/ডিলিট করা যাবে না:
+> ⚠️ `@can` **শুধু UI লুকায়, সুরক্ষা দেয় না** — DevTools দিয়ে বাটন ফিরিয়ে আনা যায়, সরাসরি URL হিট করা যায়। তাই Step 3 বাদ দেওয়া যাবে না। দুটো একসাথে:
+> `@can` = ইউজার এমন বাটন দেখবে না যা ক্লিক করলে 403 খাবে · middleware = আসল গার্ড।
 
-```blade
-@can('update', $role)  <a href="...">Edit</a>     @endcan
-@can('delete', $role)  <button>Delete</button>  @endcan
-```
+---
 
-অর্থাৎ **মডেল পাস করলে Policy লাগবে, permission নাম লিখলে লাগবে না**। Users/Settings-এর মতো সাধারণ CRUD-এ permission নামই যথেষ্ট।
+### Step 5 — Role-এ assign করুন
 
-> মনে রাখুন: `@can` শুধু UI লুকায়, সুরক্ষা দেয় না। সার্ভার-সাইডে middleware/`authorize()` অবশ্যই রাখতে হবে।
+`/admin/roles/{id}/edit` এ যান → **Brands** গ্রুপটা নিজে থেকেই checkbox হিসেবে দেখাবে → টিক দিয়ে Save।
 
-### Step 5 — অন্য role-গুলোতে assign করুন
+(কোনো UI কোড লিখতে হবে না — ভিউ `Permission::all()` নিয়ে `groupBy('group')` করে দেখায়।)
 
-`/admin/roles/{id}/edit` → নতুন permission-টা তার group-এর নিচে checkbox হিসেবে দেখাবে → টিক দিয়ে Save। (`create/edit` ভিউ DB থেকে `Permission::all()` নিয়ে `groupBy('group')` করে, তাই আলাদা কোনো UI চেঞ্জ লাগবে না।)
+---
 
 ### Step 6 — যাচাই করুন
 
 ```bash
 php artisan tinker
->>> App\Models\User::where('email','admin@gmail.com')->first()->hasPermission('products.export');
+>>> App\Models\User::where('email','admin@gmail.com')->first()->hasPermission('brands.edit');
 # => true
 ```
-তারপর permission নেই এমন একটি role-এর user দিয়ে লগইন করে দেখুন 403 আসছে কিনা, এবং বাটনটা লুকানো আছে কিনা।
 
-### Step 7 — ডিপ্লয়
+তারপর **দুইটা user দিয়ে** ব্রাউজারে দেখুন:
 
-ডিপ্লয় স্ক্রিপ্টে seeder দুটো চালাতে ভুলবেন না:
+| যাচাই | permission আছে | permission নেই |
+| --- | --- | --- |
+| বাটন/মেনু দেখা যায়? | হ্যাঁ | না (Step 4) |
+| সরাসরি URL হিট (`/admin/brands/create`) | 200 | **403** (Step 3) |
+
+---
+
+### Step 7 — ডিপ্লয়ের সময়
 
 ```bash
 php artisan migrate --force
 php artisan db:seed --class=PermissionSeeder --force
 php artisan db:seed --class=RoleSeeder --force
-php artisan config:clear   # config cache থাকলে
-```
-
-> মনে রাখুন: `config/permissions.php` পরিবর্তন করলে প্রোডাকশনে `php artisan config:cache` আবার চালাতে হবে, না হলে seeder পুরনো ক্যাশড config পড়বে।
-
----
-
-## ৬. Permission ডিলিট/রিনেম করার সময়
-
-- `PermissionSeeder` শুধু create/update করে, **config থেকে মুছে ফেলা permission DB-তে থেকে যায়** (orphan)। দরকার হলে ম্যানুয়ালি ডিলিট করুন:
-  ```php
-  App\Models\Permission::whereNotIn('name', collect(config('permissions'))
-      ->flatMap(fn ($m) => array_keys($m['permissions']))->all())->delete();
-  ```
-  pivot cascade delete থাকায় role-এর সাথে সম্পর্কও মুছে যাবে।
-- রিনেম করলে DB-তে নতুন row তৈরি হবে; পুরনোটা আলাদা করে মুছতে হবে এবং কোডের সব `hasPermission('old.name')` আপডেট করতে হবে।
-
----
-
-## ৭. খেয়াল রাখার মতো কিছু বিষয় / সম্ভাব্য ইস্যু
-
-1. **`settings.view` / `settings.edit` কেন কাজ করছিল না (এখন ঠিক করা হয়েছে)।** `SettingsController` এ `authorizeResource(Option::class, 'option')` ছিল, যা `index → viewAny` এবং `update → update` ability চেক করে — permission নাম দুটো নয়। `Gate::before` তখন `hasPermission('viewAny')` খুঁজত (এটা কোনো permission নয়) → `null`, আর `OptionPolicy` না থাকায় Gate সব সময় deny করত। ফলে **সব permission থাকা Admin-ও `/admin/settings` এ 403 পেত**। ফিক্স: `authorizeResource` বাদ দিয়ে `HasMiddleware` দিয়ে `permission:settings.view` / `permission:settings.edit` সরাসরি এনফোর্স করা হয়েছে — এতে `OptionPolicy` এর দরকার পড়ে না।
-   - **অপ্রয়োজনীয় Policy সরানো হয়েছে।** `UserPolicy` ও `OptionPolicy` এর প্রতিটা মেথড শুধু `hasPermission('...')` wrap করত — যা middleware + `@can('users.edit')` দিয়েই হয়। `RolePolicy`-তে শুধু `update()` / `delete()` রাখা হয়েছে, কারণ ওখানে সতিয়িকার row-নির্ভর নিয়ম আছে (Admin role protected)।
-2. **`hasPermission()` এখন per-request cached।** প্রথম কলে role-এর সব permission নাম একবার লোড হয়ে `$permissionNames`-এ রাখা হয়, তাই মেনু/টেবিলে অনেকগুলো `@can` থাকলেও একটাই query হয়। Role-এর permission রানটাইমে বদলালে সেই request-এ পুরনো মান দেখাবে (পরের request-এ ঠিক হয়ে যাবে)।
-3. **`Gate::before` সবকিছুর আগে চলে।** কোনো Policy যদি ইচ্ছাকৃতভাবে deny করতে চায় (যেমন `RolePolicy::update()` Admin role এডিট আটকায়), সেটা তখনই কাজ করে যখন ability নামটা permission নাম নয় (`update`, `delete` — এগুলো permission নাম নয়, তাই নিরাপদ)। কিন্তু ভবিষ্যতে কোনো permission-এর নাম যদি `update`-এর মতো plain হয়, guard bypass হয়ে যাবে — তাই সবসময় `module.action` কনভেনশন মেনে চলুন।
-4. **Admin role protected**: `RolePolicy` Admin নামের role-কে edit/delete করতে দেয় না, কিন্তু `roles` টেবিলে `id=1`-এর বদলে নাম দিয়ে চেক হয় (`strcasecmp`)। Admin role রিনেম করলে সুরক্ষা চলে যাবে।
-5. **একজন user-এর একটাই role।** একাধিক role দরকার হলে `role_user` pivot বানিয়ে `hasPermission()` রিরাইট করতে হবে।
-
----
-
-## ৮. দ্রুত চিটশিট
-
-```bash
-# নতুন permission যোগ করার পর
-php artisan db:seed --class=PermissionSeeder
-php artisan db:seed --class=RoleSeeder
 php artisan config:clear
 ```
 
+`config/permissions.php` বদলালে প্রোডাকশনে `config:cache` আবার চালাতে হবে, না হলে seeder পুরনো ক্যাশড config পড়বে।
+
+---
+
+## ৩. Policy কখন লাগবে, কখন লাগবে না
+
+| পরিস্থিতি | কী ব্যবহার করবেন | Policy লাগবে? |
+| --- | --- | --- |
+| "এই permission আছে কিনা" | `@can('brands.edit')` | **না** |
+| Route/Controller গার্ড | `permission:brands.edit` middleware | **না** |
+| "কোন **row**" তার উপর নির্ভরশীল নিয়ম | `@can('update', $brand)` + `$this->authorize('update', $brand)` | **হ্যাঁ** |
+
+সহজ নিয়ম: **মডেল পাস করলে Policy লাগবে, permission নাম লিখলে লাগবে না।**
+
+Policy দরকার হয় এমন উদাহরণ: "শুধু নিজের তৈরি brand এডিট করা যাবে", "published record ডিলিট করা যাবে না", "Admin role এডিট/ডিলিট করা যাবে না"।
+
+এই প্রজেক্টে **একটাই Policy আছে** — `RolePolicy`, আর তাতে শুধু দুইটা মেথড:
+
 ```php
-// চেক করার তিন উপায়
-auth()->user()->hasPermission('products.export');   // সরাসরি
-auth()->user()->can('products.export');             // Gate::before হয়ে
-Route::...->middleware('permission:products.export');
+// app/Policies/RolePolicy.php
+public function update(User $user, Role $role): bool
+{
+    if (strcasecmp($role->name, 'admin') === 0) {
+        return false;                       // Admin role কখনোই এডিট করা যাবে না
+    }
+    return $user->hasPermission('roles.edit');
+}
 ```
+
+নতুন Policy বানালে `AuthServiceProvider::$policies` এ ম্যাপ করে দিন:
+```php
+protected $policies = [
+    Role::class  => RolePolicy::class,
+    Brand::class => BrandPolicy::class,   // ← নতুন
+];
+```
+
+---
+
+## ৪. পারমিশন চেক করার সব উপায়
+
+```php
+// PHP
+$user->hasPermission('brands.edit');       // সরাসরি
+$user->can('brands.edit');                 // Gate (Gate::before এর মধ্য দিয়ে)
+$this->authorize('update', $brand);        // Policy (মডেল পাস করা হয়েছে)
+abort_unless($user->can('brands.edit'), 403);
+```
+
+```blade
+{{-- Blade --}}
+@can('brands.edit') ... @endcan
+@canany(['brands.view', 'brands.create']) ... @endcanany
+@cannot('brands.delete') ... @endcannot
+```
+
+```php
+// Route
+Route::get('brands', [BrandController::class, 'index'])->middleware('permission:brands.view');
+```
+
+মূল ব্যাপারটা `AuthServiceProvider` এ:
+```php
+Gate::before(function (User $user, string $ability) {
+    if ($user->hasPermission($ability)) {
+        return true;                       // ability নামটাই permission নাম হলে সরাসরি allow
+    }
+});                                        // null রিটার্ন করলে Laravel স্বাভাবিক Policy চেকে যায়
+```
+এই লাইনগুলোর জন্যই **Policy ছাড়াই** `@can('brands.edit')` কাজ করে।
+
+---
+
+## ৫. ফাইলগুলো কী করে
+
+| ফাইল | দায়িত্ব |
+| --- | --- |
+| `config/permissions.php` | সব permission-এর ডিফিনিশন (গ্রুপ → `label` + `permissions`)। |
+| `database/seeders/PermissionSeeder.php` | config পড়ে `Permission::updateOrCreate()` করে। |
+| `database/seeders/RoleSeeder.php` | ডিফল্ট role বানায়, Admin role-এ সব permission `sync()` করে। |
+| `app/Models/User.php` | `assignedRole()` + `hasPermission()` (per-request cached)। |
+| `app/Models/Role.php` | `permissions()` belongsToMany, `users()` hasMany। |
+| `app/Providers/AuthServiceProvider.php` | `Gate::before()` + Policy ম্যাপিং। |
+| `app/Providers/AppServiceProvider.php` | `permission` alias middleware রেজিস্টার করে। |
+| `app/Http/Middleware/EnsurePermission.php` | `$user->can($permission)` না হলে `abort(403)`। |
+| `app/Policies/RolePolicy.php` | শুধু `update()`/`delete()` — Admin role protect করে। |
+| `app/Services/Admin/RoleService.php` | Role save-এ `permissions()->sync($permission_ids)`। |
+| `resources/views/admin/Role/create|edit.blade.php` | permission গুলো `groupBy('group')` করে checkbox দেখায়। |
+
+DB স্ট্রাকচার: `permissions` (name unique, label, group) · `roles` (name unique) · `permission_role` (pivot, cascade delete) · `users.role_id` (FK, nullable, `nullOnDelete`)।
+
+---
+
+## ৬. Permission ডিলিট বা রিনেম
+
+`PermissionSeeder` শুধু create/update করে — **config থেকে মুছে ফেলা permission DB-তে orphan হয়ে থেকে যায়**। দরকার হলে:
+
+```php
+App\Models\Permission::whereNotIn('name', collect(config('permissions'))
+    ->flatMap(fn ($m) => array_keys($m['permissions']))->all())->delete();
+```
+pivot-এ cascade delete থাকায় role-এর সাথে সম্পর্কও মুছে যাবে।
+
+রিনেম করলে DB-তে নতুন row তৈরি হয় — পুরনোটা আলাদা করে মুছতে হবে, আর কোডের সব `hasPermission('old.name')` / `@can('old.name')` আপডেট করতে হবে।
+
+---
+
+## ৭. সতর্কতা
+
+1. **`module.action` কনভেনশন কখনো ভাঙবেন না।** `Gate::before` সব Policy-র আগে চলে। কোনো permission-এর নাম যদি plain `update` বা `delete` হয়, তাহলে সেই permission থাকা user-এর জন্য Policy-র deny (যেমন "Admin role এডিট করা যাবে না") **bypass** হয়ে যাবে।
+2. **`hasPermission()` per-request cached।** প্রথম কলে role-এর সব permission একবার লোড হয়, তাই মেনু/টেবিলে অনেকগুলো `@can` থাকলেও একটাই query হয়। রানটাইমে permission বদলালে সেই request-এ পুরনো মান দেখাবে।
+3. **Admin role নাম দিয়ে protect করা** (`strcasecmp($role->name, 'admin')`) — role রিনেম করলে সুরক্ষা চলে যাবে। `id` বা `is_system` কলাম দিয়ে চেক করা বেশি নিরাপদ।
+4. **এক user = এক role।** একাধিক role দরকার হলে `role_user` pivot বানিয়ে `hasPermission()` রিরাইট করতে হবে।
+5. **শুধু `@can` দিয়ে কাজ শেষ ভাববেন না** — middleware ছাড়া module unprotected।
