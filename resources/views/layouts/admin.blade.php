@@ -176,16 +176,26 @@
                 <nav class="navbar navbar-header navbar-header-transparent navbar-expand-lg border-bottom">
                     <div class="container-fluid">
                         <nav class="navbar navbar-header-left navbar-expand-lg navbar-form nav-search p-0 d-none d-lg-flex">
-                            <div class="input-group">
-                                <div class="input-group-prepend">
-                                    <button type="submit" class="btn btn-search pe-1">
-                                        <i class="fa fa-search search-icon"></i>
-                                    </button>
+                            <div class="admin-search-wrapper">
+                                <div class="input-group">
+                                    <div class="input-group-prepend">
+                                        <button type="button" class="btn btn-search pe-1">
+                                            <i class="fa fa-search search-icon"></i>
+                                        </button>
+                                    </div>
+
+                                    <input
+                                        type="text"
+                                        id="adminSearch"
+                                        placeholder="Search menu or settings..."
+                                        class="form-control"
+                                        autocomplete="off"
+                                    />
                                 </div>
-                                <input type="text" placeholder="Search ..." class="form-control" />
+
+                                <div id="adminSearchResults" class="admin-search-results"></div>
                             </div>
                         </nav>
-
                         <ul class="navbar-nav topbar-nav ms-md-auto align-items-center">
                             <li class="nav-item topbar-icon dropdown hidden-caret d-flex d-lg-none">
                                 <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="#" role="button" aria-expanded="false" aria-haspopup="true">
@@ -225,7 +235,7 @@
                                                 </a>
                                                 <a href="#">
                                                     <div class="notif-img">
-                                                        <img src="assets/img/chadengle.jpg" alt="Img Profile" />
+                                                        <img src="{{ asset('assets/img/chadengle.jpg') }}" alt="Img Profile" />
                                                     </div>
                                                     <div class="notif-content">
                                                         <span class="subject">Chad</span>
@@ -235,7 +245,7 @@
                                                 </a>
                                                 <a href="#">
                                                     <div class="notif-img">
-                                                        <img src="assets/img/mlane.jpg" alt="Img Profile" />
+                                                        <img src="{{ asset('assets/img/mlane.jpg') }}" alt="Img Profile" />
                                                     </div>
                                                     <div class="notif-content">
                                                         <span class="subject">Jhon Doe</span>
@@ -245,7 +255,7 @@
                                                 </a>
                                                 <a href="#">
                                                     <div class="notif-img">
-                                                        <img src="assets/img/talha.jpg" alt="Img Profile" />
+                                                        <img src="{{ asset('assets/img/talha.jpg') }}" alt="Img Profile" />
                                                     </div>
                                                     <div class="notif-content">
                                                         <span class="subject">Talha</span>
@@ -293,7 +303,7 @@
                                                 </a>
                                                 <a href="#">
                                                     <div class="notif-img">
-                                                        <img src="assets/img/profile2.jpg" alt="Img Profile" />
+                                                        <img src="{{ asset('assets/img/profile2.jpg') }}" alt="Img Profile" />
                                                     </div>
                                                     <div class="notif-content">
                                                         <span class="block"> Reza send messages to you </span>
@@ -516,6 +526,7 @@
     <script src="{{ asset('assets/js/plugin/sweetalert/sweetalert.min.js') }}"></script>
     <script src="{{ asset('assets/js/msradmin.min.js') }}"></script>
     <script src="{{ asset('assets/js/setting-demo.js') }}"></script>
+    <script src="{{ asset('assets/js/demo.js') }}"></script>
 
     @stack('scripts')
 </body>

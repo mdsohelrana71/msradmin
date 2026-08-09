@@ -72,4 +72,10 @@ class SettingsController extends Controller implements HasMiddleware
 
         return redirect()->route('admin.settings.index')->with('success', 'Settings updated successfully.');
     }
+
+    public function menuSearch(Request $request)
+    {
+        $menus = $this->service->getMenus($request);
+        return response()->json($menus);
+    }
 }
