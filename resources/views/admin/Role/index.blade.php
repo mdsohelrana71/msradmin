@@ -31,7 +31,7 @@
                     <div class="card-header">
                         <div class="d-flex align-items-center">
                             <h4 class="card-title">All Roles</h4>
-                            @can('create', App\Models\Role::class)
+                            @can('roles.create')
                             <a href="{{ route('admin.roles.create') }}" class="btn btn-primary btn-round ms-auto">
                                 <i class="fa fa-plus"></i>
                                 Add Role

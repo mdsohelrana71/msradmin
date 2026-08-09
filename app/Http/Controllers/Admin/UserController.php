@@ -7,15 +7,29 @@ use App\Models\Role;
 use App\Models\User;
 use App\Services\Admin\UserService;
 use Illuminate\Http\Request;
+use Illuminate\Routing\Controllers\HasMiddleware;
+use Illuminate\Routing\Controllers\Middleware;
 
-class UserController extends Controller
+class UserController extends Controller implements HasMiddleware
 {
     protected UserService $service;
 
     public function __construct(UserService $service)
     {
         $this->service = $service;
-        $this->authorizeResource(User::class, 'user');
+    }
+
+    /**
+     * @return array<int, Middleware>
+     */
+    public static function middleware(): array
+    {
+        return [
+            new Middleware('permission:users.view', only: ['index', 'show']),
+            new Middleware('permission:users.create', only: ['create', 'store']),
+            new Middleware('permission:users.edit', only: ['edit', 'update']),
+            new Middleware('permission:users.delete', only: ['destroy']),
+        ];
     }
 
     public function index(Request $request)
