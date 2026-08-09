@@ -4,6 +4,7 @@ namespace App\Services\Admin;
 
 use App\Models\User;
 use Illuminate\Http\UploadedFile;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 
 class AccountService
@@ -15,7 +16,7 @@ class AccountService
 
     public function updateUser(array $data): void
     {
-        $user = User::findOrFail(auth()->id());
+        $user = User::findOrFail(Auth::user()->id);
 
         if (empty($data['password'])) {
             unset($data['password']);

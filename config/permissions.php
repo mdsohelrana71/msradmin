@@ -29,4 +29,11 @@ return [
             'roles.delete' => 'Delete roles',
         ],
     ],
+    'settings' => [
+        'label' => 'Settings',
+        'permissions' => [
+            'settings.view' => 'View settings',
+            'settings.edit' => 'Edit settings',
+        ],
+    ],
 ];

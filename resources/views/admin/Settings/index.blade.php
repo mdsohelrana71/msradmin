@@ -22,17 +22,17 @@
         </div>
 
         @if(session('success'))
-            <div class="alert alert-success">{{ session('success') }}</div>
+        <div class="alert alert-success">{{ session('success') }}</div>
         @endif
 
         @if($errors->any())
-            <div class="alert alert-danger">
-                <ul class="mb-0">
-                    @foreach($errors->all() as $error)
-                        <li>{{ $error }}</li>
-                    @endforeach
-                </ul>
-            </div>
+        <div class="alert alert-danger">
+            <ul class="mb-0">
+                @foreach($errors->all() as $error)
+                <li>{{ $error }}</li>
+                @endforeach
+            </ul>
+        </div>
         @endif
 
         <div class="row">
@@ -48,42 +48,48 @@
                             @csrf
                             @method('PUT')
 
-                            <div class="form-group">
-                                <label for="site_name">Site Name</label>
-                                <input type="text" name="site_name" id="site_name" class="form-control" value="{{ old('site_name', $settings->site_name) }}">
-                            </div>
-
-                            <div class="form-group">
-                                <label for="site_email">Site Email</label>
-                                <input type="email" name="site_email" id="site_email" class="form-control" value="{{ old('site_email', $settings->site_email) }}">
-                            </div>
-
-                            <div class="form-group">
-                                <label for="site_phone">Site Phone</label>
-                                <input type="text" name="site_phone" id="site_phone" class="form-control" value="{{ old('site_phone', $settings->site_phone) }}">
-                            </div>
-
-                            <div class="form-group">
-                                <label for="site_logo">Site Logo</label>
-                                <input type="file" name="site_logo" id="site_logo" class="form-control">
-                                @if(!empty($settings->site_logo))
-                                    <div class="mt-2">
-                                        <img src="{{ asset($settings->site_logo) }}" alt="Site Logo" style="max-height: 100px;" />
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label for="site_name">Site Name</label>
+                                        <input type="text" name="site_name" id="site_name" class="form-control" value="{{ old('site_name', $settings->site_name) }}">
                                     </div>
-                                @endif
-                            </div>
 
-                            <div class="form-group">
-                                <label for="site_favicon">Site Favicon</label>
-                                <input type="file" name="site_favicon" id="site_favicon" class="form-control">
-                                @if(!empty($settings->site_favicon))
-                                    <div class="mt-2">
-                                        <img src="{{ asset($settings->site_favicon) }}" alt="Site Favicon" style="max-height: 48px;" />
+                                    <div class="form-group">
+                                        <label for="site_email">Site Email</label>
+                                        <input type="email" name="site_email" id="site_email" class="form-control" value="{{ old('site_email', $settings->site_email) }}">
                                     </div>
-                                @endif
+
+                                    <div class="form-group">
+                                        <label for="site_phone">Site Phone</label>
+                                        <input type="text" name="site_phone" id="site_phone" class="form-control" value="{{ old('site_phone', $settings->site_phone) }}">
+                                    </div>
+                                </div>
+
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label for="site_logo">Site Logo</label>
+                                        <input type="file" name="site_logo" id="site_logo" class="form-control">
+                                        @if(!empty($settings->site_logo))
+                                        <div class="mt-2">
+                                            <img src="{{ asset($settings->site_logo) }}" alt="Site Logo" style="max-height: 80px;" />
+                                        </div>
+                                        @endif
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label for="site_favicon">Site Favicon</label>
+                                        <input type="file" name="site_favicon" id="site_favicon" class="form-control">
+                                        @if(!empty($settings->site_favicon))
+                                        <div class="mt-2">
+                                            <img src="{{ asset($settings->site_favicon) }}" alt="Site Favicon" style="max-height: 48px;" />
+                                        </div>
+                                        @endif
+                                    </div>
+                                </div>
                             </div>
 
-                            <button type="submit" class="btn btn-primary">Save Settings</button>
+                            <button type="submit" class="btn btn-primary mt-3">Save Settings</button>
                         </form>
                     </div>
                 </div>
@@ -92,4 +98,3 @@
     </div>
 </div>
 @endsection
-
