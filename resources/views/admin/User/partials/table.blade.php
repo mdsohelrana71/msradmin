@@ -44,17 +44,17 @@
                     <td>{{ ucfirst($user->is_active ? 'Active' : 'Inactive') }}</td>
                     <td>{{ $user->created_at->format('Y-m-d') }}</td>
                     <td>
-                        @can('view', $user)
+                        @can('users.view')
                         <a href="{{ route('admin.users.show', $user) }}" class="btn btn-info btn-sm" title="View">
                             <i class="fa fa-eye"></i>
                         </a>
                         @endcan
-                        @can('update', $user)
+                        @can('users.edit')
                         <a href="{{ route('admin.users.edit', $user) }}" class="btn btn-warning btn-sm" title="Edit">
                             <i class="fa fa-edit"></i>
                         </a>
                         @endcan
-                        @can('delete', $user)
+                        @can('users.delete')
                         <form action="{{ route('admin.users.destroy', $user) }}" method="POST" class="d-inline-block" onsubmit="return confirm('Delete this user?');">
                             @csrf
                             @method('DELETE')

@@ -3,11 +3,12 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
-use App\Models\Option;
 use App\Services\Admin\SettingsService;
 use Illuminate\Http\Request;
+use Illuminate\Routing\Controllers\HasMiddleware;
+use Illuminate\Routing\Controllers\Middleware;
 
-class SettingsController extends Controller
+class SettingsController extends Controller implements HasMiddleware
 {
     protected SettingsService $service;
 
@@ -16,10 +17,19 @@ class SettingsController extends Controller
         $this->service = $service;
     }
 
+    /**
+     * @return array<int, Middleware>
+     */
+    public static function middleware(): array
+    {
+        return [
+            new Middleware('permission:settings.view', only: ['index']),
+            new Middleware('permission:settings.edit', only: ['update']),
+        ];
+    }
+
     public function index()
     {
-        $this->authorize('viewAny', Option::class);
-
         $names = ['site_name', 'site_email', 'site_phone', 'site_logo', 'site_favicon'];
         $defaults = [
             'site_name' => config('app.name'),
@@ -36,8 +46,6 @@ class SettingsController extends Controller
 
     public function update(Request $request)
     {
-        $this->authorize('update', Option::class);
-
         $validated = $request->validate([
             'site_name' => 'required|string|max:255',
             'site_email' => 'required|email|max:255',
