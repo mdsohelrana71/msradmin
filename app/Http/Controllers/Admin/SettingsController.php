@@ -14,11 +14,12 @@ class SettingsController extends Controller
     public function __construct(SettingsService $service)
     {
         $this->service = $service;
-        $this->authorizeResource(Option::class, 'option');
     }
 
     public function index()
     {
+        $this->authorize('viewAny', Option::class);
+
         $names = ['site_name', 'site_email', 'site_phone', 'site_logo', 'site_favicon'];
         $defaults = [
             'site_name' => config('app.name'),
@@ -35,6 +36,8 @@ class SettingsController extends Controller
 
     public function update(Request $request)
     {
+        $this->authorize('update', Option::class);
+
         $validated = $request->validate([
             'site_name' => 'required|string|max:255',
             'site_email' => 'required|email|max:255',
