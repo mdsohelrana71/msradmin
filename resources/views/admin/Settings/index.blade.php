@@ -89,7 +89,9 @@
                                 </div>
                             </div>
 
+                            @can('settings.edit')
                             <button type="submit" class="btn btn-primary mt-3">Save Settings</button>
+                            @endcan
                         </form>
                     </div>
                 </div>

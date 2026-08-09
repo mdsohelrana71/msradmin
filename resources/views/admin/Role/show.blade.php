@@ -54,14 +54,14 @@
                             </div>
 
                             <div class="ms-auto d-flex gap-2">
-                                @if(strcasecmp($role->name, 'admin') !== 0)
+                                @can('update', $role)
                                     <a
                                         href="{{ route('admin.roles.edit', $role) }}"
                                         class="btn btn-warning btn-round">
                                         <i class="fa fa-edit me-1"></i>
                                         Edit
                                     </a>
-                                @endif
+                                @endcan
 
                                 <a
                                     href="{{ route('admin.roles.index') }}"

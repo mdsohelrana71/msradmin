@@ -68,13 +68,16 @@
                                 <p>Dashboard</p>
                             </a>
                         </li>
+                        @canany(['users.view', 'users.create', 'roles.view', 'roles.create'])
                         <li class="nav-section">
                             <span class="sidebar-mini-icon">
                                 <i class="fa fa-ellipsis-h"></i>
                             </span>
                             <h4 class="text-section">User Management</h4>
                         </li>
+                        @endcanany
 
+                        @canany(['users.view', 'users.create'])
                         <li class="nav-item {{ request()->routeIs('admin.users.*') ? 'active' : '' }}">
                             <a data-bs-toggle="collapse" href="#users" class="{{ request()->routeIs('admin.users.*') ? '' : 'collapsed' }}" aria-expanded="{{ request()->routeIs('admin.users.*') ? 'true' : 'false' }}">
                                 <i class="fas fa-users"></i>
@@ -83,20 +86,26 @@
                             </a>
                             <div class="collapse {{ request()->routeIs('admin.users.*') ? 'show' : '' }}" id="users">
                                 <ul class="nav nav-collapse">
+                                    @can('users.view')
                                     <li class="{{ request()->routeIs('admin.users.index') ? 'active' : '' }}">
                                         <a href="{{ route('admin.users.index') }}">
                                             <span class="sub-item">All User</span>
                                         </a>
                                     </li>
+                                    @endcan
+                                    @can('users.create')
                                     <li class="{{ request()->routeIs('admin.users.create') ? 'active' : '' }}">
                                         <a href="{{ route('admin.users.create') }}">
                                             <span class="sub-item">Create User</span>
                                         </a>
                                     </li>
+                                    @endcan
                                 </ul>
                             </div>
                         </li>
+                        @endcanany
 
+                        @canany(['roles.view', 'roles.create'])
                         <li class="nav-item {{ request()->routeIs('admin.roles.*') ? 'active' : '' }}">
                             <a data-bs-toggle="collapse" href="#roles" class="{{ request()->routeIs('admin.roles.*') ? '' : 'collapsed' }}" aria-expanded="{{ request()->routeIs('admin.roles.*') ? 'true' : 'false' }}">
                                 <i class="fas fa-user-tag"></i>
@@ -105,20 +114,26 @@
                             </a>
                             <div class="collapse {{ request()->routeIs('admin.roles.*') ? 'show' : '' }}" id="roles">
                                 <ul class="nav nav-collapse">
+                                    @can('roles.view')
                                     <li class="{{ request()->routeIs('admin.roles.index') ? 'active' : '' }}">
                                         <a href="{{ route('admin.roles.index') }}">
                                             <span class="sub-item">All Roles</span>
                                         </a>
                                     </li>
+                                    @endcan
+                                    @can('roles.create')
                                     <li class="{{ request()->routeIs('admin.roles.create') ? 'active' : '' }}">
                                         <a href="{{ route('admin.roles.create') }}">
                                             <span class="sub-item">Create Role</span>
                                         </a>
                                     </li>
+                                    @endcan
                                 </ul>
                             </div>
                         </li>
+                        @endcanany
 
+                        @can('settings.view')
                         <li class="nav-section">
                             <span class="sidebar-mini-icon">
                                 <i class="fa fa-ellipsis-h"></i>
@@ -132,6 +147,7 @@
                                 <p>Settings</p>
                             </a>
                         </li>
+                        @endcan
                     </ul>
                 </div>
             </div>
