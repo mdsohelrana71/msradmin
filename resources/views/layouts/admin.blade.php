@@ -386,17 +386,17 @@
                                                 <div class="u-text">
                                                     <h4>{{ auth()->user()?->name }}</h4>
                                                     <p class="text-muted">{{ auth()->user()?->email }}</p>
-                                                    <a href="#" class="btn btn-xs btn-secondary btn-sm">View Profile</a>
+                                                    <a href="{{ route('admin.accounts.index') }}" class="btn btn-xs btn-secondary btn-sm">View Profile</a>
                                                 </div>
                                             </div>
                                         </li>
                                         <li>
                                             <div class="dropdown-divider"></div>
-                                            <a class="dropdown-item" href="#">My Profile</a>
-                                            <a class="dropdown-item" href="#">My Balance</a>
-                                            <a class="dropdown-item" href="#">Inbox</a>
+                                            <a class="dropdown-item" href="{{ route('admin.accounts.index') }}">My Profile</a>
+                                            <a class="dropdown-item disabled" href="#">My Balance</a>
+                                            <a class="dropdown-item disabled" href="#">Inbox</a>
                                             <div class="dropdown-divider"></div>
-                                            <a class="dropdown-item" href="#">Account Setting</a>
+                                            <a class="dropdown-item" href="{{ route('admin.accounts.index') }}">Account Setting</a>
                                             <div class="dropdown-divider"></div>
                                             <a class="dropdown-item" href="{{ route('logout') }}" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">Logout</a>
                                             <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">
