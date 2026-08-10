@@ -27,6 +27,13 @@ class SettingsService
                 continue;
             }
 
+            if (
+                in_array($key, ['mail_password', 'api_key'], true)
+                && blank($value)
+            ) {
+                continue;
+            }
+
             Option::setOption($key, $value, 'yes');
         }
     }
