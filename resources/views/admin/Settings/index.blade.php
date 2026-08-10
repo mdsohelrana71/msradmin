@@ -7,7 +7,7 @@
     <div class="page-inner">
 
         {{-- Page Header --}}
-        <div class="page-header">
+        <div class="page-header d-flex justify-content-between align-items-center">
             <ul class="breadcrumbs mb-3">
                 <li class="nav-home">
                     <a href="{{ route('admin.dashboard') }}">
@@ -25,6 +25,15 @@
                     </a>
                 </li>
             </ul>
+
+            <form action="{{ route('admin.cache.clear') }}" method="POST" class="mb-3">
+                @csrf
+
+                <button type="submit" class="btn btn-danger btn-round">
+                    <i class="fas fa-trash me-1"></i>
+                    Clear Cache
+                </button>
+            </form>
         </div>
 
         {{-- Success Message --}}
