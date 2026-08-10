@@ -72,8 +72,7 @@ The application includes role-based access control to manage administrator permi
 | Frontend | Blade |
 | CSS Framework | Bootstrap |
 | JavaScript | JavaScript |
-| Build Tool | Vite |
-| Package Manager | Composer / NPM |
+| Package Manager | Composer |
 
 ---
 
@@ -83,8 +82,6 @@ Before installing the project, make sure the following are installed:
 
 - PHP >= 8.3
 - Composer
-- Node.js
-- NPM
 - MySQL
 - Git
 
