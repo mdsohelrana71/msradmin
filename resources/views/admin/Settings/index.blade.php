@@ -14,11 +14,9 @@
                         <i class="icon-home"></i>
                     </a>
                 </li>
-
                 <li class="separator">
                     <i class="icon-arrow-right"></i>
                 </li>
-
                 <li class="nav-item">
                     <a href="{{ route('admin.settings.index') }}">
                         Settings
@@ -26,26 +24,33 @@
                 </li>
             </ul>
 
-            <form action="{{ route('admin.cache.clear') }}" method="POST" class="mb-3">
+            <form action="{{ route('admin.cache.clear') }}"method="POST" id="clearCacheForm" class="mb-3">
                 @csrf
-
-                <button type="submit" class="btn btn-danger btn-round">
+                <button type="button"
+                        class="btn btn-danger btn-round"
+                        data-bs-toggle="modal"
+                        data-bs-target="#clearCacheModal">
                     <i class="fas fa-trash me-1"></i>
                     Clear Cache
                 </button>
+
+                <x-confirm-modal
+                    id="clearCacheModal"
+                    formId="clearCacheForm"
+                    title="Clear Cache?"
+                    message="Are you sure you want to clear all application cache?"
+                    confirmText="Yes, Clear Cache"
+                />
             </form>
         </div>
 
-        {{-- Success Message --}}
-        @if(session('success'))
-            <div class="alert alert-success alert-dismissible fade show">
+        @if (session('success'))
+            <div class="alert alert-success alert-dismissible fade show position-fixed top-0 end-0 m-3 shadow"
+                id="successAlert"
+                style="z-index: 9999; min-width: 300px;"
+                role="alert">
                 <i class="fas fa-check-circle me-2"></i>
                 {{ session('success') }}
-
-                <button type="button"
-                        class="btn-close"
-                        data-bs-dismiss="alert">
-                </button>
             </div>
         @endif
 
@@ -76,11 +81,9 @@
 
             {{-- Settings Content --}}
             <div class="col-lg-9">
-
                 <form action="{{ route('admin.settings.update') }}"
                       method="POST"
                       enctype="multipart/form-data">
-
                     @csrf
                     @method('PUT')
 

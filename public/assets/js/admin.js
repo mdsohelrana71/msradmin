@@ -1,3 +1,14 @@
+
+setTimeout(function () {
+	const alert = document.getElementById('successAlert');
+
+	if (alert) {
+		const bsAlert = bootstrap.Alert.getOrCreateInstance(alert);
+		bsAlert.close();
+	}
+}, 2000);
+
+
 /*
 |--------------------------------------------------------------------------
 | Menu Or Settings Search js

@@ -26,13 +26,25 @@
                         @endcan
 
                         @can('delete', $role)
-                        <form action="{{ route('admin.roles.destroy', $role) }}" method="POST" class="d-inline-block" onsubmit="return confirm('Delete this role?');">
-                            @csrf
-                            @method('DELETE')
-                            <button type="submit" class="btn btn-danger btn-sm" title="Delete">
-                                <i class="fa fa-trash"></i>
-                            </button>
-                        </form>
+                            <form action="{{ route('admin.roles.destroy', $role) }}" method="POST" id="deleteRoleForm{{ $role->id }}" class="d-inline-block">
+                                @csrf
+                                @method('DELETE')
+                                <button type="button"
+                                        class="btn btn-danger btn-sm"
+                                        title="Delete"
+                                        data-bs-toggle="modal"
+                                        data-bs-target="#deleteRoleModal{{ $role->id }}">
+                                    <i class="fa fa-trash"></i>
+                                </button>
+                                <x-confirm-modal
+                                    id="deleteRoleModal{{ $role->id }}"
+                                    formId="deleteRoleForm{{ $role->id }}"
+                                    title="Delete Role?"
+                                    message="Are you sure you want to delete this role?"
+                                    confirmText="Yes, Delete"
+                                    confirmClass="btn-danger"
+                                />
+                            </form>
                         @endcan
                     </td>
                 </tr>

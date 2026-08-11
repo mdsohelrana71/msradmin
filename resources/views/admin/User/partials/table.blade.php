@@ -55,13 +55,25 @@
                         </a>
                         @endcan
                         @can('users.delete')
-                        <form action="{{ route('admin.users.destroy', $user) }}" method="POST" class="d-inline-block" onsubmit="return confirm('Delete this user?');">
-                            @csrf
-                            @method('DELETE')
-                            <button type="submit" class="btn btn-danger btn-sm" title="Delete">
-                                <i class="fa fa-trash"></i>
-                            </button>
-                        </form>
+                            <form action="{{ route('admin.users.destroy', $user) }}" method="POST" id="deleteUserForm{{ $user->id }}" class="d-inline-block">
+                                @csrf
+                                @method('DELETE')
+                                <button type="button"
+                                        class="btn btn-danger btn-sm"
+                                        title="Delete"
+                                        data-bs-toggle="modal"
+                                        data-bs-target="#deleteUserModal{{ $user->id }}">
+                                    <i class="fa fa-trash"></i>
+                                </button>
+                                <x-confirm-modal
+                                    id="deleteUserModal{{ $user->id }}"
+                                    formId="deleteUserForm{{ $user->id }}"
+                                    title="Delete User?"
+                                    message="Are you sure you want to delete this user?"
+                                    confirmText="Yes, Delete"
+                                    confirmClass="btn-danger"
+                                />
+                            </form>
                         @endcan
                     </td>
                 </tr>
