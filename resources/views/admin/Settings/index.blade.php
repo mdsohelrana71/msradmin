@@ -5,8 +5,6 @@
 @section('content')
 <div class="container">
     <div class="page-inner">
-
-        {{-- Page Header --}}
         <div class="page-header d-flex justify-content-between align-items-center">
             <ul class="breadcrumbs mb-3">
                 <li class="nav-home">
