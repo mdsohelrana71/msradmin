@@ -9,6 +9,11 @@
     background: #fff;
 }
 
+.confirm-modal-dialog {
+    max-width: 420px;
+    width: calc(100% - 30px);
+}
+
 .confirm-icon {
     width: 64px;
     height: 64px;

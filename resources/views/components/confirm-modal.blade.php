@@ -12,7 +12,7 @@
      tabindex="-1"
      aria-labelledby="{{ $id }}Label"
      aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered modal-md">
+    <div class="modal-dialog modal-dialog-centered confirm-modal-dialog">
         <div class="modal-content">
             <div class="modal-body text-center p-4">
                 {{-- Icon --}}
