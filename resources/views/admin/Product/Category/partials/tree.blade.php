@@ -4,7 +4,9 @@
             {{-- Category Name + Status + Expand --}}
             <div class="category-left">
                 <span class="category-name">
-                    {{ $category->name }}
+                    <span class="category-title">
+                        {{ $category->name }}
+                    </span>
 
                     @if (!$category->status)
                         <span class="badge bg-warning ms-2">

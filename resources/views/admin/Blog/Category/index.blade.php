@@ -57,6 +57,31 @@
                             Manage your blog category hierarchy.
                         </p>
                     </div>
+
+                    <div class="ms-auto" style="width: 300px;">
+                        <div class="input-group">
+                            <span class="input-group-text">
+                                <i class="fa fa-search"></i>
+                            </span>
+
+                            <input
+                                type="text"
+                                id="categorySearch"
+                                class="form-control"
+                                placeholder="Search category..."
+                                autocomplete="off"
+                            >
+
+                            <button
+                                type="button"
+                                id="clearCategorySearch"
+                                class="btn btn-light d-none"
+                                title="Clear search"
+                            >
+                                <i class="fa fa-times"></i>
+                            </button>
+                        </div>
+                    </div>
                 </div>
             </div>
 
