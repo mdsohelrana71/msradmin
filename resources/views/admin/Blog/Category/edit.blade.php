@@ -55,12 +55,11 @@
                             method="POST">
                             @csrf
                             @method('PUT')
-
                             @include('admin.Blog.Category.partials.form', [
-                            'category' => $category,
-                            'categories' => $categories,
-                            'selectedParent' => old('parent_id', $category->parent_id),
-                            'excludedIds' => $excludedIds,
+                                'category' => $category,
+                                'categories' => $categories,
+                                'selectedParent' => old('parent_id', $category->parent_id),
+                                'excludedIds' => $excludedIds,
                             ])
                             <div class="mt-4">
                                 <button

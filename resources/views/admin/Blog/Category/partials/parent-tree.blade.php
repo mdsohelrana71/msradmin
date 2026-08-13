@@ -1,5 +1,25 @@
 @foreach ($categories as $category)
     @if (!in_array($category->id, $excludedIds))
+        @php
+            $hasChildren = $category->children->isNotEmpty();
+            $isSelected = (int) $selectedParent === (int) $category->id;
+
+            $hasSelectedChild = $category->children->contains(function ($child) use ($selectedParent, $excludedIds) {
+                if (in_array($child->id, $excludedIds)) {
+                    return false;
+                }
+
+                if ((int) $child->id === (int) $selectedParent) {
+                    return true;
+                }
+
+                return $child->children->contains(function ($nestedChild) use ($selectedParent, $excludedIds) {
+                    return !in_array($nestedChild->id, $excludedIds)
+                        && (int) $nestedChild->id === (int) $selectedParent;
+                });
+            });
+        @endphp
+
         <div class="category-tree-item">
             <div class="category-option-row">
                 <label class="category-option">
@@ -7,9 +27,7 @@
                         type="radio"
                         name="parent_id"
                         value="{{ $category->id }}"
-                        {{ (string) $selectedParent === (string) $category->id
-                            ? 'checked'
-                            : '' }}
+                        @checked($isSelected)
                     >
                     <span class="category-check"></span>
                     <span class="category-name">
@@ -17,20 +35,24 @@
                     </span>
                 </label>
 
-                @if ($category->children->isNotEmpty())
+                @if ($hasChildren)
                     <button
                         type="button"
                         class="category-toggle"
                         data-bs-toggle="collapse"
                         data-bs-target="#parent-category-{{ $category->id }}"
+                        aria-expanded="{{ $hasSelectedChild ? 'true' : 'false' }}"
                     >
-                        <i class="fas fa-plus"></i>
+                        <i class="fas {{ $hasSelectedChild ? 'fa-minus' : 'fa-plus' }}"></i>
                     </button>
                 @endif
             </div>
 
-            @if ($category->children->isNotEmpty())
-                <div class="collapse category-children" id="parent-category-{{ $category->id }}">
+            @if ($hasChildren)
+                <div
+                    class="collapse category-children {{ $hasSelectedChild ? 'show' : '' }}"
+                    id="parent-category-{{ $category->id }}"
+                >
                     @include(
                         'admin.Blog.Category.partials.parent-tree',
                         [
