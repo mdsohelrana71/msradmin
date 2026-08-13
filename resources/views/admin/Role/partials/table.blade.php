@@ -20,7 +20,7 @@
                         @endcan
 
                         @can('update', $role)
-                        <a href="{{ route('admin.roles.edit', $role) }}" class="btn btn-warning btn-sm" title="Edit">
+                        <a href="{{ route('admin.roles.edit', $role) }}" class="btn btn-primary btn-sm" title="Edit">
                             <i class="fa fa-edit"></i>
                         </a>
                         @endcan

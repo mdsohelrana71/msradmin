@@ -50,7 +50,7 @@
                         </a>
                         @endcan
                         @can('users.edit')
-                        <a href="{{ route('admin.users.edit', $user) }}" class="btn btn-warning btn-sm" title="Edit">
+                        <a href="{{ route('admin.users.edit', $user) }}" class="btn btn-primary btn-sm" title="Edit">
                             <i class="fa fa-edit"></i>
                         </a>
                         @endcan
