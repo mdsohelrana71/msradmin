@@ -94,7 +94,10 @@
                                 </div>
                             </div>
 
-                            <button type="submit" class="btn btn-primary">Create User</button>
+                            <x-admin.form-actions
+                                submitText="Save User"
+                                :cancelUrl="route('admin.users.index')"
+                            />
                         </form>
                     </div>
                 </div>

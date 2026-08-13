@@ -46,22 +46,10 @@
                                 'permissions' => $permissions,
                             ])
 
-                            <div class="mt-4">
-                                <button
-                                    type="submit"
-                                    class="btn btn-primary"
-                                >
-                                    <i class="fa fa-save me-1"></i>
-                                    Update Role
-                                </button>
-
-                                <a
-                                    href="{{ route('admin.roles.index') }}"
-                                    class="btn btn-secondary"
-                                >
-                                    Cancel
-                                </a>
-                            </div>
+                            <x-admin.form-actions
+                                submitText="Update Role"
+                                :cancelUrl="route('admin.roles.index')"
+                            />
                         </form>
                     </div>
                 </div>

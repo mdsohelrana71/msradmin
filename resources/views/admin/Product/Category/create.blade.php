@@ -49,22 +49,10 @@
                                 'excludedIds' => [],
                             ])
 
-                            <div class="mt-4">
-                                <button
-                                    type="submit"
-                                    class="btn btn-primary"
-                                >
-                                    <i class="fa fa-save me-1"></i>
-                                    Save Category
-                                </button>
-
-                                <a
-                                    href="{{ route('admin.product-categories.index') }}"
-                                    class="btn btn-secondary"
-                                >
-                                    Cancel
-                                </a>
-                            </div>
+                            <x-admin.form-actions
+                                submitText="Save Category"
+                                :cancelUrl="route('admin.product-categories.index')"
+                            />
                         </form>
                     </div>
                 </div>

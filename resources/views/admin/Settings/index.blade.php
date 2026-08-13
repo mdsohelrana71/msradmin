@@ -104,18 +104,10 @@
 
                     {{-- Save Button --}}
                     @can('settings.edit')
-                        <div class="">
-                            <div class="card-body">
-                                <div class="d-flex justify-content-end">
-                                    <button type="submit"
-                                            class="btn btn-primary">
-
-                                        <i class="fas fa-save me-1"></i>
-                                        Save Settings
-                                    </button>
-                                </div>
-                            </div>
-                        </div>
+                        <x-admin.form-actions
+                            submitText="Update Settings"
+                            :cancelUrl="route('admin.settings.index')"
+                        />
                     @endcan
                 </form>
             </div>

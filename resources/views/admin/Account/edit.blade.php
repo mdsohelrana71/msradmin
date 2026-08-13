@@ -31,7 +31,10 @@
 
                             @include('admin.Account.partials.form', ['user' => $user])
 
-                            <button type="submit" class="btn btn-primary">Update Profile</button>
+                            <x-admin.form-actions
+                                submitText="Update Profile"
+                                :cancelUrl="route('admin.accounts.index')"
+                            />
                         </form>
                     </div>
                 </div>

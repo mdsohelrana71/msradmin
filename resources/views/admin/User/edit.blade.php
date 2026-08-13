@@ -100,7 +100,10 @@
                                 </div>
                             </div>
 
-                            <button type="submit" class="btn btn-primary">Update User</button>
+                            <x-admin.form-actions
+                                submitText="Update Role"
+                                :cancelUrl="route('admin.users.index')"
+                            />
                         </form>
                     </div>
                 </div>
