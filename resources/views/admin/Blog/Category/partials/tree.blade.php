@@ -1,10 +1,15 @@
 @foreach ($categories as $category)
     <div class="category-item">
         <div class="category-row">
-            {{-- Category Name + Expand --}}
             <div class="category-left">
                 <span class="category-name">
                     {{ $category->name }}
+
+                    @if (!$category->status)
+                        <span class="badge bg-warning ms-2">
+                            Inactive
+                        </span>
+                    @endif
                 </span>
 
                 @if ($category->children->isNotEmpty())
@@ -20,13 +25,9 @@
                 @endif
             </div>
 
-            {{-- Actions --}}
             <div class="category-actions">
                 <a
-                    href="{{ route(
-                            'admin.blog-categories.edit',
-                            $category
-                        ) }}"
+                    href="{{ route('admin.blog-categories.edit', $category) }}"
                     class="btn btn-sm btn-primary"
                     title="Edit">
                     <i class="fa fa-edit"></i>
@@ -50,16 +51,14 @@
             </div>
         </div>
 
-        {{-- Children --}}
         @if ($category->children->isNotEmpty())
-            <div class="collapse category-children" id="category-children-{{ $category->id }}">
+            <div
+                class="collapse category-children"
+                id="category-children-{{ $category->id }}">
 
-                @include(
-                'admin.Blog.Category.partials.tree',
-                [
-                'categories' => $category->children
-                ]
-                )
+                @include('admin.Blog.Category.partials.tree', [
+                    'categories' => $category->children
+                ])
 
             </div>
         @endif

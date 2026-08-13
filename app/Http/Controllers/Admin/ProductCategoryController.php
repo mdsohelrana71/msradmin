@@ -15,6 +15,10 @@ class ProductCategoryController extends Controller
         protected CategoryService $categoryService
     ) {}
 
+
+    /**
+     * Display product categories.
+     */
     public function index(): View
     {
         $categories = $this->categoryService
@@ -26,10 +30,14 @@ class ProductCategoryController extends Controller
         );
     }
 
+
+    /**
+     * Show create category form.
+     */
     public function create(): View
     {
         $categories = $this->categoryService
-            ->getParentOptions('product');
+            ->getTree('product');
 
         return view(
             'admin.Product.Category.create',
@@ -37,6 +45,10 @@ class ProductCategoryController extends Controller
         );
     }
 
+
+    /**
+     * Store a new product category.
+     */
     public function store(
         CategoryRequest $request
     ): RedirectResponse {
@@ -53,28 +65,41 @@ class ProductCategoryController extends Controller
             );
     }
 
-    public function edit(Category $category): View
-    {
+
+    /**
+     * Show edit category form.
+     */
+    public function edit(
+        Category $category
+    ): View {
         abort_if(
             $category->type !== 'product',
             404
         );
 
         $categories = $this->categoryService
-            ->getParentOptions(
-                'product',
-                $category
-            );
+            ->getTree('product');
+
+        $excludedIds = $this->categoryService
+            ->getDescendantIdsForEdit($category);
+
+        // Current category cannot be its own parent.
+        $excludedIds[] = $category->id;
 
         return view(
             'admin.Product.Category.edit',
             compact(
                 'category',
-                'categories'
+                'categories',
+                'excludedIds'
             )
         );
     }
 
+
+    /**
+     * Update product category.
+     */
     public function update(
         CategoryRequest $request,
         Category $category
@@ -98,6 +123,10 @@ class ProductCategoryController extends Controller
             );
     }
 
+
+    /**
+     * Delete product category.
+     */
     public function destroy(
         Category $category
     ): RedirectResponse {
@@ -106,7 +135,9 @@ class ProductCategoryController extends Controller
             404
         );
 
-        $this->categoryService->delete($category);
+        $this->categoryService->delete(
+            $category
+        );
 
         return redirect()
             ->route('admin.product-categories.index')

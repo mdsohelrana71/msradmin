@@ -1,114 +1,69 @@
 @foreach ($categories as $category)
-
     <div class="category-item">
-
         <div class="category-row">
-
-            {{-- LEFT --}}
+            {{-- Category Name + Status + Expand --}}
             <div class="category-left">
-
-                <input
-                    type="checkbox"
-                    class="category-checkbox"
-                    id="category-{{ $category->id }}"
-                    value="{{ $category->id }}"
-                >
-
-                <label
-                    for="category-{{ $category->id }}"
-                    class="category-label"
-                >
+                <span class="category-name">
                     {{ $category->name }}
-                </label>
 
-            </div>
+                    @if (!$category->status)
+                        <span class="badge bg-warning ms-2">
+                            Inactive
+                        </span>
+                    @endif
+                </span>
 
-
-            {{-- RIGHT --}}
-            <div class="d-flex align-items-center gap-2">
-
-                {{-- Actions --}}
-                <div class="category-actions">
-
-                    <a
-                        href="{{ route(
-                            'admin.blog-categories.edit',
-                            $category
-                        ) }}"
-                        class="btn btn-sm btn-primary"
-                        title="Edit"
-                    >
-                        <i class="fa fa-edit"></i>
-                    </a>
-
-                    <form
-                        action="{{ route(
-                            'admin.blog-categories.destroy',
-                            $category
-                        ) }}"
-                        method="POST"
-                        class="d-inline"
-                        onsubmit="return confirm('Are you sure you want to delete this category?')"
-                    >
-                        @csrf
-                        @method('DELETE')
-
-                        <button
-                            type="submit"
-                            class="btn btn-sm btn-danger"
-                            title="Delete"
-                        >
-                            <i class="fa fa-trash"></i>
-                        </button>
-
-                    </form>
-
-                </div>
-
-
-                {{-- + / - --}}
                 @if ($category->children->isNotEmpty())
-
                     <button
                         type="button"
                         class="category-toggle"
                         data-bs-toggle="collapse"
                         data-bs-target="#category-children-{{ $category->id }}"
                         aria-expanded="false"
-                    >
+                        title="Show sub categories">
                         <i class="fas fa-plus"></i>
                     </button>
-
-                @else
-
-                    <span class="category-toggle-placeholder"></span>
-
                 @endif
-
             </div>
 
+            {{-- Actions --}}
+            <div class="category-actions">
+                <a
+                    href="{{ route('admin.product-categories.edit', $category) }}"
+                    class="btn btn-sm btn-primary"
+                    title="Edit">
+                    <i class="fa fa-edit"></i>
+                </a>
+
+                <form
+                    action="{{ route('admin.product-categories.destroy', $category) }}"
+                    method="POST"
+                    class="d-inline"
+                    onsubmit="return confirm('Are you sure you want to delete this category?')">
+                    @csrf
+                    @method('DELETE')
+
+                    <button
+                        type="submit"
+                        class="btn btn-sm btn-danger"
+                        title="Delete">
+                        <i class="fa fa-trash"></i>
+                    </button>
+                </form>
+            </div>
         </div>
 
-
-        {{-- CHILDREN --}}
+        {{-- Children --}}
         @if ($category->children->isNotEmpty())
-
             <div
                 class="collapse category-children"
-                id="category-children-{{ $category->id }}"
-            >
+                id="category-children-{{ $category->id }}">
 
-                @include(
-                    'admin.Blog.Category.partials.tree',
-                    [
-                        'categories' => $category->children
-                    ]
-                )
+                @include('admin.Product.Category.partials.tree', [
+                    'categories' => $category->children
+                ])
 
             </div>
-
         @endif
-
     </div>
-
 @endforeach
