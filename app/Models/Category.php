@@ -2,19 +2,19 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Support\Str;
 
 class Category extends Model
 {
     protected $fillable = [
-        'parent_id',
         'name',
         'slug',
+        'parent_id',
         'type',
-        'description',
-        'image',
         'status',
         'sort_order',
     ];
@@ -30,16 +30,21 @@ class Category extends Model
 
     public function children(): HasMany
     {
-        return $this->hasMany(self::class, 'parent_id');
+        return $this->hasMany(self::class, 'parent_id')
+            ->orderBy('sort_order')
+            ->orderBy('name');
     }
 
-    public function scopeOfType($query, string $type)
-    {
+    public function scopeOfType(
+        Builder $query,
+        string $type
+    ): Builder {
         return $query->where('type', $type);
     }
 
-    public function scopeActive($query)
-    {
+    public function scopeActive(
+        Builder $query
+    ): Builder {
         return $query->where('status', true);
     }
 }

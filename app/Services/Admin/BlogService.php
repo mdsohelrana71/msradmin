@@ -4,9 +4,11 @@ namespace App\Services\Admin;
 
 use App\Models\Blog;
 use App\Models\Category;
-use Illuminate\Contracts\Pagination\LengthAwarePaginator;
-use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Support\Str;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 
 class BlogService
 {
@@ -15,23 +17,24 @@ class BlogService
         int $perPage = 20
     ): LengthAwarePaginator {
         return Blog::query()
-            ->with('category')
+            ->with(['category', 'author'])
             ->when($search, function ($query) use ($search) {
                 $query->where(function ($query) use ($search) {
-                    $query->where(
-                        'title',
-                        'like',
-                        "%{$search}%"
-                    )->orWhere(
-                        'content',
-                        'like',
-                        "%{$search}%"
-                    );
+                    $query->where('title', 'like', "%{$search}%")
+                        ->orWhere('content', 'like', "%{$search}%");
                 });
             })
             ->latest()
             ->paginate($perPage)
             ->withQueryString();
+    }
+
+    public function getBlog(Blog $blog): Blog
+    {
+        return $blog->load([
+            'category',
+            'author',
+        ]);
     }
 
     public function getCategories(): Collection
@@ -45,31 +48,55 @@ class BlogService
 
     public function create(array $data): Blog
     {
-        $data = $this->prepareData($data);
-
-        return Blog::create($data);
+        $data['user_id'] = Auth::user()->id;
+        return Blog::create(
+            $this->prepareData($data)
+        );
     }
 
-    public function update(
-        Blog $blog,
-        array $data
-    ): Blog {
-        $data = $this->prepareData($data);
+    public function update(Blog $blog, array $data): Blog
+    {
+        $blog->update(
+            $this->prepareData($data, $blog)
+        );
 
-        $blog->update($data);
-
-        return $blog->fresh();
+        return $blog->fresh([
+            'category',
+            'author',
+        ]);
     }
 
     public function delete(Blog $blog): bool
     {
+        if ($blog->featured_image) {
+            Storage::disk('public')->delete(
+                $blog->featured_image
+            );
+        }
+
         return $blog->delete();
     }
 
-    private function prepareData(array $data): array
-    {
-        if (empty($data['slug'])) {
-            $data['slug'] = Str::slug($data['title']);
+    private function prepareData(
+        array $data,
+        ?Blog $blog = null
+    ): array {
+        $data['slug'] = Str::slug($data['title']);
+
+        if (
+            isset($data['featured_image'])
+            && $data['featured_image']
+        ) {
+            if ($blog?->featured_image) {
+                Storage::disk('public')->delete(
+                    $blog->featured_image
+                );
+            }
+
+            $data['featured_image'] = $data['featured_image']
+                ->store('blogs', 'public');
+        } elseif ($blog) {
+            unset($data['featured_image']);
         }
 
         return $data;

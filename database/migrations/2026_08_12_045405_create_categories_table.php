@@ -11,25 +11,31 @@ return new class extends Migration
         Schema::create('categories', function (Blueprint $table) {
             $table->id();
 
+            $table->string('name');
+
+            $table->string('slug');
+
             $table->foreignId('parent_id')
                 ->nullable()
                 ->constrained('categories')
                 ->nullOnDelete();
 
-            $table->string('name');
-            $table->string('slug');
-            $table->string('type', 20);
+            $table->enum('type', [
+                'blog',
+                'product',
+            ]);
 
-            $table->text('description')->nullable();
-            $table->string('image')->nullable();
+            $table->boolean('status')
+                ->default(true);
 
-            $table->boolean('status')->default(true);
-            $table->unsignedInteger('sort_order')->default(0);
+            $table->unsignedInteger('sort_order')
+                ->default(0);
 
             $table->timestamps();
 
             $table->unique(['type', 'slug']);
-            $table->index(['type', 'status']);
+
+            $table->index(['type', 'parent_id']);
         });
     }
 

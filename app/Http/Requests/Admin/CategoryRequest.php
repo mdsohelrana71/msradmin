@@ -1,9 +1,8 @@
 <?php
+
 namespace App\Http\Requests\Admin;
 
-use App\Enums\CategoryType;
 use Illuminate\Foundation\Http\FormRequest;
-use Illuminate\Validation\Rule;
 
 class CategoryRequest extends FormRequest
 {
@@ -14,27 +13,11 @@ class CategoryRequest extends FormRequest
 
     public function rules(): array
     {
-        $categoryId = $this->route('category')?->id;
-
         return [
             'name' => [
                 'required',
                 'string',
                 'max:255',
-            ],
-
-            'slug' => [
-                'nullable',
-                'string',
-                'max:255',
-                Rule::unique('categories', 'slug')
-                    ->where('type', $this->type)
-                    ->ignore($categoryId),
-            ],
-
-            'type' => [
-                'required',
-                Rule::enum(CategoryType::class),
             ],
 
             'parent_id' => [
@@ -43,18 +26,8 @@ class CategoryRequest extends FormRequest
                 'exists:categories,id',
             ],
 
-            'description' => [
-                'nullable',
-                'string',
-            ],
-
-            'image' => [
-                'nullable',
-                'string',
-                'max:255',
-            ],
-
             'status' => [
+                'required',
                 'boolean',
             ],
 
@@ -63,6 +36,14 @@ class CategoryRequest extends FormRequest
                 'integer',
                 'min:0',
             ],
+        ];
+    }
+
+    public function messages(): array
+    {
+        return [
+            'name.required' => 'Category name is required.',
+            'parent_id.exists' => 'Selected parent category does not exist.',
         ];
     }
 }

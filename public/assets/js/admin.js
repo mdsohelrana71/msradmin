@@ -177,3 +177,44 @@ document.addEventListener('DOMContentLoaded', function() {
 		openTab('#general');
 	}
 });
+
+/*
+|--------------------------------------------------------------------------
+| Category js
+|--------------------------------------------------------------------------
+*/
+
+document.addEventListener('DOMContentLoaded', function() {
+	document.querySelectorAll('.category-toggle').forEach(function(button) {
+		const targetSelector =
+			button.getAttribute('data-bs-target');
+		const target =
+			document.querySelector(targetSelector);
+
+		if (!target) {
+			return;
+		}
+
+		target.addEventListener(
+			'shown.bs.collapse',
+			function() {
+				const icon =
+					button.querySelector('i');
+
+				icon.classList.remove('fa-plus');
+				icon.classList.add('fa-minus');
+			}
+		);
+
+		target.addEventListener(
+			'hidden.bs.collapse',
+			function() {
+				const icon =
+					button.querySelector('i');
+
+				icon.classList.remove('fa-minus');
+				icon.classList.add('fa-plus');
+			}
+		);
+	});
+});

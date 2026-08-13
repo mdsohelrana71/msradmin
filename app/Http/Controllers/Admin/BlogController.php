@@ -20,7 +20,7 @@ class BlogController extends Controller
             $request->input('search')
         );
 
-        return view('admin.blogs.index', compact('blogs'));
+        return view('admin.Blog.index', compact('blogs'));
     }
 
     public function create()
@@ -28,7 +28,7 @@ class BlogController extends Controller
         $categories = $this->blogService->getCategories();
 
         return view(
-            'admin.blogs.create',
+            'admin.Blog.create',
             compact('categories')
         );
     }
@@ -52,7 +52,7 @@ class BlogController extends Controller
         $categories = $this->blogService->getCategories();
 
         return view(
-            'admin.blogs.edit',
+            'admin.Blog.edit',
             compact('blog', 'categories')
         );
     }
@@ -72,6 +72,14 @@ class BlogController extends Controller
                 'success',
                 'Blog updated successfully.'
             );
+    }
+
+    public function show(Blog $blog)
+    {
+        return view(
+            'admin.Blog.show',
+            compact('blog')
+        );
     }
 
     public function destroy(Blog $blog)

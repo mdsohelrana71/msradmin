@@ -233,3 +233,128 @@
         white-space: nowrap;
     }
 }
+
+    /*
+|--------------------------------------------------------------------------
+| Category CSS
+|--------------------------------------------------------------------------
+*/
+
+.category-row {
+    min-height: 56px;
+    padding: 10px 18px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border-bottom: 1px solid #eeeeee;
+}
+
+.category-left {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.category-name {
+    margin: 0;
+    font-size: 14px;
+    font-weight: 500;
+    color: #333;
+    text-decoration: none;
+}
+
+.category-toggle {
+    width: 26px;
+    height: 26px;
+    padding: 0;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    background: #fff;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all .2s ease;
+}
+
+.category-toggle:hover {
+    background: #f5f5f5;
+    border-color: #ccc;
+}
+
+.category-toggle i {
+    font-size: 11px;
+}
+
+.category-toggle-placeholder {
+    width: 26px;
+}
+
+.category-children {
+    margin-left: 30px;
+    border-left: 1px solid #e5e5e5;
+}
+
+.category-actions {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.category-item {
+    width: 100%;
+}
+
+.category-option-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    min-height: 48px;
+    padding: 8px 12px;
+    border-bottom: 1px solid #eee;
+}
+
+.category-option {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin: 0;
+    cursor: pointer;
+}
+
+.category-option input {
+    display: none;
+}
+
+.category-check {
+    width: 20px;
+    height: 20px;
+    border: 1px solid #ced4da;
+    border-radius: 4px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.category-option input:checked + .category-check::after {
+    content: "✓";
+    font-size: 14px;
+    font-weight: 700;
+}
+
+.category-name {
+    font-size: 14px;
+}
+
+.category-toggle {
+    width: 28px;
+    height: 28px;
+    border: 1px solid #ddd;
+    background: #fff;
+    border-radius: 4px;
+}
+
+.category-children {
+    margin-left: 30px;
+    border-left: 1px solid #e5e5e5;
+}
