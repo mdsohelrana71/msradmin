@@ -4,39 +4,19 @@
 
 <div class="container">
     <div class="page-inner">
-        {{-- Header --}}
-        <div class="page-header">
-            <ul class="breadcrumbs">
-                <li class="nav-home">
-                    <a href="{{ route('admin.dashboard') }}">
-                        <i class="icon-home"></i>
-                    </a>
-                </li>
-                <li class="separator">
-                    <i class="icon-arrow-right"></i>
-                </li>
-                <li class="nav-item">
-                    <span>Blog Categories</span>
-                </li>
-            </ul>
-            <a
-                href="{{ route('admin.blog-categories.create') }}"
-                class="btn btn-primary btn-round ms-auto">
-                <i class="fa fa-plus me-1"></i>
-                Add Category
-            </a>
-        </div>
-
-        @if (session('success'))
-            <div
-                class="alert alert-success alert-dismissible fade show position-fixed top-0 end-0 m-3 shadow"
-                id="successAlert"
-                style="z-index: 9999; min-width: 300px;"
-                role="alert">
-                <i class="fas fa-check-circle me-2"></i>
-                {{ session('success') }}
-            </div>
-        @endif
+        <x-admin.breadcrumb
+            :items="[
+                [
+                    'label' => 'Blog Categories',
+                ],
+            ]"
+            :action="[
+                'label' => 'Add Category',
+                'url' => route('admin.blog-categories.create'),
+                'icon' => 'fa fa-plus',
+            ]"
+        />
+        <x-admin.alert />
 
         {{-- Error Alert --}}
         @if ($errors->has('category'))
@@ -58,30 +38,10 @@
                         </p>
                     </div>
 
-                    <div class="ms-auto" style="width: 300px;">
-                        <div class="input-group">
-                            <span class="input-group-text">
-                                <i class="fa fa-search"></i>
-                            </span>
-
-                            <input
-                                type="text"
-                                id="categorySearch"
-                                class="form-control"
-                                placeholder="Search category..."
-                                autocomplete="off"
-                            >
-
-                            <button
-                                type="button"
-                                id="clearCategorySearch"
-                                class="btn btn-light d-none"
-                                title="Clear search"
-                            >
-                                <i class="fa fa-times"></i>
-                            </button>
-                        </div>
-                    </div>
+                    <x-admin.search
+                        id="categorySearch"
+                        placeholder="Search category..."
+                    />
                 </div>
             </div>
 

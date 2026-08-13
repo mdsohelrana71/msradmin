@@ -4,30 +4,17 @@
 
 <div class="container">
     <div class="page-inner">
-        <div class="page-header">
-            <ul class="breadcrumbs">
-                <li class="nav-home">
-                    <a href="{{ route('admin.dashboard') }}">
-                        <i class="icon-home"></i>
-                    </a>
-                </li>
-                <li class="separator">
-                    <i class="icon-arrow-right"></i>
-                </li>
-                <li class="nav-item">
-                    <a href="{{ route('admin.product-categories.index') }}">
-                        Product Categories
-                    </a>
-                </li>
-                <li class="separator">
-                    <i class="icon-arrow-right"></i>
-                </li>
-                <li class="nav-item">
-                    <span>Edit Category</span>
-                </li>
-            </ul>
-        </div>
-
+        <x-admin.breadcrumb
+            :items="[
+                [
+                    'label' => 'Product Categories',
+                    'url' => route('admin.product-categories.index'),
+                ],
+                [
+                    'label' => 'Edit Category',
+                ],
+            ]"
+        />
         <div class="row justify-content-center">
             <div class="col-lg-12">
                 <div class="card">

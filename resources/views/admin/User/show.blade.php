@@ -5,28 +5,17 @@
 @section('content')
 <div class="container">
     <div class="page-inner">
-        <div class="page-header">
-            <ul class="breadcrumbs">
-                <li class="nav-home">
-                    <a href="{{ route('admin.dashboard') }}">
-                        <i class="icon-home"></i>
-                    </a>
-                </li>
-                <li class="separator">
-                    <i class="icon-arrow-right"></i>
-                </li>
-                <li class="nav-item">
-                    <a href="{{ route('admin.users.index') }}">Users</a>
-                </li>
-                <li class="separator">
-                    <i class="icon-arrow-right"></i>
-                </li>
-                <li class="nav-item">
-                    <a href="#">Show</a>
-                </li>
-            </ul>
-        </div>
-
+        <x-admin.breadcrumb
+            :items="[
+                [
+                    'label' => 'Users',
+                    'url' => route('admin.users.index'),
+                ],
+                [
+                    'label' => 'Show',
+                ],
+            ]"
+        />
         <div class="row">
             <div class="col-md-12">
                 <div class="card border-0 shadow-sm">

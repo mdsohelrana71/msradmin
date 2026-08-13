@@ -1,3 +1,7 @@
+.module-header-search-box {
+    width: 300px;
+}
+
 /* Confirmation Modal */
 .confirm-modal .modal-content {
     border: 0;

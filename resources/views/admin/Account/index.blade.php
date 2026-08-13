@@ -5,36 +5,15 @@
 @section('content')
 <div class="container">
     <div class="page-inner">
-
-        {{-- Breadcrumb --}}
-        <div class="page-header">
-            <ul class="breadcrumbs">
-                <li class="nav-home">
-                    <a href="{{ route('admin.dashboard') }}">
-                        <i class="icon-home"></i>
-                    </a>
-                </li>
-                <li class="separator">
-                    <i class="icon-arrow-right"></i>
-                </li>
-                <li class="nav-item">
-                    <a href="{{ route('admin.accounts.index') }}">
-                        My Profile
-                    </a>
-                </li>
-            </ul>
-        </div>
-
-        @if (session('success'))
-            <div class="alert alert-success alert-dismissible fade show position-fixed top-0 end-0 m-3 shadow"
-                id="successAlert"
-                style="z-index: 9999; min-width: 300px;"
-                role="alert">
-                <i class="fas fa-check-circle me-2"></i>
-                {{ session('success') }}
-            </div>
-        @endif
-
+        <x-admin.breadcrumb
+            :items="[
+                [
+                    'label' => 'My Profile',
+                    'url' => route('admin.accounts.index'),
+                ],
+            ]"
+        />
+        <x-admin.alert />
         <div class="row justify-content-center">
             <div class="col-12">
                 <div class="card border-0 shadow-sm">

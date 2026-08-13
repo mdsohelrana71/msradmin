@@ -1,42 +1,20 @@
 @extends('layouts.admin')
-
 @section('title', 'Edit Profile')
-
 @section('content')
+
 <div class="container">
     <div class="page-inner">
-
-        {{-- Breadcrumb --}}
-        <div class="page-header">
-            <ul class="breadcrumbs">
-                <li class="nav-home">
-                    <a href="{{ route('admin.dashboard') }}">
-                        <i class="icon-home"></i>
-                    </a>
-                </li>
-
-                <li class="separator">
-                    <i class="icon-arrow-right"></i>
-                </li>
-
-                <li class="nav-item">
-                    <a href="{{ route('admin.accounts.index') }}">
-                        My Profile
-                    </a>
-                </li>
-
-                <li class="separator">
-                    <i class="icon-arrow-right"></i>
-                </li>
-                <li class="nav-item">
-                    <a href="{{ route('admin.accounts.edit', $user) }}">
-                        Edit Profile
-                    </a>
-                </li>
-            </ul>
-        </div>
-
-
+        <x-admin.breadcrumb
+            :items="[
+                [
+                    'label' => 'My Profile',
+                    'url' => route('admin.accounts.index'),
+                ],
+                [
+                    'label' => 'Edit Profile',
+                ],
+            ]"
+        />
         <div class="row justify-content-center">
             <div class="col-lg-12">
                 <div class="card">
