@@ -48,7 +48,8 @@ class BlogService
 
     public function create(array $data): Blog
     {
-        $data['user_id'] = Auth::user()->id;
+        $data['user_id'] = Auth::id();
+
         return Blog::create(
             $this->prepareData($data)
         );
@@ -76,28 +77,37 @@ class BlogService
 
         return $blog->delete();
     }
-
+    
     private function prepareData(
         array $data,
         ?Blog $blog = null
     ): array {
         $data['slug'] = Str::slug($data['title']);
 
-        if (
-            isset($data['featured_image'])
-            && $data['featured_image']
-        ) {
+        if (isset($data['featured_image']) && $data['featured_image']) {
             if ($blog?->featured_image) {
-                Storage::disk('public')->delete(
-                    $blog->featured_image
-                );
+                Storage::disk('public')->delete($blog->featured_image);
             }
 
             $data['featured_image'] = $data['featured_image']
-                ->store('blogs', 'public');
+                ->store('blogs/featured', 'public');
         } elseif ($blog) {
             unset($data['featured_image']);
         }
+
+        if (isset($data['og_image']) && $data['og_image']) {
+            if ($blog?->og_image) {
+                Storage::disk('public')->delete($blog->og_image);
+            }
+
+            $data['og_image'] = $data['og_image']
+                ->store('blogs/og', 'public');
+        } elseif ($blog) {
+            unset($data['og_image']);
+        }
+
+        $data['is_featured'] = $data['is_featured'] ?? false;
+        $data['allow_comments'] = $data['allow_comments'] ?? false;
 
         return $data;
     }

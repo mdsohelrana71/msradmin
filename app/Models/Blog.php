@@ -15,14 +15,26 @@ class Blog extends Model
         'excerpt',
         'content',
         'featured_image',
+        'meta_title',
+        'meta_description',
+        'meta_keywords',
+        'canonical_url',
         'status',
         'published_at',
+        'tags',
+        'is_featured',
+        'allow_comments',
+        'og_image',
     ];
 
-    protected $casts = [
-        'status' => 'boolean',
-        'published_at' => 'datetime',
-    ];
+    protected function casts(): array
+    {
+        return [
+            'published_at' => 'datetime',
+            'is_featured' => 'boolean',
+            'allow_comments' => 'boolean',
+        ];
+    }
 
     public function category(): BelongsTo
     {

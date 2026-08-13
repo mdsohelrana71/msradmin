@@ -27,8 +27,7 @@ class BlogRequest extends FormRequest
                 'nullable',
                 'string',
                 'max:255',
-                Rule::unique('blogs', 'slug')
-                    ->ignore($blogId),
+                Rule::unique('blogs', 'slug')->ignore($blogId),
             ],
 
             'category_id' => [
@@ -57,9 +56,61 @@ class BlogRequest extends FormRequest
                 'max:2048',
             ],
 
+            'meta_title' => [
+                'nullable',
+                'string',
+                'max:255',
+            ],
+
+            'meta_description' => [
+                'nullable',
+                'string',
+                'max:1000',
+            ],
+
+            'meta_keywords' => [
+                'nullable',
+                'string',
+                'max:500',
+            ],
+
+            'canonical_url' => [
+                'nullable',
+                'url',
+                'max:255',
+            ],
+
             'status' => [
                 'required',
+                Rule::in(['draft', 'published']),
+            ],
+
+            'published_at' => [
+                'nullable',
+                'date',
+            ],
+
+            'tags' => [
+                'nullable',
+                'string',
+                'max:500',
+            ],
+
+            'is_featured' => [
+                'nullable',
                 'boolean',
+            ],
+
+            'allow_comments' => [
+                'nullable',
+                'boolean',
+            ],
+
+            'og_image' => [
+                'nullable',
+                'image',
+                'mimes:jpg,jpeg,png,webp',
+                'max:2048',
             ],
         ];
     }

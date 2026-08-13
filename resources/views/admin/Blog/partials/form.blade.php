@@ -1,173 +1,329 @@
-<div class="row g-3">
-
-    {{-- Title --}}
-    <div class="col-md-8">
-        <div class="form-group">
-            <label for="title">
-                Blog Title <span class="text-danger">*</span>
-            </label>
-
-            <input
-                type="text"
-                name="title"
-                id="title"
-                class="form-control @error('title') is-invalid @enderror"
-                value="{{ old('title', $blog->title ?? '') }}"
-                placeholder="Enter blog title"
-                required>
-
-            @error('title')
-            <div class="invalid-feedback">{{ $message }}</div>
-            @enderror
-        </div>
-    </div>
-
-
-    {{-- Category --}}
-    <div class="col-md-4">
-        <div class="form-group">
-            <label for="category_id">
-                Category <span class="text-danger">*</span>
-            </label>
-
-            <select
-                name="category_id"
-                id="category_id"
-                class="form-select @error('category_id') is-invalid @enderror"
-                required>
-                <option value="">Select Category</option>
-
-                @foreach ($categories as $category)
-                <option
-                    value="{{ $category->id }}"
-                    {{ old('category_id', $blog->category_id ?? '') == $category->id ? 'selected' : '' }}>
-                    {{ $category->name }}
-                </option>
-                @endforeach
-            </select>
-
-            @error('category_id')
-            <div class="invalid-feedback">{{ $message }}</div>
-            @enderror
-        </div>
-    </div>
-
-
-    {{-- Excerpt --}}
-    <div class="col-md-12">
-        <div class="form-group">
-            <label for="excerpt">Excerpt</label>
-
-            <textarea
-                name="excerpt"
-                id="excerpt"
-                rows="3"
-                class="form-control @error('excerpt') is-invalid @enderror"
-                placeholder="Write a short summary...">{{ old('excerpt', $blog->excerpt ?? '') }}</textarea>
-
-            @error('excerpt')
-            <div class="invalid-feedback">{{ $message }}</div>
-            @enderror
-        </div>
-    </div>
-
-
-    {{-- Content --}}
-    <div class="col-md-12">
-        <div class="form-group">
-            <label for="content">
-                Content <span class="text-danger">*</span>
-            </label>
-
-            <textarea
-                name="content"
-                id="content"
-                rows="10"
-                class="form-control @error('content') is-invalid @enderror"
-                placeholder="Write your blog content..."
-                required>{{ old('content', $blog->content ?? '') }}</textarea>
-
-            @error('content')
-            <div class="invalid-feedback">{{ $message }}</div>
-            @enderror
-        </div>
-    </div>
-
-
-    {{-- Featured Image --}}
-    <div class="col-md-6">
-        <div class="form-group">
-            <label for="featured_image">
-                Featured Image
-            </label>
-
-            <input
-                type="file"
-                name="featured_image"
-                id="featured_image"
-                class="form-control @error('featured_image') is-invalid @enderror"
-                accept="image/*">
-
-            @error('featured_image')
-            <div class="invalid-feedback">{{ $message }}</div>
-            @enderror
-
-            @if (!empty($blog?->featured_image))
-            <div class="mt-3">
-                <img
-                    src="{{ asset('storage/' . $blog->featured_image) }}"
-                    alt="{{ $blog->title }}"
-                    class="img-thumbnail"
-                    style="width: 180px; height: 120px; object-fit: cover;">
+<div class="row">
+    <div class="col-lg-8">
+        <div class="card border shadow-none mb-4">
+            <div class="card-header">
+                <h5 class="card-title mb-0">Blog Content</h5>
             </div>
-            @endif
+
+            <div class="card-body">
+                <div class="form-group mb-3">
+                    <label for="title">
+                        Title <span class="text-danger">*</span>
+                    </label>
+                    <input
+                        type="text"
+                        name="title"
+                        id="title"
+                        class="form-control @error('title') is-invalid @enderror"
+                        value="{{ old('title', $blog->title ?? '') }}"
+                        placeholder="Enter blog title"
+                        required
+                    >
+                    @error('title')
+                        <div class="invalid-feedback">{{ $message }}</div>
+                    @enderror
+                </div>
+
+                <div class="form-group mb-3">
+                    <label for="excerpt">Short Description</label>
+                    <textarea
+                        name="excerpt"
+                        id="excerpt"
+                        rows="4"
+                        class="form-control @error('excerpt') is-invalid @enderror"
+                        placeholder="Write a short description of the blog..."
+                    >{{ old('excerpt', $blog->excerpt ?? '') }}</textarea>
+                    @error('excerpt')
+                        <div class="invalid-feedback">{{ $message }}</div>
+                    @enderror
+                </div>
+
+                <div class="form-group mb-3">
+                    <label for="content">
+                        Content <span class="text-danger">*</span>
+                    </label>
+
+                    <textarea
+                        name="content"
+                        id="content"
+                        class="form-control"
+                        rows="15"
+                    >{{ old('content', $blog->content ?? '') }}</textarea>
+                    @error('content')
+                        <div class="invalid-feedback">{{ $message }}</div>
+                    @enderror
+                </div>
+            </div>
+        </div>
+
+        <div class="card border shadow-none mb-4">
+            <div class="card-header">
+                <h5 class="card-title mb-0">SEO Settings</h5>
+            </div>
+
+            <div class="card-body">
+                <div class="form-group mb-3">
+                    <label for="meta_title">SEO Title</label>
+                    <input
+                        type="text"
+                        name="meta_title"
+                        id="meta_title"
+                        class="form-control @error('meta_title') is-invalid @enderror"
+                        value="{{ old('meta_title', $blog->meta_title ?? '') }}"
+                        placeholder="SEO title"
+                    >
+                    @error('meta_title')
+                        <div class="invalid-feedback">{{ $message }}</div>
+                    @enderror
+                </div>
+
+                <div class="form-group mb-3">
+                    <label for="meta_description">SEO Description</label>
+                    <textarea
+                        name="meta_description"
+                        id="meta_description"
+                        rows="4"
+                        class="form-control @error('meta_description') is-invalid @enderror"
+                        placeholder="SEO meta description..."
+                    >{{ old('meta_description', $blog->meta_description ?? '') }}</textarea>
+                    @error('meta_description')
+                        <div class="invalid-feedback">{{ $message }}</div>
+                    @enderror
+                </div>
+
+                <div class="form-group mb-3">
+                    <label for="meta_keywords">SEO Keywords</label>
+                    <input
+                        type="text"
+                        name="meta_keywords"
+                        id="meta_keywords"
+                        class="form-control @error('meta_keywords') is-invalid @enderror"
+                        value="{{ old('meta_keywords', $blog->meta_keywords ?? '') }}"
+                        placeholder="Laravel, PHP, Web Development"
+                    >
+                    @error('meta_keywords')
+                        <div class="invalid-feedback">{{ $message }}</div>
+                    @enderror
+                </div>
+
+                <div class="form-group mb-0">
+                    <label for="canonical_url">Canonical URL</label>
+                    <input
+                        type="url"
+                        name="canonical_url"
+                        id="canonical_url"
+                        class="form-control @error('canonical_url') is-invalid @enderror"
+                        value="{{ old('canonical_url', $blog->canonical_url ?? '') }}"
+                        placeholder="https://example.com/blog/example"
+                    >
+                    @error('canonical_url')
+                        <div class="invalid-feedback">{{ $message }}</div>
+                    @enderror
+                </div>
+            </div>
         </div>
     </div>
 
-    {{-- Status --}}
-    <div class="col-md-3">
-        <div class="form-group">
-            <label for="status">
-                Status <span class="text-danger">*</span>
-            </label>
+    <div class="col-lg-4">
+        <div class="card border shadow-none mb-4">
+            <div class="card-header">
+                <h5 class="card-title mb-0">Blog Settings</h5>
+            </div>
 
-            <select
-                name="status"
-                id="status"
-                class="form-select @error('status') is-invalid @enderror"
-                required>
-                <option
-                    value="1"
-                    {{ old('status', $blog->status ?? 1) == 1 ? 'selected' : '' }}>
-                    Published
-                </option>
-                <option
-                    value="0"
-                    {{ old('status', $blog->status ?? 0) == 0 ? 'selected' : '' }}>
-                    Draft
-                </option>
-            </select>
-            @error('status')
-            <div class="invalid-feedback">{{ $message }}</div>
-            @enderror
+            <div class="card-body">
+                <div class="form-group mb-3">
+                    <label for="category_id">
+                        Category <span class="text-danger">*</span>
+                    </label>
+
+                    <select
+                        name="category_id"
+                        id="category_id"
+                        class="form-select @error('category_id') is-invalid @enderror"
+                        required
+                    >
+                        <option value="">Select Category</option>
+
+                        @foreach ($categories as $category)
+                            <option
+                                value="{{ $category->id }}"
+                                @selected(
+                                    old('category_id', $blog->category_id ?? '') == $category->id
+                                )
+                            >
+                                {{ $category->name }}
+                            </option>
+                        @endforeach
+                    </select>
+
+                    @error('category_id')
+                        <div class="invalid-feedback">{{ $message }}</div>
+                    @enderror
+                </div>
+
+                <div class="form-group mb-3">
+                    <label for="status">Status</label>
+                    <select
+                        name="status"
+                        id="status"
+                        class="form-select @error('status') is-invalid @enderror"
+                    >
+                        <option value="draft" @selected(old('status', $blog->status ?? 'draft') === 'draft')>
+                            Draft
+                        </option>
+                        <option value="published" @selected(old('status', $blog->status ?? '') === 'published')>
+                            Published
+                        </option>
+                    </select>
+                    @error('status')
+                        <div class="invalid-feedback">{{ $message }}</div>
+                    @enderror
+                </div>
+
+                <div class="form-group mb-3">
+                    <label for="published_at">Published Date</label>
+                    <input
+                        type="datetime-local"
+                        name="published_at"
+                        id="published_at"
+                        class="form-control @error('published_at') is-invalid @enderror"
+                        value="{{ old(
+                            'published_at',
+                            isset($blog->published_at)
+                                ? $blog->published_at->format('Y-m-d\TH:i')
+                                : ''
+                        ) }}"
+                    >
+                    @error('published_at')
+                        <div class="invalid-feedback">{{ $message }}</div>
+                    @enderror
+                </div>
+
+                <div class="form-group mb-3">
+                    <label for="tags">Tags</label>
+                    <input
+                        type="text"
+                        name="tags"
+                        id="tags"
+                        class="form-control @error('tags') is-invalid @enderror"
+                        value="{{ old('tags', $blog->tags ?? '') }}"
+                        placeholder="Laravel, PHP, Tutorial"
+                    >
+                    @error('tags')
+                        <div class="invalid-feedback">{{ $message }}</div>
+                    @enderror
+                </div>
+
+                <div class="form-check mb-3">
+                    <input
+                        type="checkbox"
+                        name="is_featured"
+                        value="1"
+                        id="is_featured"
+                        class="form-check-input"
+                        @checked(old('is_featured', $blog->is_featured ?? false))
+                    >
+                    <label class="form-check-label" for="is_featured">
+                        Featured Blog
+                    </label>
+                </div>
+
+                <div class="form-check">
+                    <input
+                        type="checkbox"
+                        name="allow_comments"
+                        value="1"
+                        id="allow_comments"
+                        class="form-check-input"
+                        @checked(old('allow_comments', $blog->allow_comments ?? true))
+                    >
+                    <label class="form-check-label" for="allow_comments">
+                        Allow Comments
+                    </label>
+                </div>
+            </div>
         </div>
-    </div>
 
-    {{-- Published At --}}
-    <div class="col-md-3">
-        <div class="form-group">
-            <label for="published_at">Published At</label>
-            <input
-                type="datetime-local"
-                name="published_at"
-                id="published_at"
-                class="form-control"
-                value="{{ old(
-                    'published_at',
-                    isset($blog->published_at)
-                        ? $blog->published_at->format('Y-m-d\TH:i')
-                        : ''
-                ) }}">
+        <div class="card border shadow-none mb-4">
+            <div class="card-header">
+                <h5 class="card-title mb-0">Featured Image</h5>
+            </div>
+
+            <div class="card-body">
+                @if (!empty($blog?->featured_image))
+                    <div class="mb-3">
+                        <img
+                            src="{{ asset('storage/' . $blog->featured_image) }}"
+                            alt="{{ $blog->title }}"
+                            class="img-fluid rounded"
+                        >
+                    </div>
+                @endif
+
+                <input
+                    type="file"
+                    name="featured_image"
+                    id="featured_image"
+                    class="form-control @error('featured_image') is-invalid @enderror"
+                    accept="image/*"
+                >
+                <small class="text-muted">
+                    Recommended size: 1200 × 630px
+                </small>
+                @error('featured_image')
+                    <div class="invalid-feedback">{{ $message }}</div>
+                @enderror
+            </div>
+        </div>
+
+        <div class="card border shadow-none">
+            <div class="card-header">
+                <h5 class="card-title mb-0">Social Sharing</h5>
+            </div>
+
+            <div class="card-body">
+                <label for="og_image" class="form-label">
+                    Open Graph Image
+                </label>
+
+                @if (!empty($blog?->og_image))
+                    <div class="mb-3">
+                        <img
+                            src="{{ asset('storage/' . $blog->og_image) }}"
+                            alt="OG Image"
+                            class="img-fluid rounded"
+                        >
+                    </div>
+                @endif
+
+                <input
+                    type="file"
+                    name="og_image"
+                    id="og_image"
+                    class="form-control @error('og_image') is-invalid @enderror"
+                    accept="image/*"
+                >
+
+                <small class="text-muted">
+                    Recommended size: 1200 × 630px
+                </small>
+
+                @error('og_image')
+                    <div class="invalid-feedback">{{ $message }}</div>
+                @enderror
+            </div>
         </div>
     </div>
 </div>
+
+@push('scripts')
+<script src="{{ asset('assets/js/plugin/ckeditor.js') }}"></script>
+
+<script>
+    ClassicEditor
+        .create(document.querySelector('#content'))
+        .catch(error => {
+            console.error(error);
+        });
+</script>
+@endpush
