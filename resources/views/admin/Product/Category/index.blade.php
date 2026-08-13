@@ -13,6 +13,7 @@
                 'label' => 'Add Category',
                 'url' => route('admin.product-categories.create'),
                 'icon' => 'fa fa-plus',
+                'permission' => 'product_categories.create',
             ]"
         />
         <x-admin.alert />

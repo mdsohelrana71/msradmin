@@ -1,8 +1,7 @@
 @extends('layouts.admin')
-
 @section('title', 'Roles')
-
 @section('content')
+
 <div class="container">
     <div class="page-inner">
         <div class="d-flex align-items-center justify-content-between">

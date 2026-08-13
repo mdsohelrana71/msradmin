@@ -1,3 +1,8 @@
+@props([
+'items' => [],
+'action' => null,
+])
+
 <div class="page-header">
     <ul class="breadcrumbs">
         <li class="nav-home">
@@ -7,32 +12,37 @@
         </li>
 
         @foreach ($items as $item)
-            <li class="separator">
-                <i class="icon-arrow-right"></i>
-            </li>
+        <li class="separator">
+            <i class="icon-arrow-right"></i>
+        </li>
 
-            <li class="nav-item">
-                @if (!empty($item['url']))
-                    <a href="{{ $item['url'] }}">
-                        {{ $item['label'] }}
-                    </a>
-                @else
-                    <span>{{ $item['label'] }}</span>
-                @endif
-            </li>
+        <li class="nav-item">
+            @if (!empty($item['url']))
+            <a href="{{ $item['url'] }}">
+                {{ $item['label'] }}
+            </a>
+            @else
+            <span>{{ $item['label'] }}</span>
+            @endif
+        </li>
         @endforeach
     </ul>
 
-    @if (!empty($action))
-        <a
-            href="{{ $action['url'] }}"
-            class="btn btn-primary btn-round ms-auto"
-        >
-            @if (!empty($action['icon']))
-                <i class="{{ $action['icon'] }} me-1"></i>
-            @endif
+    @if (
+    !empty($action) &&
+    (
+    empty($action['permission']) ||
+    auth()->user()->can($action['permission'])
+    )
+    )
+    <a
+        href="{{ $action['url'] }}"
+        class="btn btn-primary btn-round ms-auto">
+        @if (!empty($action['icon']))
+        <i class="{{ $action['icon'] }} me-1"></i>
+        @endif
 
-            {{ $action['label'] }}
-        </a>
+        {{ $action['label'] }}
+    </a>
     @endif
 </div>
