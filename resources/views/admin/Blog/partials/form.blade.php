@@ -132,32 +132,25 @@
 
             <div class="card-body">
                 <div class="form-group mb-3">
-                    <label for="category_id">
+                    <label class="form-label">
                         Category <span class="text-danger">*</span>
                     </label>
 
-                    <select
-                        name="category_id"
-                        id="category_id"
-                        class="form-select @error('category_id') is-invalid @enderror"
-                        required
-                    >
-                        <option value="">Select Category</option>
+                    @php
+                        $selectedCategory = old('category_id', $blog->category_id ?? null);
+                    @endphp
 
-                        @foreach ($categories as $category)
-                            <option
-                                value="{{ $category->id }}"
-                                @selected(
-                                    old('category_id', $blog->category_id ?? '') == $category->id
-                                )
-                            >
-                                {{ $category->name }}
-                            </option>
+                    <div class="category-tree">
+                        @foreach ($categories->whereNull('parent_id') as $category)
+                            @include('admin.Blog.partials.category-tree', [
+                                'category' => $category,
+                                'selectedCategory' => $selectedCategory,
+                            ])
                         @endforeach
-                    </select>
+                    </div>
 
                     @error('category_id')
-                        <div class="invalid-feedback">{{ $message }}</div>
+                        <div class="text-danger small mt-2">{{ $message }}</div>
                     @enderror
                 </div>
 

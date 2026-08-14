@@ -53,7 +53,7 @@
                     @if ($blog->status === 1)
                     <span class="badge bg-success">Published</span>
                     @else
-                    <span class="badge bg-secondary">Draft</span>
+                    <span class="badge bg-warning">Draft</span>
                     @endif
                 </td>
 
