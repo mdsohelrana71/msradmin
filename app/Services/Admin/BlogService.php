@@ -37,7 +37,7 @@ class BlogService
                 'published' => $query
                     ->where('status', true)
                     ->latest('created_at'),
-                'unpublished' => $query
+                'draft' => $query
                     ->where('status', false)
                     ->latest('created_at'),
                 default => $query->latest('created_at'),

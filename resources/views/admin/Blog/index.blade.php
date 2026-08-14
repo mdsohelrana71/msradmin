@@ -53,7 +53,6 @@
                                         A to Z
                                     </a>
                                 </li>
-
                                 <li>
                                     <a
                                         class="dropdown-item {{ request('sort') === 'z_a' ? 'active' : '' }}"
@@ -62,7 +61,6 @@
                                         Z to A
                                     </a>
                                 </li>
-
                                 <li>
                                     <a
                                         class="dropdown-item {{ request('sort') === 'latest' ? 'active' : '' }}"
@@ -71,7 +69,6 @@
                                         Latest
                                     </a>
                                 </li>
-
                                 <li>
                                     <a
                                         class="dropdown-item {{ request('sort') === 'oldest' ? 'active' : '' }}"
@@ -80,7 +77,6 @@
                                         Oldest
                                     </a>
                                 </li>
-
                                 <li>
                                     <a
                                         class="dropdown-item {{ request('sort') === 'published' ? 'active' : '' }}"
@@ -89,13 +85,12 @@
                                         Published
                                     </a>
                                 </li>
-
                                 <li>
                                     <a
-                                        class="dropdown-item {{ request('sort') === 'unpublished' ? 'active' : '' }}"
-                                        href="{{ request()->fullUrlWithQuery(['sort' => 'unpublished']) }}"
+                                        class="dropdown-item {{ request('sort') === 'draft' ? 'active' : '' }}"
+                                        href="{{ request()->fullUrlWithQuery(['sort' => 'draft']) }}"
                                     >
-                                        Unpublished
+                                        Draft
                                     </a>
                                 </li>
                             </ul>
