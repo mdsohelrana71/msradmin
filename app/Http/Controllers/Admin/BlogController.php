@@ -16,9 +16,16 @@ class BlogController extends Controller
 
     public function index(Request $request)
     {
-        $blogs = $this->blogService->getBlogs(
-            $request->input('search')
-        );
+        $blogs = $this->blogService->getBlogs($request->all());
+
+        if ($request->ajax()) {
+            $html = view(
+                'admin.Blog.partials.table',
+                compact('blogs')
+            )->render();
+
+            return response()->json(['html' => $html]);
+        }
 
         return view('admin.Blog.index', compact('blogs'));
     }
@@ -26,10 +33,11 @@ class BlogController extends Controller
     public function create()
     {
         $categories = $this->blogService->getCategories();
+        $tags = $this->blogService->getTags();
 
         return view(
             'admin.Blog.create',
-            compact('categories')
+            compact('categories', 'tags')
         );
     }
 
@@ -41,19 +49,19 @@ class BlogController extends Controller
 
         return redirect()
             ->route('admin.blogs.index')
-            ->with(
-                'success',
-                'Blog created successfully.'
-            );
+            ->with('success', 'Blog created successfully.');
     }
 
     public function edit(Blog $blog)
     {
         $categories = $this->blogService->getCategories();
+        $tags = $this->blogService->getTags();
+
+        $blog->load('tags');
 
         return view(
             'admin.Blog.edit',
-            compact('blog', 'categories')
+            compact('blog', 'categories', 'tags')
         );
     }
 
@@ -68,14 +76,13 @@ class BlogController extends Controller
 
         return redirect()
             ->route('admin.blogs.index')
-            ->with(
-                'success',
-                'Blog updated successfully.'
-            );
+            ->with('success', 'Blog updated successfully.');
     }
 
     public function show(Blog $blog)
     {
+        $blog = $this->blogService->getBlog($blog);
+
         return view(
             'admin.Blog.show',
             compact('blog')
@@ -88,9 +95,6 @@ class BlogController extends Controller
 
         return redirect()
             ->route('admin.blogs.index')
-            ->with(
-                'success',
-                'Blog deleted successfully.'
-            );
+            ->with('success', 'Blog deleted successfully.');
     }
 }

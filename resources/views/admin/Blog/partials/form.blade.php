@@ -168,10 +168,11 @@
                         id="status"
                         class="form-select @error('status') is-invalid @enderror"
                     >
-                        <option value="draft" @selected(old('status', $blog->status ?? 'draft') === 'draft')>
+                        <option value="0" @selected(old('status', $blog->status ?? false) == false)>
                             Draft
                         </option>
-                        <option value="published" @selected(old('status', $blog->status ?? '') === 'published')>
+
+                        <option value="1" @selected(old('status', $blog->status ?? false) == true)>
                             Published
                         </option>
                     </select>
@@ -201,16 +202,43 @@
 
                 <div class="form-group mb-3">
                     <label for="tags">Tags</label>
-                    <input
-                        type="text"
-                        name="tags"
-                        id="tags"
-                        class="form-control @error('tags') is-invalid @enderror"
-                        value="{{ old('tags', $blog->tags ?? '') }}"
-                        placeholder="Laravel, PHP, Tutorial"
+
+                    <div class="form-control gap-2"
+                        id="tags-container"
+                        style="min-height: 45px; cursor: text;"
                     >
+                        @foreach ($blog->tags ?? [] as $tag)
+                            <span class="badge bg-primary gap-1 tag-item">
+                                {{ ucfirst($tag->name) }}
+
+                                <button
+                                    type="button"
+                                    class="btn-close btn-close-white remove-tag"
+                                    style="font-size: 8px;"
+                                ></button>
+
+                                <input
+                                    type="hidden"
+                                    name="tags[]"
+                                    value="{{ $tag->id }}"
+                                >
+                            </span>
+                        @endforeach
+
+                        <input
+                            type="text"
+                            id="tag-input"
+                            class="border-0 outline-none flex-grow-1"
+                            placeholder="Type a tag and press Enter..."
+                            autocomplete="off"
+                            style="min-width: 180px; outline: none;"
+                        >
+                    </div>
+
                     @error('tags')
-                        <div class="invalid-feedback">{{ $message }}</div>
+                        <div class="invalid-feedback d-block">
+                            {{ $message }}
+                        </div>
                     @enderror
                 </div>
 

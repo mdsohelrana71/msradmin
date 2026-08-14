@@ -31,7 +31,7 @@
                     @include('admin.Blog.partials.form', ['blog' => $blog])
 
                     <x-admin.form-actions
-                        submit="Update Blog"
+                        submitText="Update Blog"
                         cancel="{{ route('admin.blogs.index') }}"
                     />
                 </form>

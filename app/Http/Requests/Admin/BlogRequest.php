@@ -82,7 +82,7 @@ class BlogRequest extends FormRequest
 
             'status' => [
                 'required',
-                Rule::in(['draft', 'published']),
+                'boolean',
             ],
 
             'published_at' => [
@@ -92,8 +92,11 @@ class BlogRequest extends FormRequest
 
             'tags' => [
                 'nullable',
-                'string',
-                'max:500',
+                'array',
+            ],
+
+            'tags.*' => [
+                'nullable',
             ],
 
             'is_featured' => [

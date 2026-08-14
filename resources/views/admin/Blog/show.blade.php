@@ -44,26 +44,57 @@
                             </div>
                         @endif
 
-                        <h2 class="mb-2">{{ $blog->title }}</h2>
+                        {{-- Title --}}
+                        <div class="border rounded p-3 mb-3">
+                            <h6 class="text-muted mb-2">
+                                <i class="fa fa-tag me-1"></i>
+                                Title
+                            </h6>
 
+                            <h2 class="mb-0">
+                                {{ $blog->title }}
+                            </h2>
+                        </div>
+
+                        {{-- Blog URL --}}
                         @if ($blog->slug)
-                            <div class="text-muted mb-3">
-                                <i class="fa fa-link me-1"></i>
-                                {{ $blog->slug }}
+                            <div class="border rounded p-3 mb-3">
+                                <h6 class="text-muted mb-2">
+                                    <i class="fa fa-link me-1"></i>
+                                    Blog URL
+                                </h6>
+
+                                <a
+                                    href="{{ url('blog/' . $blog->slug) }}"
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    class="text-primary text-break"
+                                >
+                                    {{ url('blog/' . $blog->slug) }}
+                                </a>
                             </div>
                         @endif
 
+                        {{-- Short Description --}}
                         @if ($blog->excerpt)
-                            <div class="mb-4">
-                                <h5>Short Description</h5>
-                                <p class="text-muted mb-0">
+                            <div class="border rounded p-3 mb-3">
+                                <h6 class="text-muted mb-2">
+                                    <i class="fa fa-align-left me-1"></i>
+                                    Short Description
+                                </h6>
+
+                                <p class="mb-0 text-muted">
                                     {{ $blog->excerpt }}
                                 </p>
                             </div>
                         @endif
 
-                        <div>
-                            <h5 class="mb-3">Content</h5>
+                        {{-- Content --}}
+                        <div class="border rounded p-3">
+                            <h6 class="text-muted mb-3">
+                                <i class="fa fa-file-alt me-1"></i>
+                                Content
+                            </h6>
 
                             <div class="blog-content">
                                 {!! $blog->content !!}
@@ -78,41 +109,59 @@
                     </div>
 
                     <div class="card-body">
-                        <div class="mb-3">
-                            <label class="fw-semibold">SEO Title</label>
-                            <div class="text-muted">
+                        {{-- SEO Title --}}
+                        <div class="border rounded p-3 mb-3">
+                            <h6 class="text-muted mb-2">
+                                <i class="fa fa-tag me-1"></i>
+                                SEO Title
+                            </h6>
+
+                            <div class="mb-0">
                                 {{ $blog->meta_title ?: '—' }}
                             </div>
                         </div>
 
-                        <div class="mb-3">
-                            <label class="fw-semibold">SEO Description</label>
-                            <div class="text-muted">
+                        {{-- SEO Description --}}
+                        <div class="border rounded p-3 mb-3">
+                            <h6 class="text-muted mb-2">
+                                <i class="fa fa-align-left me-1"></i>
+                                SEO Description
+                            </h6>
+
+                            <div class="text-muted mb-0">
                                 {{ $blog->meta_description ?: '—' }}
                             </div>
                         </div>
 
-                        <div class="mb-3">
-                            <label class="fw-semibold">SEO Keywords</label>
-                            <div class="text-muted">
+                        {{-- SEO Keywords --}}
+                        <div class="border rounded p-3 mb-3">
+                            <h6 class="text-muted mb-2">
+                                <i class="fa fa-tags me-1"></i>
+                                SEO Keywords
+                            </h6>
+
+                            <div class="text-muted mb-0">
                                 {{ $blog->meta_keywords ?: '—' }}
                             </div>
                         </div>
 
-                        <div>
-                            <label class="fw-semibold">Canonical URL</label>
+                        {{-- Canonical URL --}}
+                        <div class="border rounded p-3">
+                            <h6 class="text-muted mb-2">
+                                <i class="fa fa-link me-1"></i>
+                                Canonical URL
+                            </h6>
 
                             @if ($blog->canonical_url)
-                                <div>
-                                    <a
-                                        href="{{ $blog->canonical_url }}"
-                                        target="_blank"
-                                        rel="noopener noreferrer"
-                                    >
-                                        {{ $blog->canonical_url }}
-                                        <i class="fa fa-external-link-alt ms-1"></i>
-                                    </a>
-                                </div>
+                                <a
+                                    href="{{ $blog->canonical_url }}"
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    class="text-primary text-break"
+                                >
+                                    {{ $blog->canonical_url }}
+                                    <i class="fa fa-external-link-alt ms-1"></i>
+                                </a>
                             @else
                                 <div class="text-muted">—</div>
                             @endif
@@ -128,8 +177,12 @@
                     </div>
 
                     <div class="card-body">
-                        <div class="mb-3">
-                            <label class="fw-semibold d-block">Category</label>
+                        {{-- Category --}}
+                        <div class="border rounded p-3 mb-3">
+                            <h6 class="text-muted mb-2">
+                                <i class="fa fa-folder me-1"></i>
+                                Category
+                            </h6>
 
                             @if ($blog->category)
                                 <span class="badge bg-info">
@@ -140,18 +193,30 @@
                             @endif
                         </div>
 
-                        <div class="mb-3">
-                            <label class="fw-semibold d-block">Status</label>
+                        {{-- Status --}}
+                        <div class="border rounded p-3 mb-3">
+                            <h6 class="text-muted mb-2">
+                                <i class="fa fa-circle-check me-1"></i>
+                                Status
+                            </h6>
 
-                            @if ($blog->status === 'published')
-                                <span class="badge bg-success">Published</span>
+                            @if ($blog->status)
+                                <span class="badge bg-success">
+                                    Published
+                                </span>
                             @else
-                                <span class="badge bg-secondary">Draft</span>
+                                <span class="badge bg-secondary">
+                                    Draft
+                                </span>
                             @endif
                         </div>
 
-                        <div class="mb-3">
-                            <label class="fw-semibold d-block">Published Date</label>
+                        {{-- Published Date --}}
+                        <div class="border rounded p-3 mb-3">
+                            <h6 class="text-muted mb-2">
+                                <i class="fa fa-calendar me-1"></i>
+                                Published Date
+                            </h6>
 
                             @if ($blog->published_at)
                                 <div>
@@ -166,14 +231,18 @@
                             @endif
                         </div>
 
-                        <div class="mb-3">
-                            <label class="fw-semibold d-block">Tags</label>
+                        {{-- Tags --}}
+                        <div class="border rounded p-3 mb-3">
+                            <h6 class="text-muted mb-2">
+                                <i class="fa fa-tags me-1"></i>
+                                Tags
+                            </h6>
 
-                            @if ($blog->tags)
-                                <div class="d-flex flex-wrap gap-1">
-                                    @foreach (explode(',', $blog->tags) as $tag)
+                            @if ($blog->tags->isNotEmpty())
+                                <div class="gap-2">
+                                    @foreach ($blog->tags as $tag)
                                         <span class="badge bg-light text-dark">
-                                            {{ trim($tag) }}
+                                            {{ ucfirst($tag->name) }}
                                         </span>
                                     @endforeach
                                 </div>
@@ -181,9 +250,12 @@
                                 <span class="text-muted">—</span>
                             @endif
                         </div>
-
-                        <div class="mb-3">
-                            <label class="fw-semibold d-block">Comments</label>
+                        {{-- Comments --}}
+                        <div class="border rounded p-3 mb-3">
+                            <h6 class="text-muted mb-2">
+                                <i class="fa fa-comments me-1"></i>
+                                Comments
+                            </h6>
 
                             @if ($blog->allow_comments)
                                 <span class="badge bg-success">
@@ -196,8 +268,13 @@
                             @endif
                         </div>
 
-                        <div>
-                            <label class="fw-semibold d-block">Created</label>
+                        {{-- Created --}}
+                        <div class="border rounded p-3">
+                            <h6 class="text-muted mb-2">
+                                <i class="fa fa-clock me-1"></i>
+                                Created
+                            </h6>
+
                             <div>
                                 {{ $blog->created_at->format('d M Y, h:i A') }}
                             </div>

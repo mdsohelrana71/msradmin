@@ -45,7 +45,7 @@
                         @include('admin.Blog.partials.form')
 
                         <x-admin.form-actions
-                            submitText="Save"
+                            submitText="Save Blog"
                             :cancelUrl="route('admin.blogs.index')"
                         />
                     </form>

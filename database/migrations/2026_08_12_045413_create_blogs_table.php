@@ -32,12 +32,9 @@ return new class extends Migration
             $table->text('meta_keywords')->nullable();
             $table->string('canonical_url')->nullable();
 
-            $table->enum('status', ['draft', 'published'])
-                ->default('draft');
+            $table->boolean('status')->default(true);
 
             $table->dateTime('published_at')->nullable();
-
-            $table->text('tags')->nullable();
 
             $table->boolean('is_featured')->default(false);
             $table->boolean('allow_comments')->default(true);
