@@ -110,14 +110,6 @@
     </div>
 </div>
 
-<x-confirm-modal
-    id="deleteBlogModal"
-    title="Delete Blog"
-    message="Are you sure you want to delete this blog?"
-    confirmText="Delete"
-    confirmClass="btn-danger"
-/>
-
 @push('scripts')
 <script>
     $(document).ready(function () {

@@ -1,6 +1,6 @@
 @extends('layouts.admin')
 
-@section('title', 'View Blog')
+@section('title', 'View Product')
 
 @section('content')
 <div class="container">
@@ -8,18 +8,18 @@
         <x-admin.breadcrumb
             :items="[
                 [
-                    'label' => 'Blogs',
-                    'url' => route('admin.blogs.index'),
+                    'label' => 'Products',
+                    'url' => route('admin.products.index'),
                 ],
                 [
-                    'label' => 'View Blog',
+                    'label' => 'View Product',
                 ],
             ]"
             :action="[
-                'label' => 'Edit Blog',
-                'url' => route('admin.blogs.edit', $blog),
+                'label' => 'Edit Product',
+                'url' => route('admin.products.edit', $product),
                 'icon' => 'fa fa-edit',
-                'permission' => 'blogs.edit',
+                'permission' => 'products.edit',
             ]"
         />
 
@@ -29,15 +29,15 @@
             <div class="col-lg-8">
                 <div class="card border shadow-none mb-4">
                     <div class="card-header">
-                        <h4 class="card-title mb-0">Blog Details</h4>
+                        <h4 class="card-title mb-0">Product Details</h4>
                     </div>
 
                     <div class="card-body">
-                        @if ($blog->featured_image)
+                        @if ($product->featured_image)
                             <div class="mb-4">
                                 <img
-                                    src="{{ asset('storage/' . $blog->featured_image) }}"
-                                    alt="{{ $blog->title }}"
+                                    src="{{ asset('storage/' . $product->featured_image) }}"
+                                    alt="{{ $product->title }}"
                                     class="img-fluid rounded"
                                     style="max-height: 400px; width: 100%; object-fit: cover;"
                                 >
@@ -52,31 +52,31 @@
                             </h6>
 
                             <h2 class="mb-0">
-                                {{ $blog->title }}
+                                {{ $product->title }}
                             </h2>
                         </div>
 
-                        {{-- Blog URL --}}
-                        @if ($blog->slug)
+                        {{-- Product URL --}}
+                        @if ($product->slug)
                             <div class="border rounded p-3 mb-3">
                                 <h6 class="text-muted mb-2">
                                     <i class="fa fa-link me-1"></i>
-                                    Blog URL
+                                    Product URL
                                 </h6>
 
                                 <a
-                                    href="{{ url('blog/' . $blog->slug) }}"
+                                    href="{{ url('product/' . $product->slug) }}"
                                     target="_blank"
                                     rel="noopener noreferrer"
                                     class="text-primary text-break"
                                 >
-                                    {{ url('blog/' . $blog->slug) }}
+                                    {{ url('product/' . $product->slug) }}
                                 </a>
                             </div>
                         @endif
 
                         {{-- Short Description --}}
-                        @if ($blog->excerpt)
+                        @if ($product->excerpt)
                             <div class="border rounded p-3 mb-3">
                                 <h6 class="text-muted mb-2">
                                     <i class="fa fa-align-left me-1"></i>
@@ -84,7 +84,7 @@
                                 </h6>
 
                                 <p class="mb-0 text-muted">
-                                    {{ $blog->excerpt }}
+                                    {{ $product->excerpt }}
                                 </p>
                             </div>
                         @endif
@@ -96,8 +96,8 @@
                                 Content
                             </h6>
 
-                            <div class="blog-content">
-                                {!! $blog->content !!}
+                            <div class="product-content">
+                                {!! $product->content !!}
                             </div>
                         </div>
                     </div>
@@ -117,7 +117,7 @@
                             </h6>
 
                             <div class="mb-0">
-                                {{ $blog->meta_title ?: '—' }}
+                                {{ $product->meta_title ?: '—' }}
                             </div>
                         </div>
 
@@ -129,7 +129,7 @@
                             </h6>
 
                             <div class="text-muted mb-0">
-                                {{ $blog->meta_description ?: '—' }}
+                                {{ $product->meta_description ?: '—' }}
                             </div>
                         </div>
 
@@ -141,7 +141,7 @@
                             </h6>
 
                             <div class="text-muted mb-0">
-                                {{ $blog->meta_keywords ?: '—' }}
+                                {{ $product->meta_keywords ?: '—' }}
                             </div>
                         </div>
 
@@ -152,14 +152,14 @@
                                 Canonical URL
                             </h6>
 
-                            @if ($blog->canonical_url)
+                            @if ($product->canonical_url)
                                 <a
-                                    href="{{ $blog->canonical_url }}"
+                                    href="{{ $product->canonical_url }}"
                                     target="_blank"
                                     rel="noopener noreferrer"
                                     class="text-primary text-break"
                                 >
-                                    {{ $blog->canonical_url }}
+                                    {{ $product->canonical_url }}
                                     <i class="fa fa-external-link-alt ms-1"></i>
                                 </a>
                             @else
@@ -173,7 +173,7 @@
             <div class="col-lg-4">
                 <div class="card border shadow-none mb-4">
                     <div class="card-header">
-                        <h5 class="card-title mb-0">Blog Information</h5>
+                        <h5 class="card-title mb-0">Product Information</h5>
                     </div>
 
                     <div class="card-body">
@@ -184,9 +184,9 @@
                                 Category
                             </h6>
 
-                            @if ($blog->category)
+                            @if ($product->category)
                                 <span class="badge bg-info">
-                                    {{ $blog->category->name }}
+                                    {{ $product->category->name }}
                                 </span>
                             @else
                                 <span class="text-muted">—</span>
@@ -200,7 +200,7 @@
                                 Status
                             </h6>
 
-                            @if ($blog->status)
+                            @if ($product->status)
                                 <span class="badge bg-success">
                                     Published
                                 </span>
@@ -218,13 +218,13 @@
                                 Published Date
                             </h6>
 
-                            @if ($blog->published_at)
+                            @if ($product->published_at)
                                 <div>
-                                    {{ $blog->published_at->format('d M Y') }}
+                                    {{ $product->published_at->format('d M Y') }}
                                 </div>
 
                                 <small class="text-muted">
-                                    {{ $blog->published_at->format('h:i A') }}
+                                    {{ $product->published_at->format('h:i A') }}
                                 </small>
                             @else
                                 <span class="text-muted">—</span>
@@ -238,9 +238,9 @@
                                 Tags
                             </h6>
 
-                            @if ($blog->tags->isNotEmpty())
+                            @if ($product->tags->isNotEmpty())
                                 <div class="gap-2">
-                                    @foreach ($blog->tags as $tag)
+                                    @foreach ($product->tags as $tag)
                                         <span class="badge bg-light text-dark">
                                             {{ ucfirst($tag->name) }}
                                         </span>
@@ -250,6 +250,7 @@
                                 <span class="text-muted">—</span>
                             @endif
                         </div>
+
                         {{-- Comments --}}
                         <div class="border rounded p-3 mb-3">
                             <h6 class="text-muted mb-2">
@@ -257,7 +258,7 @@
                                 Comments
                             </h6>
 
-                            @if ($blog->allow_comments)
+                            @if ($product->allow_comments)
                                 <span class="badge bg-success">
                                     Allowed
                                 </span>
@@ -276,7 +277,7 @@
                             </h6>
 
                             <div>
-                                {{ $blog->created_at->format('d M Y, h:i A') }}
+                                {{ $product->created_at->format('d M Y, h:i A') }}
                             </div>
                         </div>
                     </div>
@@ -288,9 +289,9 @@
                     </div>
 
                     <div class="card-body">
-                        @if ($blog->og_image)
+                        @if ($product->og_image)
                             <img
-                                src="{{ asset('storage/' . $blog->og_image) }}"
+                                src="{{ asset('storage/' . $product->og_image) }}"
                                 alt="OG Image"
                                 class="img-fluid rounded"
                             >
@@ -310,9 +311,9 @@
 
                     <div class="card-body">
                         <div class="d-flex gap-2">
-                            @can('blogs.edit')
+                            @can('products.edit')
                                 <a
-                                    href="{{ route('admin.blogs.edit', $blog) }}"
+                                    href="{{ route('admin.products.edit', $product) }}"
                                     class="btn btn-primary"
                                 >
                                     <i class="fa fa-edit me-1"></i>
@@ -321,7 +322,7 @@
                             @endcan
 
                             <a
-                                href="{{ route('admin.blogs.index') }}"
+                                href="{{ route('admin.products.index') }}"
                                 class="btn btn-light"
                             >
                                 <i class="fa fa-arrow-left me-1"></i>

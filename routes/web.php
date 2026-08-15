@@ -26,8 +26,8 @@ Route::middleware('auth')->prefix('admin')->name('admin.')->group(function () {
     Route::resource('users', UserController::class);
     Route::resource('roles', RoleController::class);
     Route::resource('accounts', AccountController::class);
-    Route::resource('blogs', BlogController::class);
     Route::resource('products', ProductController::class);
+    Route::resource('blogs', BlogController::class);
     Route::resource('blog-categories', BlogCategoryController::class)
         ->parameters([
             'blog-categories' => 'category',

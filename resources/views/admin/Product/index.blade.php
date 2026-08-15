@@ -1,6 +1,6 @@
 @extends('layouts.admin')
 
-@section('title', 'Blogs')
+@section('title', 'Products')
 
 @section('content')
 <div class="container">
@@ -8,14 +8,14 @@
         <x-admin.breadcrumb
             :items="[
                 [
-                    'label' => 'Blogs',
+                    'label' => 'Products',
                 ],
             ]"
             :action="[
-                'label' => 'Add Blog',
-                'url' => route('admin.blogs.create'),
+                'label' => 'Add Product',
+                'url' => route('admin.products.create'),
                 'icon' => 'fa fa-plus',
-                'permission' => 'blogs.create',
+                'permission' => 'products.create',
             ]"
         />
         <x-admin.alert />
@@ -24,14 +24,14 @@
             <div class="card-header">
                 <div class="d-flex align-items-center">
                     <div>
-                        <h4 class="card-title mb-1">Blogs</h4>
-                        <p class="text-muted mb-0">Manage all blog posts</p>
+                        <h4 class="card-title mb-1">Products</h4>
+                        <p class="text-muted mb-0">Manage all product posts</p>
                     </div>
 
                     <div class="ms-auto d-flex align-items-center gap-2">
                         <x-admin.search
-                            id="blogSearch"
-                            placeholder="Search blogs..."
+                            id="productSearch"
+                            placeholder="Search products..."
                         />
                         <div class="dropdown">
                             <button
@@ -100,9 +100,9 @@
             </div>
 
             <div class="card-body">
-                <div id="blogs-table">
-                    @include('admin.Blog.partials.table', [
-                        'blogs' => $blogs
+                <div id="products-table">
+                    @include('admin.Product.partials.table', [
+                        'products' => $products
                     ])
                 </div>
             </div>
@@ -110,27 +110,19 @@
     </div>
 </div>
 
-<x-confirm-modal
-    id="deleteBlogModal"
-    title="Delete Blog"
-    message="Are you sure you want to delete this blog?"
-    confirmText="Delete"
-    confirmClass="btn-danger"
-/>
-
 @push('scripts')
 <script>
     $(document).ready(function () {
-        function loadBlogs(page = 1) {
+        function loadProducts(page = 1) {
             $.ajax({
-                url: "{{ route('admin.blogs.index') }}",
+                url: "{{ route('admin.products.index') }}",
                 type: "GET",
                 data: {
-                    search: $('#blogSearch').val(),
+                    search: $('#productSearch').val(),
                     page: page
                 },
                 success: function (response) {
-                    $('#blogs-table').html(response.html);
+                    $('#products-table').html(response.html);
                 },
                 error: function (xhr) {
                     console.log(xhr.responseText);
@@ -140,26 +132,26 @@
 
         let searchTimer;
 
-        $('#blogSearch').on('keyup', function () {
+        $('#productSearch').on('keyup', function () {
             clearTimeout(searchTimer);
 
             searchTimer = setTimeout(function () {
-                loadBlogs();
+                loadProducts();
             }, 400);
         });
 
-        $(document).on('click', '#blogs-pagination a', function (e) {
+        $(document).on('click', '#products-pagination a', function (e) {
             e.preventDefault();
 
             const page = new URL(this.href).searchParams.get('page');
 
-            loadBlogs(page);
+            loadProducts(page);
         });
     });
 
     function confirmDelete(id) {
-        const form = document.querySelector(`form[action$="/blogs/${id}"]`);
-        const modal = document.getElementById('deleteBlogModal');
+        const form = document.querySelector(`form[action$="/products/${id}"]`);
+        const modal = document.getElementById('deleteProductModal');
 
         if (!modal || !form) return;
 

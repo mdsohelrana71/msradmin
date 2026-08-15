@@ -12,15 +12,15 @@
             </tr>
         </thead>
         <tbody>
-            @forelse ($blogs as $blog)
+            @forelse ($products as $product)
             <tr>
-                <td>{{ $blogs->firstItem() + $loop->index }}</td>
+                <td>{{ $products->firstItem() + $loop->index }}</td>
 
                 <td>
-                    @if ($blog->featured_image)
+                    @if ($product->featured_image)
                     <img
-                        src="{{ asset('storage/' . $blog->featured_image) }}"
-                        alt="{{ $blog->title }}"
+                        src="{{ asset('storage/' . $product->featured_image) }}"
+                        alt="{{ $product->title }}"
                         class="rounded"
                         style="width:65px;height:50px;object-fit:cover;">
                     @else
@@ -33,16 +33,16 @@
                 </td>
 
                 <td>
-                    <div class="fw-semibold">{{ $blog->title }}</div>
-                    @if ($blog->slug)
-                    <small class="text-muted">{{ $blog->slug }}</small>
+                    <div class="fw-semibold">{{ $product->title }}</div>
+                    @if ($product->slug)
+                    <small class="text-muted">{{ $product->slug }}</small>
                     @endif
                 </td>
 
                 <td>
-                    @if ($blog->category)
+                    @if ($product->category)
                     <span class="badge bg-info">
-                        {{ $blog->category->name }}
+                        {{ $product->category->name }}
                     </span>
                     @else
                     <span class="text-muted">—</span>
@@ -50,7 +50,7 @@
                 </td>
 
                 <td>
-                    @if ($blog->status === 1)
+                    @if ($product->status === 1)
                     <span class="badge bg-success">Published</span>
                     @else
                     <span class="badge bg-warning">Draft</span>
@@ -58,10 +58,10 @@
                 </td>
 
                 <td>
-                    @if ($blog->published_at)
-                    <div>{{ $blog->published_at->format('d M Y') }}</div>
+                    @if ($product->published_at)
+                    <div>{{ $product->published_at->format('d M Y') }}</div>
                     <small class="text-muted">
-                        {{ $blog->published_at->format('h:i A') }}
+                        {{ $product->published_at->format('h:i A') }}
                     </small>
                     @else
                     <span class="text-muted">—</span>
@@ -70,9 +70,9 @@
 
                 <td>
                     <div class="d-flex gap-1">
-                        @can('blogs.view')
+                        @can('products.view')
                         <a
-                            href="{{ route('admin.blogs.show', $blog) }}"
+                            href="{{ route('admin.products.show', $product) }}"
                             class="btn btn-info btn-sm"
                             title="View"
                             data-bs-toggle="tooltip">
@@ -80,9 +80,9 @@
                         </a>
                         @endcan
 
-                        @can('blogs.edit')
+                        @can('products.edit')
                         <a
-                            href="{{ route('admin.blogs.edit', $blog) }}"
+                            href="{{ route('admin.products.edit', $product) }}"
                             class="btn btn-primary btn-sm"
                             title="Edit"
                             data-bs-toggle="tooltip">
@@ -90,10 +90,10 @@
                         </a>
                         @endcan
 
-                        @can('blogs.delete')
+                        @can('products.delete')
                         <form
-                            id="deleteBlogForm{{ $blog->id }}"
-                            action="{{ route('admin.blogs.destroy', $blog) }}"
+                            id="deleteProductForm{{ $product->id }}"
+                            action="{{ route('admin.products.destroy', $product) }}"
                             method="POST"
                             class="d-inline">
                             @csrf
@@ -104,16 +104,16 @@
                                 class="btn btn-danger btn-sm"
                                 title="Delete"
                                 data-bs-toggle="modal"
-                                data-bs-target="#deleteBlogModal{{ $blog->id }}">
+                                data-bs-target="#deleteProductModal{{ $product->id }}">
                                 <i class="fa fa-trash"></i>
                             </button>
                         </form>
 
                         <x-confirm-modal
-                            id="deleteBlogModal{{ $blog->id }}"
-                            formId="deleteBlogForm{{ $blog->id }}"
-                            title="Delete Blog?"
-                            message="Are you sure you want to delete this blog?"
+                            id="deleteProductModal{{ $product->id }}"
+                            formId="deleteProductForm{{ $product->id }}"
+                            title="Delete Product?"
+                            message="Are you sure you want to delete this product?"
                             confirmText="Yes, Delete"
                             confirmClass="btn-danger" />
                         @endcan
@@ -124,15 +124,15 @@
             <tr>
                 <td colspan="7">
                     <div class="text-center py-5">
-                        <i class="fas fa-newspaper fa-3x text-muted mb-3"></i>
-                        <h5 class="text-muted">No blogs found</h5>
+                        <i class="fas fa-box fa-3x text-muted mb-3"></i>
+                        <h5 class="text-muted">No products found</h5>
 
-                        @can('blogs.create')
+                        @can('products.create')
                         <a
-                            href="{{ route('admin.blogs.create') }}"
+                            href="{{ route('admin.products.create') }}"
                             class="btn btn-primary btn-sm mt-2">
                             <i class="fa fa-plus me-1"></i>
-                            Create Blog
+                            Create Product
                         </a>
                         @endcan
                     </div>
@@ -143,6 +143,6 @@
     </table>
 </div>
 
-<div class="mt-3" id="blogs-pagination">
-    {{ $blogs->links('pagination::bootstrap-5') }}
+<div class="mt-3" id="products-pagination">
+    {{ $products->links('pagination::bootstrap-5') }}
 </div>

@@ -17,18 +17,18 @@ class ProductController extends Controller
 
     public function index(Request $request)
     {
-        $blogs = $this->productService->getBlogs($request->all());
+        $products = $this->productService->getBlogs($request->all());
 
         if ($request->ajax()) {
             $html = view(
-                'admin.Blog.partials.table',
-                compact('blogs')
+                'admin.Product.partials.table',
+                compact('products')
             )->render();
 
             return response()->json(['html' => $html]);
         }
 
-        return view('admin.Blog.index', compact('blogs'));
+        return view('admin.Product.index', compact('products'));
     }
 
     public function create()
@@ -37,7 +37,7 @@ class ProductController extends Controller
         $tags = $this->productService->getTags();
 
         return view(
-            'admin.Blog.create',
+            'admin.Product.create',
             compact('categories', 'tags')
         );
     }
@@ -49,8 +49,8 @@ class ProductController extends Controller
         );
 
         return redirect()
-            ->route('admin.blogs.index')
-            ->with('success', 'Blog created successfully.');
+            ->route('admin.products.index')
+            ->with('success', 'Product created successfully.');
     }
 
     public function edit(Blog $blog)
@@ -61,7 +61,7 @@ class ProductController extends Controller
         $blog->load('tags');
 
         return view(
-            'admin.Blog.edit',
+            'admin.Product.edit',
             compact('blog', 'categories', 'tags')
         );
     }
@@ -76,17 +76,17 @@ class ProductController extends Controller
         );
 
         return redirect()
-            ->route('admin.blogs.index')
-            ->with('success', 'Blog updated successfully.');
+            ->route('admin.products.index')
+            ->with('success', 'Product updated successfully.');
     }
 
     public function show(Blog $blog)
     {
-        $blog = $this->productService->getBlog($blog);
+        $product = $this->productService->getBlog($blog);
 
         return view(
-            'admin.Blog.show',
-            compact('blog')
+            'admin.Product.show',
+            compact('product')
         );
     }
 
@@ -95,7 +95,7 @@ class ProductController extends Controller
         $this->productService->delete($blog);
 
         return redirect()
-            ->route('admin.blogs.index')
-            ->with('success', 'Blog deleted successfully.');
+            ->route('admin.products.index')
+            ->with('success', 'Product deleted successfully.');
     }
 }
