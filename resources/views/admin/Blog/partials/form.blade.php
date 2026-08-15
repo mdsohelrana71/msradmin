@@ -6,7 +6,7 @@
             </div>
 
             <div class="card-body">
-                <div class="form-group mb-3">
+                <div class="form-group mb-1">
                     <label for="title">
                         Title <span class="text-danger">*</span>
                     </label>
@@ -24,7 +24,7 @@
                     @enderror
                 </div>
 
-                <div class="form-group mb-3">
+                <div class="form-group mb-1">
                     <label for="excerpt">Short Description</label>
                     <textarea
                         name="excerpt"
@@ -38,7 +38,7 @@
                     @enderror
                 </div>
 
-                <div class="form-group mb-3">
+                <div class="form-group mb-1">
                     <label for="content">
                         Content <span class="text-danger">*</span>
                     </label>
@@ -62,7 +62,7 @@
             </div>
 
             <div class="card-body">
-                <div class="form-group mb-3">
+                <div class="form-group mb-1">
                     <label for="meta_title">SEO Title</label>
                     <input
                         type="text"
@@ -77,7 +77,7 @@
                     @enderror
                 </div>
 
-                <div class="form-group mb-3">
+                <div class="form-group mb-1">
                     <label for="meta_description">SEO Description</label>
                     <textarea
                         name="meta_description"
@@ -91,7 +91,7 @@
                     @enderror
                 </div>
 
-                <div class="form-group mb-3">
+                <div class="form-group mb-1">
                     <label for="meta_keywords">SEO Keywords</label>
                     <input
                         type="text"
@@ -131,7 +131,7 @@
             </div>
 
             <div class="card-body">
-                <div class="form-group mb-3">
+                <div class="form-group mb-1">
                     <label class="form-label">
                         Category <span class="text-danger">*</span>
                     </label>
@@ -154,7 +154,7 @@
                     @enderror
                 </div>
 
-                <div class="form-group mb-3">
+                <div class="form-group mb-1">
                     <label for="status">Status</label>
                     <select
                         name="status"
@@ -174,7 +174,7 @@
                     @enderror
                 </div>
 
-                <div class="form-group mb-3">
+                <div class="form-group mb-1">
                     <label for="published_at">Published Date</label>
                     <input
                         type="datetime-local"
@@ -193,7 +193,7 @@
                     @enderror
                 </div>
 
-                <div class="form-group mb-3">
+                <div class="form-group mb-1">
                     <label for="tags">Tags</label>
 
                     <div class="form-control gap-2"
@@ -235,7 +235,7 @@
                     @enderror
                 </div>
 
-                <div class="form-check mb-3">
+                <div class="form-check mb-1">
                     <input
                         type="checkbox"
                         name="is_featured"
@@ -272,7 +272,7 @@
 
             <div class="card-body">
                 @if (!empty($blog?->featured_image))
-                    <div class="mb-3">
+                    <div class="mb-1">
                         <img
                             src="{{ asset('storage/' . $blog->featured_image) }}"
                             alt="{{ $blog->title }}"
@@ -308,7 +308,7 @@
                 </label>
 
                 @if (!empty($blog?->og_image))
-                    <div class="mb-3">
+                    <div class="mb-1">
                         <img
                             src="{{ asset('storage/' . $blog->og_image) }}"
                             alt="OG Image"
