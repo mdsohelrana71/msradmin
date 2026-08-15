@@ -6,6 +6,34 @@ $.ajaxSetup({
     }
 });
 
+function showAlert(message, type = 'success') {
+    $("#ajaxAlert").remove();
+
+    const icon = type === 'success'
+        ? 'fa-check-circle'
+        : 'fa-exclamation-circle';
+
+    const alert = `
+        <div
+            class="alert alert-${type} alert-dismissible fade show position-fixed top-0 end-0 m-3 shadow"
+            id="ajaxAlert"
+            style="z-index: 9999; min-width: 300px;"
+            role="alert"
+        >
+            <i class="fas ${icon} me-2"></i>
+            ${message}
+        </div>
+    `;
+
+    $("body").append(alert);
+
+    setTimeout(function () {
+        $("#ajaxAlert").fadeOut(300, function () {
+            $(this).remove();
+        });
+    }, 2000);
+}
+
 /*
 |--------------------------------------------------------------------------
 | success js
@@ -29,14 +57,16 @@ setTimeout(function () {
 
 function saveThemeColor(type, color) {
     $.ajax({
-        url: window.themeColorSaveUrl,   // এখানে
+        url: window.themeColorSaveUrl,
         method: "POST",
         data: {
             _token: $('meta[name="csrf-token"]').attr('content') || "{{ csrf_token() }}",
             [type]: color
         },
         success: function (res) {
-            // console.log('Theme color saved');
+            if (res.success) {
+                showAlert(res.message);
+            }
         },
         error: function (xhr) {
             console.error(xhr.responseText);

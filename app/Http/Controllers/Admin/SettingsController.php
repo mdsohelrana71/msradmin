@@ -199,6 +199,9 @@ class SettingsController extends Controller implements HasMiddleware
 
         $this->service->saveThemeColors($validated);
 
-        return response()->json(['success' => true]);
+        return response()->json([
+            'success' => true,
+            'message' => 'Theme colors updated successfully.',
+        ]);
     }
 }
