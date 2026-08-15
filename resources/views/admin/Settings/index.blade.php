@@ -115,3 +115,7 @@
     </div>
 </div>
 @endsection
+
+@push('scripts')
+    <script src="{{ asset('assets/js/settings.js') }}"></script>
+@endpush

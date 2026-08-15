@@ -16,7 +16,7 @@ return [
     [
         'title' => 'Account settings',
         'route' => 'admin.accounts.index',
-        'icon' => 'fa fa-user',
+        'icon' => 'fa fa-user-cog',
         'permission' => null,
     ],
     [
@@ -38,10 +38,21 @@ return [
         'permission' => 'accounts.view',
     ],
     [
+        'title' => 'Blog Categories',
+        'route' => 'admin.blog-categories.index',
+        'icon' => 'fa fa-folder',
+        'permission' => 'blog_categories.view',
+    ],
+    [
+        'title' => 'Blogs',
+        'route' => 'admin.blogs.index',
+        'icon' => 'fa fa-newspaper',
+        'permission' => 'blogs.view',
+    ],
+    [
         'title' => 'Site settings',
         'route' => 'admin.settings.index',
         'icon' => 'fa fa-cog',
         'permission' => 'settings.view',
     ],
-
 ];
