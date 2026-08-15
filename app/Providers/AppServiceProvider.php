@@ -27,13 +27,17 @@ class AppServiceProvider extends ServiceProvider
     {
         Route::aliasMiddleware('permission', EnsurePermission::class);
 
-        $names = ['site_name', 'site_email', 'site_phone', 'site_logo', 'site_favicon'];
+        $names = ['site_name', 'site_email', 'site_phone', 'site_logo', 'site_favicon', 'logo_header_color', 'topbar_color', 'sidebar_color'];
         $defaults = [
             'site_name' => config('app.name'),
             'site_email' => '',
             'site_phone' => '',
             'site_logo' => '',
             'site_favicon' => '',
+
+            'logo_header_color' => 'dark',
+            'topbar_color'      => 'white',
+            'sidebar_color'     => 'dark',
         ];
 
         try {

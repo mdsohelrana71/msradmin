@@ -188,4 +188,17 @@ class SettingsController extends Controller implements HasMiddleware
         $menus = $this->service->getMenus($request);
         return response()->json($menus);
     }
+
+    public function updateThemeColors(Request $request)
+    {
+        $validated = $request->validate([
+            'logo_header_color' => 'nullable|string|max:30',
+            'topbar_color'      => 'nullable|string|max:30',
+            'sidebar_color'     => 'nullable|string|max:30',
+        ]);
+
+        $this->service->saveThemeColors($validated);
+
+        return response()->json(['success' => true]);
+    }
 }

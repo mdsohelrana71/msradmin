@@ -21,6 +21,7 @@ Route::middleware('auth')->prefix('admin')->name('admin.')->group(function () {
     Route::get('search', [SettingsController::class, 'menuSearch'])->name('search');
     Route::get('settings', [SettingsController::class, 'index'])->name('settings.index');
     Route::put('settings', [SettingsController::class, 'update'])->name('settings.update');
+    Route::post('settings/theme-colors', [SettingsController::class, 'updateThemeColors'])->name('settings.theme-colors');
     Route::resource('users', UserController::class);
     Route::resource('roles', RoleController::class);
     Route::resource('accounts', AccountController::class);

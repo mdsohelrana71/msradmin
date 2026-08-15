@@ -70,12 +70,9 @@ $(".changeBackgroundColor").on("click", function () {
 });
 
 function customCheckColor() {
-  var logoHeader = $(".logo-header").attr("data-background-color");
-  if (logoHeader !== "white") {
-    $(".logo-header .navbar-brand").attr("src", "assets/img/msradmin/logo_light.svg");
-  } else {
-    $(".logo-header .navbar-brand").attr("src", "assets/img/msradmin/logo_dark.svg");
-  }
+    const siteLogo = $('#app-config').data('site-logo');
+
+    $('.logo-header .navbar-brand').attr('src', siteLogo);
 }
 
 var toggle_customSidebar = false,

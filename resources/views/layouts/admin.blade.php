@@ -3,6 +3,7 @@
 
 <head>
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="csrf-token" content="{{ csrf_token() }}">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no" />
     <title>@yield('title', 'Admin Dashboard') | {{ $settings->site_name }}</title>
     <link rel="icon" href="{{ asset($settings->site_favicon) }}" type="image/x-icon">
@@ -41,9 +42,9 @@
 
 <body>
     <div class="wrapper">
-        <div class="sidebar" data-background-color="dark">
+        <div class="sidebar" data-background-color="{{ $settings->sidebar_color ?? 'dark' }}">
             <div class="sidebar-logo">
-                <div class="logo-header" data-background-color="dark">
+                <div class="logo-header" data-background-color="{{ $settings->logo_header_color ?? 'dark' }}">
                     <a href="{{ route('admin.dashboard') }}" class="logo">
                         <img src="{{ asset($settings->site_logo) }}" alt="navbar brand" class="navbar-brand" height="20" />
                     </a>
@@ -247,9 +248,9 @@
         <div class="main-panel">
             <div class="main-header">
                 <div class="main-header-logo">
-                    <div class="logo-header" data-background-color="dark">
+                    <div class="logo-header" data-background-color="{{ $settings->logo_header_color ?? 'dark' }}">
                         <a href="{{ route('admin.dashboard') }}" class="logo">
-                            <img src="{{ asset('assets/img/msradmin/logo_light.svg') }}" alt="navbar brand" class="navbar-brand" height="20" />
+                            <img src="{{ asset($settings->site_logo) }}" alt="navbar brand" class="navbar-brand" height="20" />
                         </a>
                         <div class="nav-toggle">
                             <button class="btn btn-toggle toggle-sidebar">
@@ -264,7 +265,7 @@
                         </button>
                     </div>
                 </div>
-                <nav class="navbar navbar-header navbar-header-transparent navbar-expand-lg border-bottom">
+                <nav class="navbar navbar-header navbar-header-transparent navbar-expand-lg border-bottom" data-background-color="{{ $settings->topbar_color ?? 'white' }}">
                     <div class="container-fluid">
                         <nav class="navbar navbar-header-left navbar-expand-lg navbar-form nav-search p-0 d-none d-lg-flex">
                             <div class="admin-search-wrapper">
@@ -602,6 +603,15 @@
         </div>
     </div>
 
+    @php
+        $siteLogo = $settings->site_logo
+            ? asset('storage/' . $settings->site_logo)
+            : asset('assets/img/msradmin/logo_light.svg');
+    @endphp
+    <div id="app-config" data-site-logo="{{ $siteLogo }}"></div>
+    <script>
+        window.themeColorSaveUrl = "{{ route('admin.settings.theme-colors') }}";
+    </script>
     <script src="{{ asset('assets/js/core/jquery-3.7.1.min.js') }}"></script>
     <script src="{{ asset('assets/js/core/popper.min.js') }}"></script>
     <script src="{{ asset('assets/js/core/bootstrap.min.js') }}"></script>

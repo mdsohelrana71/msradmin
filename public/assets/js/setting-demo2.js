@@ -69,13 +69,10 @@ $('.changeBackgroundColor').on('click', function(){
 	getCheckmark();
 });
 
-function customCheckColor(){
-	var logoHeader = $('.logo-header').attr('data-background-color');
-	if (logoHeader !== "white") {
-		$('.logo-header .navbar-brand').attr('src', '../assets/img/msradmin/logo_light.svg');
-	} else {
-		$('.logo-header .navbar-brand').attr('src', '../assets/img/msradmin/logo_dark.svg');
-	}
+function customCheckColor() {
+	const siteLogo = $('#app-config').data('site-logo');
+
+	$('.logo-header .navbar-brand').attr('src', siteLogo);
 }
 
 

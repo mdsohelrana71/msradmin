@@ -88,4 +88,26 @@ class SettingsService
 
         Option::setOption($key, $path, 'yes');
     }
+
+    public function saveThemeColors(array $colors): void
+    {
+        $allowed = ['logo_header_color', 'topbar_color', 'sidebar_color'];
+
+        foreach ($allowed as $key) {
+            if (array_key_exists($key, $colors) && $colors[$key] !== null) {
+                $this->saveOption($key, $colors[$key]);
+            }
+        }
+    }
+
+    protected function saveOption(string $name, mixed $value): void
+    {
+        Option::updateOrCreate(
+            ['option_name' => $name],
+            [
+                'option_value' => $value,
+                'autoload' => 'yes',
+            ]
+        );
+    }
 }

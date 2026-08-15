@@ -8,7 +8,75 @@ setTimeout(function () {
 	}
 }, 2000);
 
+function saveThemeColor(type, color) {
+    $.ajax({
+        url: window.themeColorSaveUrl,   // এখানে
+        method: "POST",
+        data: {
+            _token: $('meta[name="csrf-token"]').attr('content') || "{{ csrf_token() }}",
+            [type]: color
+        },
+        success: function (res) {
+            // console.log('Theme color saved');
+        },
+        error: function (xhr) {
+            console.error(xhr.responseText);
+        }
+    });
+}
 
+$(".changeLogoHeaderColor").on("click", function () {
+    const color = $(this).attr("data-color");
+
+    if (color === "default") {
+        $(".logo-header").removeAttr("data-background-color");
+    } else {
+        $(".logo-header").attr("data-background-color", color);
+    }
+
+    $(this).parent().find(".changeLogoHeaderColor").removeClass("selected");
+    $(this).addClass("selected");
+    customCheckColor();
+    layoutsColors();
+    getCheckmark();
+
+    // Save to DB
+    saveThemeColor('logo_header_color', color === 'default' ? null : color);
+});
+
+$(".changeTopBarColor").on("click", function () {
+    const color = $(this).attr("data-color");
+
+    if (color === "default") {
+        $(".main-header .navbar-header").removeAttr("data-background-color");
+    } else {
+        $(".main-header .navbar-header").attr("data-background-color", color);
+    }
+
+    $(this).parent().find(".changeTopBarColor").removeClass("selected");
+    $(this).addClass("selected");
+    layoutsColors();
+    getCheckmark();
+
+    saveThemeColor('topbar_color', color === 'default' ? null : color);
+});
+
+$(".changeSideBarColor").on("click", function () {
+    const color = $(this).attr("data-color");
+
+    if (color === "default") {
+        $(".sidebar").removeAttr("data-background-color");
+    } else {
+        $(".sidebar").attr("data-background-color", color);
+    }
+
+    $(this).parent().find(".changeSideBarColor").removeClass("selected");
+    $(this).addClass("selected");
+    layoutsColors();
+    getCheckmark();
+
+    saveThemeColor('sidebar_color', color === 'default' ? null : color);
+});
 /*
 |--------------------------------------------------------------------------
 | Menu Or Settings Search js
