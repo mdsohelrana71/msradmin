@@ -415,9 +415,60 @@
 .category-actions .btn i {
     font-size: 12px;
 }
+
+.category-selector {
+    background: #fff;
+    overflow: hidden;
+}
+
+.category-search {
+    padding: 10px;
+    border-bottom: 1px solid #eeeeee;
+    background: #fff;
+    position: sticky;
+    top: 0;
+    z-index: 2;
+}
+
+.category-search .input-group-text {
+    border-right: 0;
+}
+
+.category-search .form-control {
+    border-left: 0;
+}
+
+.category-search .form-control:focus {
+    box-shadow: none;
+    border-color: #ced4da;
+}
+
+.category-list {
+    max-height: 350px;
+    overflow-y: auto;
+}
+
+/* Optional scrollbar */
+.category-list::-webkit-scrollbar {
+    width: 6px;
+}
+
+.category-list::-webkit-scrollbar-track {
+    background: #f8f9fa;
+}
+
+.category-list::-webkit-scrollbar-thumb {
+    background: #ced4da;
+    border-radius: 10px;
+}
+
+.category-list::-webkit-scrollbar-thumb:hover {
+    background: #adb5bd;
+}
+
 /*
 |--------------------------------------------------------------------------
-| Common css
+| Blog css
 |--------------------------------------------------------------------------
 */
 

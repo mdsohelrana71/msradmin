@@ -40,7 +40,7 @@
                     </div>
 
                     <x-admin.search
-                        id="categorySearch"
+                        id="categoryTreeSearch"
                         placeholder="Search category..."
                     />
                 </div>
