@@ -262,10 +262,18 @@
 | Category CSS
 |--------------------------------------------------------------------------
 */
+.category-item {
+    width: 100%;
+}
+
+.category-tree{
+    border: 1px solid #e5e5e5;
+    border-radius: 6px;
+}
 
 .category-row {
-    min-height: 56px;
-    padding: 10px 18px;
+    min-height: 40px;
+    padding: 5px 12px;
     display: flex;
     align-items: center;
     justify-content: space-between;
@@ -276,6 +284,7 @@
     display: flex;
     align-items: center;
     gap: 8px;
+    min-width: 0;
 }
 
 .category-name {
@@ -286,9 +295,38 @@
     text-decoration: none;
 }
 
+.category-actions {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    flex-shrink: 0;
+}
+
+.category-children {
+    position: relative;
+    margin-left: 30px;
+    border-left: 0;
+}
+
+.category-children::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    bottom: 1px;
+    left: 0;
+    width: 1px;
+    height: 40px;
+    background: #e5e5e5;
+}
+
+.category-children > .category-item > .category-row {
+    padding-left: 20px;
+    border-bottom: 1px solid #eeeeee;
+}
+
 .category-toggle {
-    width: 26px;
-    height: 26px;
+    width: 25px;
+    height: 25px;
     padding: 0;
     border: 1px solid #ddd;
     border-radius: 5px;
@@ -297,7 +335,7 @@
     align-items: center;
     justify-content: center;
     cursor: pointer;
-    transition: all .2s ease;
+    transition: all 0.2s ease;
 }
 
 .category-toggle:hover {
@@ -307,34 +345,21 @@
 
 .category-toggle i {
     font-size: 11px;
+    color: #333;
 }
 
 .category-toggle-placeholder {
-    width: 26px;
-}
-
-.category-children {
-    margin-left: 30px;
-    border-left: 1px solid #e5e5e5;
-}
-
-.category-actions {
-    display: flex;
-    align-items: center;
-    gap: 5px;
-}
-
-.category-item {
-    width: 100%;
+    width: 28px;
+    height: 28px;
 }
 
 .category-option-row {
+    min-height: 40px;
+    padding: 5px 8px;
     display: flex;
     align-items: center;
     justify-content: space-between;
-    min-height: 48px;
-    padding: 8px 12px;
-    border-bottom: 1px solid #eee;
+    border-bottom: 1px solid #eeeeee;
 }
 
 .category-option {
@@ -343,6 +368,7 @@
     gap: 10px;
     margin: 0;
     cursor: pointer;
+    margin-bottom:0px !important;
 }
 
 .category-option input {
@@ -352,8 +378,10 @@
 .category-check {
     width: 20px;
     height: 20px;
+    flex: 0 0 20px;
     border: 1px solid #ced4da;
     border-radius: 4px;
+    background: #fff;
     display: inline-flex;
     align-items: center;
     justify-content: center;
@@ -363,23 +391,8 @@
     content: "✓";
     font-size: 14px;
     font-weight: 700;
-}
-
-.category-name {
-    font-size: 14px;
-}
-
-.category-toggle {
-    width: 28px;
-    height: 28px;
-    border: 1px solid #ddd;
-    background: #fff;
-    border-radius: 4px;
-}
-
-.category-children {
-    margin-left: 30px;
-    border-left: 1px solid #e5e5e5;
+    line-height: 1;
+    color: #555;
 }
 
 .category-search-highlight {
@@ -390,6 +403,18 @@
     padding: 1px 4px;
 }
 
+.category-actions .btn {
+    width: 30px;
+    height: 30px;
+    padding: 0;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.category-actions .btn i {
+    font-size: 12px;
+}
 /*
 |--------------------------------------------------------------------------
 | Common css

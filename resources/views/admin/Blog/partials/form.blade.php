@@ -235,7 +235,7 @@
                     @enderror
                 </div>
 
-                <div class="form-check mb-1">
+                <div class="form-check">
                     <input
                         type="checkbox"
                         name="is_featured"
@@ -338,14 +338,15 @@
 </div>
 
 @push('scripts')
-<script src="{{ asset('assets/js/plugin/ckeditor.js') }}"></script>
 <script src="{{ asset('assets/js/tags.js') }}"></script>
+    <script src="{{ asset('assets/js/plugin/ckeditor.js') }}"></script>
+    <script src="{{ asset('assets/js/tags.js') }}"></script>
 
-<script>
-    ClassicEditor
-        .create(document.querySelector('#content'))
-        .catch(error => {
-            console.error(error);
-        });
-</script>
+    <script>
+        ClassicEditor
+            .create(document.querySelector('#content'))
+            .catch(error => {
+                console.error(error);
+            });
+    </script>
 @endpush
