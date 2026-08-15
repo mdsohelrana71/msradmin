@@ -1,4 +1,4 @@
-# MSR Admin
+# Laravel Admin Starter Kit
 
 **Laravel Admin Starter Kit** is a modern, scalable, and customizable admin panel starter kit built with **Laravel 13**, providing a solid foundation for managing users, roles, permissions, settings, blog content, categories, and other essential administrative features.
 
