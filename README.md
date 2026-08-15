@@ -7,9 +7,10 @@ A modern and scalable Admin Panel built with **Laravel 13**, designed to manage 
 ## Features
 
 ### Admin Panel
-
 - Admin authentication
 - Dashboard
+- Blog CRUD
+- Blog Category
 - User management
 - User details
 - Role management
@@ -20,9 +21,6 @@ A modern and scalable Admin Panel built with **Laravel 13**, designed to manage 
 - Responsive admin interface
 
 ### Roles & Permissions
-
-The application includes role-based access control to manage administrator permissions.
-
 - Create and manage roles
 - Create and manage permissions
 - Assign permissions to roles
@@ -31,17 +29,15 @@ The application includes role-based access control to manage administrator permi
 - Middleware-based authorization
 
 ### Search & Dynamic Features
-
 - Dynamic data searching
 - Server-side filtering
 - Pagination
 - Dynamic sorting
 - Search by multiple fields
-- AJAX-based dynamic operations where applicable
+- AJAX-based dynamic operations
 - Reusable query/filter logic
 
 ### Database & Seeders
-
 - Laravel migrations
 - Database seeders
 - Factory support
@@ -50,7 +46,6 @@ The application includes role-based access control to manage administrator permi
 - Application configuration seeding
 
 ### Security
-
 - Laravel authentication
 - Password hashing
 - CSRF protection
@@ -64,29 +59,111 @@ The application includes role-based access control to manage administrator permi
 
 ## Tech Stack
 
-| Technology | Version |
-|------------|---------|
-| Laravel | 13 |
-| PHP | 8.3+ |
-| Database | MySQL |
-| Frontend | Blade |
-| CSS Framework | Bootstrap |
-| JavaScript | JavaScript |
-| Package Manager | Composer |
+| Technology       | Version     |
+|------------------|-------------|
+| Laravel          | 13          |
+| PHP              | 8.3+        |
+| Database         | MySQL       |
+| Frontend         | Blade       |
+| CSS Framework    | Bootstrap   |
+| JavaScript       | JavaScript  |
+| Package Manager  | Composer    |
 
 ---
 
 ## Requirements
 
-Before installing the project, make sure the following are installed:
+Make sure the following are installed on your system:
 
 - PHP >= 8.3
 - Composer
 - MySQL
 - Git
 
-You can verify your installed versions:
+Check versions:
 
 ```bash
 php -v
 composer -V
+```
+
+---
+
+## Installation
+
+Follow the steps below carefully to install the project.
+
+### Step 1: Clone the Repository
+
+```bash
+git clone https://github.com/mdsohelrana71/laravel-admin-starter-kit.git
+cd laravel-admin-starter-kit
+```
+
+### Step 2: Install Composer Dependencies
+
+```bash
+composer install
+```
+
+### Step 3: Setup Environment File
+
+```bash
+cp .env.example .env
+php artisan key:generate
+```
+
+### Step 4: Configure Database
+
+Open the `.env` file and update the database settings:
+
+```env
+DB_CONNECTION=mysql
+DB_HOST=127.0.0.1
+DB_PORT=3306
+DB_DATABASE=msr_admin
+DB_USERNAME=root
+DB_PASSWORD=your_password
+```
+
+Then create the database in MySQL:
+
+```sql
+CREATE DATABASE msr_admin;
+```
+
+### Step 5: Run Migration and Seeder
+
+```bash
+php artisan migrate --seed
+```
+
+This command will:
+- Create all database tables
+- Insert default admin user
+- Insert default roles and permissions
+
+### Step 6: Start the Server
+
+```bash
+php artisan serve
+```
+
+Now open your browser and go to:
+
+```
+http://127.0.0.1:8000
+```
+
+---
+
+## Default Admin Login
+
+| Field    | Value               |
+|----------|---------------------|
+| Email    | admin@gmail.com   |
+| Password | 12345678            |
+
+> **Important:** Change the default password after first login.
+
+---
