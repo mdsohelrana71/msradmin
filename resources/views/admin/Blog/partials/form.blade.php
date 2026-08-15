@@ -338,7 +338,6 @@
 </div>
 
 @push('scripts')
-<script src="{{ asset('assets/js/tags.js') }}"></script>
     <script src="{{ asset('assets/js/plugin/ckeditor.js') }}"></script>
     <script src="{{ asset('assets/js/tags.js') }}"></script>
 
