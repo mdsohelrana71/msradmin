@@ -53,16 +53,16 @@ class ProductController extends Controller
             ->with('success', 'Product created successfully.');
     }
 
-    public function edit(Blog $blog)
+    public function edit(Blog $product)
     {
         $categories = $this->productService->getCategories();
         $tags = $this->productService->getTags();
 
-        $blog->load('tags');
+        $product->load('tags');
 
         return view(
             'admin.Product.edit',
-            compact('blog', 'categories', 'tags')
+            compact('product', 'categories', 'tags')
         );
     }
 

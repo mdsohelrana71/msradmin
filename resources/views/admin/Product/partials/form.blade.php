@@ -2,7 +2,7 @@
     <div class="col-lg-8">
         <div class="card border shadow-none mb-4">
             <div class="card-header">
-                <h5 class="card-title mb-0">Blog Content</h5>
+                <h5 class="card-title mb-0">Product Content</h5>
             </div>
 
             <div class="card-body">
@@ -15,8 +15,8 @@
                         name="title"
                         id="title"
                         class="form-control @error('title') is-invalid @enderror"
-                        value="{{ old('title', $blog->title ?? '') }}"
-                        placeholder="Enter blog title"
+                        value="{{ old('title', $product->title ?? '') }}"
+                        placeholder="Enter product title"
                         required
                     >
                     @error('title')
@@ -31,8 +31,8 @@
                         id="excerpt"
                         rows="4"
                         class="form-control @error('excerpt') is-invalid @enderror"
-                        placeholder="Write a short description of the blog..."
-                    >{{ old('excerpt', $blog->excerpt ?? '') }}</textarea>
+                        placeholder="Write a short description of the product..."
+                    >{{ old('excerpt', $product->excerpt ?? '') }}</textarea>
                     @error('excerpt')
                         <div class="invalid-feedback">{{ $message }}</div>
                     @enderror
@@ -48,7 +48,7 @@
                         id="content"
                         class="form-control"
                         rows="15"
-                    >{{ old('content', $blog->content ?? '') }}</textarea>
+                    >{{ old('content', $product->content ?? '') }}</textarea>
                     @error('content')
                         <div class="invalid-feedback">{{ $message }}</div>
                     @enderror
@@ -69,7 +69,7 @@
                         name="meta_title"
                         id="meta_title"
                         class="form-control @error('meta_title') is-invalid @enderror"
-                        value="{{ old('meta_title', $blog->meta_title ?? '') }}"
+                        value="{{ old('meta_title', $product->meta_title ?? '') }}"
                         placeholder="SEO title"
                     >
                     @error('meta_title')
@@ -85,7 +85,7 @@
                         rows="4"
                         class="form-control @error('meta_description') is-invalid @enderror"
                         placeholder="SEO meta description..."
-                    >{{ old('meta_description', $blog->meta_description ?? '') }}</textarea>
+                    >{{ old('meta_description', $product->meta_description ?? '') }}</textarea>
                     @error('meta_description')
                         <div class="invalid-feedback">{{ $message }}</div>
                     @enderror
@@ -98,7 +98,7 @@
                         name="meta_keywords"
                         id="meta_keywords"
                         class="form-control @error('meta_keywords') is-invalid @enderror"
-                        value="{{ old('meta_keywords', $blog->meta_keywords ?? '') }}"
+                        value="{{ old('meta_keywords', $product->meta_keywords ?? '') }}"
                         placeholder="Laravel, PHP, Web Development"
                     >
                     @error('meta_keywords')
@@ -113,8 +113,8 @@
                         name="canonical_url"
                         id="canonical_url"
                         class="form-control @error('canonical_url') is-invalid @enderror"
-                        value="{{ old('canonical_url', $blog->canonical_url ?? '') }}"
-                        placeholder="https://example.com/blog/example"
+                        value="{{ old('canonical_url', $product->canonical_url ?? '') }}"
+                        placeholder="https://example.com/product/example"
                     >
                     @error('canonical_url')
                         <div class="invalid-feedback">{{ $message }}</div>
@@ -127,7 +127,7 @@
     <div class="col-lg-4">
         <div class="card border shadow-none mb-4">
             <div class="card-header">
-                <h5 class="card-title mb-0">Blog Settings</h5>
+                <h5 class="card-title mb-0">Product Settings</h5>
             </div>
 
             <div class="card-body">
@@ -137,12 +137,12 @@
                     </label>
 
                     @php
-                        $selectedCategory = old('category_id', $blog->category_id ?? null);
+                        $selectedCategory = old('category_id', $product->category_id ?? null);
                     @endphp
 
                     <div class="category-tree">
                         @foreach ($categories->whereNull('parent_id') as $category)
-                            @include('admin.Blog.partials.category-tree', [
+                            @include('admin.Product.partials.category-tree', [
                                 'category' => $category,
                                 'selectedCategory' => $selectedCategory,
                             ])
@@ -161,11 +161,11 @@
                         id="status"
                         class="form-select @error('status') is-invalid @enderror"
                     >
-                        <option value="0" @selected(old('status', $blog->status ?? false) == false)>
+                        <option value="0" @selected(old('status', $product->status ?? false) == false)>
                             Draft
                         </option>
 
-                        <option value="1" @selected(old('status', $blog->status ?? false) == true)>
+                        <option value="1" @selected(old('status', $product->status ?? false) == true)>
                             Published
                         </option>
                     </select>
@@ -183,8 +183,8 @@
                         class="form-control @error('published_at') is-invalid @enderror"
                         value="{{ old(
                             'published_at',
-                            isset($blog->published_at)
-                                ? $blog->published_at->format('Y-m-d\TH:i')
+                            isset($product->published_at)
+                                ? $product->published_at->format('Y-m-d\TH:i')
                                 : ''
                         ) }}"
                     >
@@ -200,7 +200,7 @@
                         id="tags-container"
                         style="min-height: 45px; cursor: text;"
                     >
-                        @foreach ($blog->tags ?? [] as $tag)
+                        @foreach ($product->tags ?? [] as $tag)
                             <span class="badge bg-primary gap-1 tag-item">
                                 {{ ucfirst($tag->name) }}
 
@@ -242,10 +242,10 @@
                         value="1"
                         id="is_featured"
                         class="form-check-input"
-                        @checked(old('is_featured', $blog->is_featured ?? false))
+                        @checked(old('is_featured', $product->is_featured ?? false))
                     >
                     <label class="form-check-label" for="is_featured">
-                        Featured Blog
+                        Featured Product
                     </label>
                 </div>
 
@@ -256,7 +256,7 @@
                         value="1"
                         id="allow_comments"
                         class="form-check-input"
-                        @checked(old('allow_comments', $blog->allow_comments ?? true))
+                        @checked(old('allow_comments', $product->allow_comments ?? true))
                     >
                     <label class="form-check-label" for="allow_comments">
                         Allow Comments
@@ -271,11 +271,11 @@
             </div>
 
             <div class="card-body">
-                @if (!empty($blog?->featured_image))
+                @if (!empty($product?->featured_image))
                     <div class="mb-1">
                         <img
-                            src="{{ asset('storage/' . $blog->featured_image) }}"
-                            alt="{{ $blog->title }}"
+                            src="{{ asset('storage/' . $product->featured_image) }}"
+                            alt="{{ $product->title }}"
                             class="img-fluid rounded"
                         >
                     </div>
@@ -307,10 +307,10 @@
                     Open Graph Image
                 </label>
 
-                @if (!empty($blog?->og_image))
+                @if (!empty($product?->og_image))
                     <div class="mb-1">
                         <img
-                            src="{{ asset('storage/' . $blog->og_image) }}"
+                            src="{{ asset('storage/' . $product->og_image) }}"
                             alt="OG Image"
                             class="img-fluid rounded"
                         >

@@ -65,7 +65,7 @@ class ProductService
     public function getCategories(): Collection
     {
         return Category::query()
-            ->ofType('blog')
+            ->ofType('product')
             ->active()
             ->orderBy('name')
             ->get();
