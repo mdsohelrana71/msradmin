@@ -12,6 +12,8 @@ use App\Http\Controllers\Admin\SettingsController;
 use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\BlogCategoryController;
 use App\Http\Controllers\Admin\ProductCategoryController;
+use App\Http\Controllers\Admin\ProductAttributeController;
+use App\Http\Controllers\Admin\ProductAttributeValueController;
 
 Route::get('/', function () {
     return view('welcome');
@@ -28,16 +30,21 @@ Route::middleware('auth')->prefix('admin')->name('admin.')->group(function () {
     Route::resource('roles', RoleController::class);
     Route::resource('accounts', AccountController::class);
     Route::resource('products', ProductController::class);
+    Route::resource('product-categories', ProductCategoryController::class)
+    ->parameters([
+        'product-categories' => 'category',
+    ]);
+    Route::resource('product-attributes', ProductAttributeController::class)
+    ->parameters([
+        'product-attributes' => 'product_attribute',
+    ]);
+    Route::resource('product-attributes.values', ProductAttributeValueController::class);
+
     Route::resource('brands', BrandController::class);
     Route::resource('blogs', BlogController::class);
     Route::resource('blog-categories', BlogCategoryController::class)
         ->parameters([
             'blog-categories' => 'category',
-        ]);
-
-    Route::resource('product-categories', ProductCategoryController::class)
-        ->parameters([
-            'product-categories' => 'category',
         ]);
 
     Route::post('/cache/clear', function () {

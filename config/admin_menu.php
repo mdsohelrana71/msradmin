@@ -56,6 +56,12 @@ return [
         'permission' => 'brands.view',
     ],
     [
+        'title' => 'Product Attributes',
+        'route' => 'admin.product-attributes.index',
+        'icon' => 'fa fa-sliders-h',
+        'permission' => 'product-attributes.view',
+    ],
+    [
         'title' => 'Blog Categories',
         'route' => 'admin.blog-categories.index',
         'icon' => 'fa fa-folder',

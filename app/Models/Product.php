@@ -2,10 +2,9 @@
 
 namespace App\Models;
 
-use App\Models\Brand;
-use App\Models\Category;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
 class Product extends Model
 {
@@ -29,25 +28,39 @@ class Product extends Model
         'status',
     ];
 
-    protected function casts(): array
-    {
-        return [
-            'cost_price' => 'decimal:2',
-            'selling_price' => 'decimal:2',
-            'discount_price' => 'decimal:2',
-            'weight' => 'decimal:2',
-            'is_featured' => 'boolean',
-            'status' => 'boolean',
-        ];
-    }
+    protected $casts = [
+        'cost_price' => 'decimal:2',
+        'selling_price' => 'decimal:2',
+        'discount_price' => 'decimal:2',
+        'weight' => 'decimal:2',
+        'stock' => 'integer',
+        'is_featured' => 'boolean',
+        'status' => 'boolean',
+    ];
 
     public function category(): BelongsTo
     {
-        return $this->belongsTo(Category::class);
+        return $this->belongsTo(
+            Category::class,
+            'category_id'
+        );
     }
 
     public function brand(): BelongsTo
     {
-        return $this->belongsTo(Brand::class);
+        return $this->belongsTo(
+            Brand::class,
+            'brand_id'
+        );
+    }
+
+    public function tags(): BelongsToMany
+    {
+        return $this->belongsToMany(
+            Tag::class,
+            'product_tag',
+            'product_id',
+            'tag_id'
+        );
     }
 }

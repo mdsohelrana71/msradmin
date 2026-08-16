@@ -152,6 +152,46 @@
                     </li>
                 @endcanany
 
+                @canany(['product-attributes.view', 'product-attributes.create'])
+                    <li class="nav-item {{ request()->routeIs('admin.product-attributes.*') ? 'active' : '' }}">
+                        <a
+                            data-bs-toggle="collapse"
+                            href="#productAttributes"
+                            class="{{ request()->routeIs('admin.product-attributes.*') ? '' : 'collapsed' }}"
+                            aria-expanded="{{ request()->routeIs('admin.product-attributes.*') ? 'true' : 'false' }}">
+                            <i class="fas fa-sliders-h"></i>
+                            <p>Product Attributes</p>
+                            <span class="caret"></span>
+                        </a>
+
+                        <div
+                            class="collapse {{ request()->routeIs('admin.product-attributes.*') ? 'show' : '' }}"
+                            id="productAttributes">
+                            <ul class="nav nav-collapse">
+                                @can('product-attributes.view')
+                                    <li class="{{ request()->routeIs('admin.product-attributes.index') ? 'active' : '' }}">
+                                        <a href="{{ route('admin.product-attributes.index') }}">
+                                            <span class="sub-item">
+                                                All Attributes
+                                            </span>
+                                        </a>
+                                    </li>
+                                @endcan
+
+                                @can('product-attributes.create')
+                                    <li class="{{ request()->routeIs('admin.product-attributes.create') ? 'active' : '' }}">
+                                        <a href="{{ route('admin.product-attributes.create') }}">
+                                            <span class="sub-item">
+                                                Create Attribute
+                                            </span>
+                                        </a>
+                                    </li>
+                                @endcan
+                            </ul>
+                        </div>
+                    </li>
+                @endcanany
+
                 @canany(['blogs.view', 'blogs.create', 'blog_categories.view', 'blog_categories.create'])
                     <li class="nav-section">
                         <span class="sidebar-mini-icon">

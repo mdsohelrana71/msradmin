@@ -32,6 +32,16 @@ return [
         ],
     ],
 
+    'product-attributes' => [
+        'label' => 'Product Attributes',
+        'permissions' => [
+            'product-attributes.view' => 'View product attributes',
+            'product-attributes.create' => 'Create product attributes',
+            'product-attributes.edit' => 'Edit product attributes',
+            'product-attributes.delete' => 'Delete product attributes',
+        ],
+    ],
+
     'blogs' => [
         'label' => 'Blogs',
         'permissions' => [
