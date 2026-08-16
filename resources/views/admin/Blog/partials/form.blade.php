@@ -221,7 +221,7 @@
                         <input
                             type="text"
                             id="tag-input"
-                            class="border-0 outline-none flex-grow-1"
+                            class="border-0 outline-none grow"
                             placeholder="Type a tag and press Enter..."
                             autocomplete="off"
                             style="min-width: 180px; outline: none;"
