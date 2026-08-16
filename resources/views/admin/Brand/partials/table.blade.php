@@ -6,7 +6,7 @@
                 <th width="90">Logo</th>
                 <th>Brand</th>
                 <th>Status</th>
-                <th>Sort Order</th>
+                <th>Description</th>
                 <th width="170">Action</th>
             </tr>
         </thead>

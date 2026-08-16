@@ -102,7 +102,6 @@ class ProductRequest extends FormRequest
             ],
 
             'is_featured' => [
-                'required',
                 'boolean',
             ],
 

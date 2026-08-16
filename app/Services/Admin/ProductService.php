@@ -162,6 +162,7 @@ class ProductService
         Product $product,
         array $data
     ): Product {
+
         return DB::transaction(function () use (
             $product,
             $data
@@ -189,6 +190,8 @@ class ProductService
             } else {
                 unset($data['thumbnail']);
             }
+
+            $data['is_featured'] = $data['is_featured'] ?? false;
 
             $product->update($data);
 
