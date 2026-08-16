@@ -8,7 +8,6 @@ return [
             'products.create' => 'Create products',
             'products.edit' => 'Edit products',
             'products.delete' => 'Delete products',
-            'products.approve' => 'Approve products',
         ],
     ],
 

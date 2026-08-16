@@ -6,119 +6,168 @@
             </div>
 
             <div class="card-body">
-                <div class="form-group mb-1">
-                    <label for="title">
-                        Title <span class="text-danger">*</span>
+                <div class="form-group mb-3">
+                    <label for="name">
+                        Product Name <span class="text-danger">*</span>
                     </label>
-                    <input
-                        type="text"
-                        name="title"
-                        id="title"
-                        class="form-control @error('title') is-invalid @enderror"
-                        value="{{ old('title', $product->title ?? '') }}"
-                        placeholder="Enter product title"
-                        required
-                    >
-                    @error('title')
+
+                    <input type="text" name="name" id="name"
+                        class="form-control @error('name') is-invalid @enderror"
+                        value="{{ old('name', $product->name ?? '') }}" placeholder="Enter product name" required>
+
+                    @error('name')
                         <div class="invalid-feedback">{{ $message }}</div>
                     @enderror
                 </div>
 
-                <div class="form-group mb-1">
-                    <label for="excerpt">Short Description</label>
-                    <textarea
-                        name="excerpt"
-                        id="excerpt"
-                        rows="4"
-                        class="form-control @error('excerpt') is-invalid @enderror"
-                        placeholder="Write a short description of the product..."
-                    >{{ old('excerpt', $product->excerpt ?? '') }}</textarea>
-                    @error('excerpt')
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group mb-3">
+                            <label for="sku">
+                                SKU <span class="text-danger">*</span>
+                            </label>
+
+                            <input type="text" name="sku" id="sku"
+                                class="form-control @error('sku') is-invalid @enderror"
+                                value="{{ old('sku', $product->sku ?? '') }}" placeholder="Enter product SKU" required>
+
+                            @error('sku')
+                                <div class="invalid-feedback">{{ $message }}</div>
+                            @enderror
+                        </div>
+                    </div>
+
+                    <div class="col-md-6">
+                        <div class="form-group mb-3">
+                            <label for="barcode">Barcode</label>
+
+                            <input type="text" name="barcode" id="barcode"
+                                class="form-control @error('barcode') is-invalid @enderror"
+                                value="{{ old('barcode', $product->barcode ?? '') }}" placeholder="Enter barcode">
+
+                            @error('barcode')
+                                <div class="invalid-feedback">{{ $message }}</div>
+                            @enderror
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-group mb-3">
+                    <label for="short_description">
+                        Short Description
+                    </label>
+
+                    <textarea name="short_description" id="short_description" rows="4"
+                        class="form-control @error('short_description') is-invalid @enderror"
+                        placeholder="Write a short description of the product...">{{ old('short_description', $product->short_description ?? '') }}</textarea>
+
+                    @error('short_description')
                         <div class="invalid-feedback">{{ $message }}</div>
                     @enderror
                 </div>
 
-                <div class="form-group mb-1">
-                    <label for="content">
-                        Content <span class="text-danger">*</span>
+                <div class="form-group mb-3">
+                    <label for="description">
+                        Description
                     </label>
 
-                    <textarea
-                        name="content"
-                        id="content"
-                        class="form-control"
-                        rows="15"
-                    >{{ old('content', $product->content ?? '') }}</textarea>
-                    @error('content')
+                    <textarea name="description" id="description" class="form-control" rows="15">{{ old('description', $product->description ?? '') }}</textarea>
+
+                    @error('description')
                         <div class="invalid-feedback">{{ $message }}</div>
                     @enderror
                 </div>
             </div>
         </div>
-
         <div class="card border shadow-none mb-4">
             <div class="card-header">
-                <h5 class="card-title mb-0">SEO Settings</h5>
+                <h5 class="card-title mb-0">Product Pricing</h5>
             </div>
 
             <div class="card-body">
-                <div class="form-group mb-1">
-                    <label for="meta_title">SEO Title</label>
-                    <input
-                        type="text"
-                        name="meta_title"
-                        id="meta_title"
-                        class="form-control @error('meta_title') is-invalid @enderror"
-                        value="{{ old('meta_title', $product->meta_title ?? '') }}"
-                        placeholder="SEO title"
-                    >
-                    @error('meta_title')
-                        <div class="invalid-feedback">{{ $message }}</div>
-                    @enderror
-                </div>
+                <div class="row">
+                    <div class="col-md-4">
+                        <div class="form-group mb-0">
+                            <label for="cost_price">
+                                Cost Price <span class="text-danger">*</span>
+                            </label>
 
-                <div class="form-group mb-1">
-                    <label for="meta_description">SEO Description</label>
-                    <textarea
-                        name="meta_description"
-                        id="meta_description"
-                        rows="4"
-                        class="form-control @error('meta_description') is-invalid @enderror"
-                        placeholder="SEO meta description..."
-                    >{{ old('meta_description', $product->meta_description ?? '') }}</textarea>
-                    @error('meta_description')
-                        <div class="invalid-feedback">{{ $message }}</div>
-                    @enderror
-                </div>
+                            <input type="number" name="cost_price" id="cost_price" min="0" step="0.01"
+                                class="form-control @error('cost_price') is-invalid @enderror"
+                                value="{{ old('cost_price', $product->cost_price ?? 0) }}" placeholder="0.00" required>
 
-                <div class="form-group mb-1">
-                    <label for="meta_keywords">SEO Keywords</label>
-                    <input
-                        type="text"
-                        name="meta_keywords"
-                        id="meta_keywords"
-                        class="form-control @error('meta_keywords') is-invalid @enderror"
-                        value="{{ old('meta_keywords', $product->meta_keywords ?? '') }}"
-                        placeholder="Laravel, PHP, Web Development"
-                    >
-                    @error('meta_keywords')
-                        <div class="invalid-feedback">{{ $message }}</div>
-                    @enderror
-                </div>
+                            @error('cost_price')
+                                <div class="invalid-feedback">
+                                    {{ $message }}
+                                </div>
+                            @enderror
+                        </div>
+                    </div>
 
-                <div class="form-group mb-0">
-                    <label for="canonical_url">Canonical URL</label>
-                    <input
-                        type="url"
-                        name="canonical_url"
-                        id="canonical_url"
-                        class="form-control @error('canonical_url') is-invalid @enderror"
-                        value="{{ old('canonical_url', $product->canonical_url ?? '') }}"
-                        placeholder="https://example.com/product/example"
-                    >
-                    @error('canonical_url')
-                        <div class="invalid-feedback">{{ $message }}</div>
-                    @enderror
+                    <div class="col-md-4">
+                        <div class="form-group mb-0">
+                            <label for="selling_price">
+                                Selling Price <span class="text-danger">*</span>
+                            </label>
+
+                            <input type="number" name="selling_price" id="selling_price" min="0" step="0.01"
+                                class="form-control @error('selling_price') is-invalid @enderror"
+                                value="{{ old('selling_price', $product->selling_price ?? '') }}" placeholder="0.00"
+                                required>
+
+                            @error('selling_price')
+                                <div class="invalid-feedback">
+                                    {{ $message }}
+                                </div>
+                            @enderror
+                        </div>
+                    </div>
+
+                    <div class="col-md-4">
+                        <div class="form-group mb-0">
+                            <label for="discount_price">
+                                Discount Price
+                            </label>
+
+                            <input type="number" name="discount_price" id="discount_price" min="0"
+                                step="0.01" class="form-control @error('discount_price') is-invalid @enderror"
+                                value="{{ old('discount_price', $product->discount_price ?? '') }}" placeholder="0.00">
+
+                            @error('discount_price')
+                                <div class="invalid-feedback">
+                                    {{ $message }}
+                                </div>
+                            @enderror
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="card border shadow-none">
+            <div class="card-header">
+                <h5 class="card-title mb-0">Product Dimensions</h5>
+            </div>
+
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group mb-0">
+                            <label for="weight">
+                                Weight
+                            </label>
+
+                            <input type="number" name="weight" id="weight" min="0" step="0.01"
+                                class="form-control @error('weight') is-invalid @enderror"
+                                value="{{ old('weight', $product->weight ?? '') }}" placeholder="Enter weight">
+
+                            @error('weight')
+                                <div class="invalid-feedback">
+                                    {{ $message }}
+                                </div>
+                            @enderror
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -131,7 +180,7 @@
             </div>
 
             <div class="card-body">
-                <div class="form-group mb-1">
+                <div class="form-group mb-3">
                     <label class="form-label">
                         Category <span class="text-danger">*</span>
                     </label>
@@ -150,46 +199,32 @@
                     </div>
 
                     @error('category_id')
-                        <div class="text-danger small mt-2">{{ $message }}</div>
+                        <div class="text-danger small mt-2">
+                            {{ $message }}
+                        </div>
                     @enderror
                 </div>
 
-                <div class="form-group mb-1">
-                    <label for="status">Status</label>
-                    <select
-                        name="status"
-                        id="status"
-                        class="form-select @error('status') is-invalid @enderror"
-                    >
-                        <option value="0" @selected(old('status', $product->status ?? false) == false)>
-                            Draft
-                        </option>
+                <div class="form-group mb-3">
+                    <label for="brand_id">
+                        Brand
+                    </label>
 
-                        <option value="1" @selected(old('status', $product->status ?? false) == true)>
-                            Published
-                        </option>
+                    <select name="brand_id" id="brand_id"
+                        class="form-select @error('brand_id') is-invalid @enderror">
+                        <option value="">Select Brand</option>
+
+                        @foreach ($brands as $brand)
+                            <option value="{{ $brand->id }}" @selected(old('brand_id', $product->brand_id ?? null) == $brand->id)>
+                                {{ $brand->name }}
+                            </option>
+                        @endforeach
                     </select>
-                    @error('status')
-                        <div class="invalid-feedback">{{ $message }}</div>
-                    @enderror
-                </div>
 
-                <div class="form-group mb-1">
-                    <label for="published_at">Published Date</label>
-                    <input
-                        type="datetime-local"
-                        name="published_at"
-                        id="published_at"
-                        class="form-control @error('published_at') is-invalid @enderror"
-                        value="{{ old(
-                            'published_at',
-                            isset($product->published_at)
-                                ? $product->published_at->format('Y-m-d\TH:i')
-                                : ''
-                        ) }}"
-                    >
-                    @error('published_at')
-                        <div class="invalid-feedback">{{ $message }}</div>
+                    @error('brand_id')
+                        <div class="invalid-feedback">
+                            {{ $message }}
+                        </div>
                     @enderror
                 </div>
 
@@ -235,31 +270,70 @@
                     @enderror
                 </div>
 
-                <div class="form-check">
-                    <input
-                        type="checkbox"
-                        name="is_featured"
-                        value="1"
-                        id="is_featured"
-                        class="form-check-input"
-                        @checked(old('is_featured', $product->is_featured ?? false))
-                    >
-                    <label class="form-check-label" for="is_featured">
-                        Featured Product
-                    </label>
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group mb-3">
+                            <label for="stock">
+                                Stock <span class="text-danger">*</span>
+                            </label>
+
+                            <input type="number" name="stock" id="stock" min="0"
+                                class="form-control @error('stock') is-invalid @enderror"
+                                value="{{ old('stock', $product->stock ?? 0) }}" placeholder="0" required>
+
+                            @error('stock')
+                                <div class="invalid-feedback">
+                                    {{ $message }}
+                                </div>
+                            @enderror
+                        </div>
+                    </div>
+
+                    <div class="col-md-6">
+                        <div class="form-group mb-3">
+                            <label for="unit">
+                                Unit <span class="text-danger">*</span>
+                            </label>
+
+                            <input type="text" name="unit" id="unit"
+                                class="form-control @error('unit') is-invalid @enderror"
+                                value="{{ old('unit', $product->unit ?? 'pcs') }}" placeholder="pcs" required>
+
+                            @error('unit')
+                                <div class="invalid-feedback">
+                                    {{ $message }}
+                                </div>
+                            @enderror
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-group mb-3">
+                    <label for="status">Status</label>
+
+                    <select name="status" id="status" class="form-select @error('status') is-invalid @enderror">
+                        <option value="1" @selected(old('status', $product->status ?? true) == true)>
+                            Active
+                        </option>
+
+                        <option value="0" @selected(old('status', $product->status ?? true) == false)>
+                            Inactive
+                        </option>
+                    </select>
+
+                    @error('status')
+                        <div class="invalid-feedback">
+                            {{ $message }}
+                        </div>
+                    @enderror
                 </div>
 
                 <div class="form-check">
-                    <input
-                        type="checkbox"
-                        name="allow_comments"
-                        value="1"
-                        id="allow_comments"
-                        class="form-check-input"
-                        @checked(old('allow_comments', $product->allow_comments ?? true))
-                    >
-                    <label class="form-check-label" for="allow_comments">
-                        Allow Comments
+                    <input type="checkbox" name="is_featured" value="1" id="is_featured"
+                        class="form-check-input" @checked(old('is_featured', $product->is_featured ?? false))>
+
+                    <label class="form-check-label" for="is_featured">
+                        Featured Product
                     </label>
                 </div>
             </div>
@@ -267,70 +341,29 @@
 
         <div class="card border shadow-none mb-4">
             <div class="card-header">
-                <h5 class="card-title mb-0">Featured Image</h5>
+                <h5 class="card-title mb-0">Product Image</h5>
             </div>
 
             <div class="card-body">
-                @if (!empty($product?->featured_image))
-                    <div class="mb-1">
-                        <img
-                            src="{{ asset('storage/' . $product->featured_image) }}"
-                            alt="{{ $product->title }}"
-                            class="img-fluid rounded"
-                        >
+                @if (!empty($product?->thumbnail))
+                    <div class="mb-2">
+                        <img src="{{ asset('storage/' . $product->thumbnail) }}" alt="{{ $product->name }}"
+                            class="img-fluid rounded" style="max-height: 200px; object-fit: contain;">
                     </div>
                 @endif
 
-                <input
-                    type="file"
-                    name="featured_image"
-                    id="featured_image"
-                    class="form-control @error('featured_image') is-invalid @enderror"
-                    accept="image/*"
-                >
+                <input type="file" name="thumbnail" id="thumbnail"
+                    class="form-control @error('thumbnail') is-invalid @enderror"
+                    accept="image/jpeg,image/png,image/webp">
+
                 <small class="text-muted">
-                    Recommended size: 1200 × 630px
+                    Recommended image format: JPG, PNG or WebP.
                 </small>
-                @error('featured_image')
-                    <div class="invalid-feedback">{{ $message }}</div>
-                @enderror
-            </div>
-        </div>
 
-        <div class="card border shadow-none">
-            <div class="card-header">
-                <h5 class="card-title mb-0">Social Sharing</h5>
-            </div>
-
-            <div class="card-body">
-                <label for="og_image" class="form-label">
-                    Open Graph Image
-                </label>
-
-                @if (!empty($product?->og_image))
-                    <div class="mb-1">
-                        <img
-                            src="{{ asset('storage/' . $product->og_image) }}"
-                            alt="OG Image"
-                            class="img-fluid rounded"
-                        >
+                @error('thumbnail')
+                    <div class="invalid-feedback">
+                        {{ $message }}
                     </div>
-                @endif
-
-                <input
-                    type="file"
-                    name="og_image"
-                    id="og_image"
-                    class="form-control @error('og_image') is-invalid @enderror"
-                    accept="image/*"
-                >
-
-                <small class="text-muted">
-                    Recommended size: 1200 x 630px
-                </small>
-
-                @error('og_image')
-                    <div class="invalid-feedback">{{ $message }}</div>
                 @enderror
             </div>
         </div>
@@ -343,7 +376,7 @@
 
     <script>
         ClassicEditor
-            .create(document.querySelector('#content'))
+            .create(document.querySelector('#description'))
             .catch(error => {
                 console.error(error);
             });

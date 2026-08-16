@@ -14,80 +14,101 @@ class ProductRequest extends FormRequest
 
     public function rules(): array
     {
-        $blogId = $this->route('blog')?->id;
+        $product = $this->route('product');
 
         return [
-            'title' => [
-                'required',
-                'string',
-                'max:255',
-            ],
-
-            'slug' => [
-                'nullable',
-                'string',
-                'max:255',
-                Rule::unique('blogs', 'slug')->ignore($blogId),
-            ],
-
             'category_id' => [
                 'required',
-                'integer',
-                Rule::exists('categories', 'id')
-                    ->where('type', 'blog')
-                    ->where('status', true),
+                'exists:categories,id',
             ],
 
-            'excerpt' => [
+            'brand_id' => [
                 'nullable',
-                'string',
-                'max:500',
+                'exists:brands,id',
             ],
 
-            'content' => [
+            'name' => [
                 'required',
                 'string',
+                'max:255',
             ],
 
-            'featured_image' => [
+            'sku' => [
+                'required',
+                'string',
+                'max:255',
+                Rule::unique('products', 'sku')
+                    ->ignore($product?->id),
+            ],
+
+            'barcode' => [
+                'nullable',
+                'string',
+                'max:255',
+            ],
+
+            'thumbnail' => [
                 'nullable',
                 'image',
                 'mimes:jpg,jpeg,png,webp',
                 'max:2048',
             ],
 
-            'meta_title' => [
+            'short_description' => [
                 'nullable',
                 'string',
-                'max:255',
             ],
 
-            'meta_description' => [
+            'description' => [
                 'nullable',
                 'string',
-                'max:1000',
             ],
 
-            'meta_keywords' => [
+            'cost_price' => [
+                'required',
+                'numeric',
+                'min:0',
+            ],
+
+            'selling_price' => [
+                'required',
+                'numeric',
+                'min:0',
+            ],
+
+            'discount_price' => [
                 'nullable',
+                'numeric',
+                'min:0',
+                'lte:selling_price',
+            ],
+
+            'stock' => [
+                'required',
+                'integer',
+                'min:0',
+            ],
+
+            'weight' => [
+                'nullable',
+                'numeric',
+                'min:0',
+            ],
+
+            'unit' => [
+                'required',
                 'string',
-                'max:500',
+                'max:50',
             ],
 
-            'canonical_url' => [
-                'nullable',
-                'url',
-                'max:255',
+            'is_featured' => [
+                'required',
+                'boolean',
             ],
 
             'status' => [
                 'required',
                 'boolean',
-            ],
-
-            'published_at' => [
-                'nullable',
-                'date',
             ],
 
             'tags' => [
@@ -97,23 +118,8 @@ class ProductRequest extends FormRequest
 
             'tags.*' => [
                 'nullable',
-            ],
-
-            'is_featured' => [
-                'nullable',
-                'boolean',
-            ],
-
-            'allow_comments' => [
-                'nullable',
-                'boolean',
-            ],
-
-            'og_image' => [
-                'nullable',
-                'image',
-                'mimes:jpg,jpeg,png,webp',
-                'max:2048',
+                'string',
+                'max:255',
             ],
         ];
     }

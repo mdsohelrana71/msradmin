@@ -2,62 +2,81 @@
 
 namespace App\Services\Admin;
 
-use App\Models\Blog;
-use App\Models\Category;
 use App\Models\Tag;
+use App\Models\Brand;
+use App\Models\Product;
+use App\Models\Category;
 use Illuminate\Support\Str;
-use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 
 class ProductService
 {
-    public function getBlogs(array $filters = []): LengthAwarePaginator
-    {
-        $query = Blog::query()
-            ->with(['category', 'author', 'tags']);
+    public function getProducts(
+        ?string $search = null,
+        ?string $sort = null,
+        int $perPage = 20
+    ): LengthAwarePaginator {
+        return Product::query()
+            ->with([
+                'category:id,name',
+                'brand:id,name',
+                'tags:id,name',
+            ])
+            ->when($search, function ($query) use ($search) {
+                $query->where(function ($query) use ($search) {
+                    $query
+                        ->where('name', 'like', "%{$search}%")
+                        ->orWhere('sku', 'like', "%{$search}%")
+                        ->orWhere('barcode', 'like', "%{$search}%");
+                });
+            })
+            ->when($sort, function ($query) use ($sort) {
+                match ($sort) {
+                    'a_z' => $query->orderBy('name'),
 
-        if (!empty($filters['search'])) {
-            $search = $filters['search'];
+                    'z_a' => $query->orderByDesc('name'),
 
-            $query->where(function ($query) use ($search) {
-                $query->where('title', 'like', "%{$search}%")
-                    ->orWhere('content', 'like', "%{$search}%")
-                    ->orWhere('excerpt', 'like', "%{$search}%");
-            });
-        }
+                    'latest' => $query->latest('created_at'),
 
-        if (!empty($filters['sort'])) {
-            match ($filters['sort']) {
-                'a_z' => $query->orderBy('title'),
-                'z_a' => $query->orderByDesc('title'),
-                'latest' => $query->latest('created_at'),
-                'oldest' => $query->oldest('created_at'),
-                'published' => $query
-                    ->where('status', true)
-                    ->latest('created_at'),
-                'draft' => $query
-                    ->where('status', false)
-                    ->latest('created_at'),
-                default => $query->latest('created_at'),
-            };
-        } else {
-            $query->latest('created_at');
-        }
+                    'oldest' => $query->oldest('created_at'),
 
-        $perPage = (int) ($filters['per_page'] ?? 10);
+                    'price_low' => $query->orderBy('selling_price'),
 
-        return $query
+                    'price_high' => $query->orderByDesc('selling_price'),
+
+                    'stock_low' => $query->orderBy('stock'),
+
+                    'stock_high' => $query->orderByDesc('stock'),
+
+                    'featured' => $query
+                        ->where('is_featured', true)
+                        ->orderBy('name'),
+
+                    'active' => $query
+                        ->where('status', true)
+                        ->orderBy('name'),
+
+                    'inactive' => $query
+                        ->where('status', false)
+                        ->orderBy('name'),
+
+                    default => $query->latest('created_at'),
+                };
+            }, function ($query) {
+                $query->latest('created_at');
+            })
             ->paginate($perPage)
             ->withQueryString();
     }
 
-    public function getBlog(Blog $blog): Blog
+    public function getProduct(Product $product): Product
     {
-        return $blog->load([
+        return $product->load([
             'category',
-            'author',
+            'brand',
             'tags',
         ]);
     }
@@ -71,6 +90,14 @@ class ProductService
             ->get();
     }
 
+    public function getBrands(): Collection
+    {
+        return Brand::query()
+            ->where('status', true)
+            ->orderBy('name')
+            ->get();
+    }
+
     public function getTags(): Collection
     {
         return Tag::query()
@@ -78,66 +105,119 @@ class ProductService
             ->get();
     }
 
-    public function create(array $data): Blog
+    public function create(): array
     {
-        $data['user_id'] = Auth::id();
-
-        $tagIds = $this->prepareTags($data['tags'] ?? []);
-
-        unset($data['tags']);
-
-        $blog = Blog::create(
-            $this->prepareData($data)
-        );
-
-        $blog->tags()->sync($tagIds);
-
-        return $blog->load([
-            'category',
-            'author',
-            'tags',
-        ]);
+        return [
+            'categories' => $this->getCategories(),
+            'brands' => $this->getBrands(),
+            'tags' => $this->getTags(),
+        ];
     }
 
-    public function update(Blog $blog, array $data): Blog
+    public function store(array $data): Product
     {
-        $tagIds = $this->prepareTags($data['tags'] ?? []);
-
-        unset($data['tags']);
-
-        $blog->update(
-            $this->prepareData($data, $blog)
-        );
-
-        $blog->tags()->sync($tagIds);
-
-        return $blog->fresh([
-            'category',
-            'author',
-            'tags',
-        ]);
-    }
-
-    public function delete(Blog $blog): bool
-    {
-        if ($blog->featured_image) {
-            Storage::disk('public')->delete(
-                $blog->featured_image
+        return DB::transaction(function () use ($data) {
+            $tagIds = $this->prepareTags(
+                $data['tags'] ?? []
             );
-        }
 
-        if ($blog->og_image) {
-            Storage::disk('public')->delete(
-                $blog->og_image
+            unset($data['tags']);
+
+            $data['slug'] = $this->generateUniqueSlug(
+                $data['name']
             );
-        }
 
-        $blog->tags()->detach();
+            if (!empty($data['thumbnail'])) {
+                $data['thumbnail'] = $data['thumbnail']
+                    ->store('products', 'public');
+            }
 
-        return $blog->delete();
+            $product = Product::create($data);
+
+            $product->tags()->sync($tagIds);
+
+            return $product->load([
+                'category',
+                'brand',
+                'tags',
+            ]);
+        });
     }
 
-    private function prepareTags(array $tags): array
+    public function edit(Product $product): array
+    {
+        return [
+            'product' => $product->load([
+                'category',
+                'brand',
+                'tags',
+            ]),
+            'categories' => $this->getCategories(),
+            'brands' => $this->getBrands(),
+            'tags' => $this->getTags(),
+        ];
+    }
+
+    public function update(
+        Product $product,
+        array $data
+    ): Product {
+        return DB::transaction(function () use (
+            $product,
+            $data
+        ) {
+            $tagIds = $this->prepareTags(
+                $data['tags'] ?? []
+            );
+
+            unset($data['tags']);
+
+            $data['slug'] = $this->generateUniqueSlug(
+                $data['name'],
+                $product->id
+            );
+
+            if (!empty($data['thumbnail'])) {
+                if ($product->thumbnail) {
+                    Storage::disk('public')->delete(
+                        $product->thumbnail
+                    );
+                }
+
+                $data['thumbnail'] = $data['thumbnail']
+                    ->store('products', 'public');
+            } else {
+                unset($data['thumbnail']);
+            }
+
+            $product->update($data);
+
+            $product->tags()->sync($tagIds);
+
+            return $product->fresh([
+                'category',
+                'brand',
+                'tags',
+            ]);
+        });
+    }
+
+    public function delete(Product $product): bool
+    {
+        return DB::transaction(function () use ($product) {
+            $product->tags()->detach();
+
+            if ($product->thumbnail) {
+                Storage::disk('public')->delete(
+                    $product->thumbnail
+                );
+            }
+
+            return $product->delete();
+        });
+    }
+
+    protected function prepareTags(array $tags): array
     {
         return collect($tags)
             ->map(function ($tag) {
@@ -151,9 +231,15 @@ class ProductService
                     return null;
                 }
 
+                $slug = Str::slug($name);
+
+                if ($slug === '') {
+                    return null;
+                }
+
                 return Tag::firstOrCreate(
                     [
-                        'slug' => Str::slug($name),
+                        'slug' => $slug,
                     ],
                     [
                         'name' => $name,
@@ -167,41 +253,36 @@ class ProductService
             ->all();
     }
 
-    private function prepareData(
-        array $data,
-        ?Blog $blog = null
-    ): array {
-        $data['slug'] = Str::slug($data['title']);
+    protected function generateUniqueSlug(
+        string $name,
+        ?int $ignoreId = null
+    ): string {
+        $slug = Str::slug($name);
 
-        if (isset($data['featured_image']) && $data['featured_image']) {
-            if ($blog?->featured_image) {
-                Storage::disk('public')->delete(
-                    $blog->featured_image
-                );
-            }
-
-            $data['featured_image'] = $data['featured_image']
-                ->store('blogs/featured', 'public');
-        } elseif ($blog) {
-            unset($data['featured_image']);
+        if ($slug === '') {
+            $slug = 'product';
         }
 
-        if (isset($data['og_image']) && $data['og_image']) {
-            if ($blog?->og_image) {
-                Storage::disk('public')->delete(
-                    $blog->og_image
-                );
-            }
+        $originalSlug = $slug;
+        $counter = 1;
 
-            $data['og_image'] = $data['og_image']
-                ->store('blogs/og', 'public');
-        } elseif ($blog) {
-            unset($data['og_image']);
+        while (
+            Product::query()
+                ->where('slug', $slug)
+                ->when(
+                    $ignoreId,
+                    fn ($query) => $query->where(
+                        'id',
+                        '!=',
+                        $ignoreId
+                    )
+                )
+                ->exists()
+        ) {
+            $slug = "{$originalSlug}-{$counter}";
+            $counter++;
         }
 
-        $data['is_featured'] = $data['is_featured'] ?? false;
-        $data['allow_comments'] = $data['allow_comments'] ?? false;
-
-        return $data;
+        return $slug;
     }
 }

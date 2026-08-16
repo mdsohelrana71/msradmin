@@ -15,12 +15,12 @@ return new class extends Migration
             $table->id();
 
             $table->foreignId('category_id')
-                ->constrained('product_categories')
+                ->constrained('categories')
                 ->cascadeOnDelete();
 
             $table->foreignId('brand_id')
                 ->nullable()
-                ->constrained('product_brands')
+                ->constrained('brands')
                 ->nullOnDelete();
 
             $table->string('name');

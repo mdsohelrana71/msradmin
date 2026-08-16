@@ -2,8 +2,7 @@
 
 namespace App\Http\Controllers\Admin;
 
-
-use App\Models\Blog;
+use App\Models\Product;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Services\Admin\ProductService;
@@ -17,7 +16,10 @@ class ProductController extends Controller
 
     public function index(Request $request)
     {
-        $products = $this->productService->getBlogs($request->all());
+        $products = $this->productService->getProducts(
+            $request->input('search'),
+            $request->input('sort')
+        );
 
         if ($request->ajax()) {
             $html = view(
@@ -28,61 +30,87 @@ class ProductController extends Controller
             return response()->json(['html' => $html]);
         }
 
-        return view('admin.Product.index', compact('products'));
+        return view(
+            'admin.Product.index',
+            compact('products')
+        );
     }
 
     public function create()
     {
         $categories = $this->productService->getCategories();
+        $brands = $this->productService->getBrands();
         $tags = $this->productService->getTags();
 
         return view(
             'admin.Product.create',
-            compact('categories', 'tags')
+            compact(
+                'categories',
+                'brands',
+                'tags'
+            )
         );
     }
 
     public function store(ProductRequest $request)
     {
-        $this->productService->create(
+        $this->productService->store(
             $request->validated()
         );
 
         return redirect()
             ->route('admin.products.index')
-            ->with('success', 'Product created successfully.');
+            ->with(
+                'success',
+                'Product created successfully.'
+            );
     }
 
-    public function edit(Blog $product)
+    public function edit(Product $product)
     {
         $categories = $this->productService->getCategories();
+        $brands = $this->productService->getBrands();
         $tags = $this->productService->getTags();
 
-        $product->load('tags');
+        $product->load([
+            'category',
+            'brand',
+            'tags',
+        ]);
 
         return view(
             'admin.Product.edit',
-            compact('product', 'categories', 'tags')
+            compact(
+                'product',
+                'categories',
+                'brands',
+                'tags'
+            )
         );
     }
 
     public function update(
         ProductRequest $request,
-        Blog $blog
+        Product $product
     ) {
         $this->productService->update(
-            $blog,
+            $product,
             $request->validated()
         );
 
         return redirect()
             ->route('admin.products.index')
-            ->with('success', 'Product updated successfully.');
+            ->with(
+                'success',
+                'Product updated successfully.'
+            );
     }
 
-    public function show(Blog $blog)
+    public function show(Product $product)
     {
-        $product = $this->productService->getBlog($blog);
+        $product = $this->productService->getProduct(
+            $product
+        );
 
         return view(
             'admin.Product.show',
@@ -90,12 +118,15 @@ class ProductController extends Controller
         );
     }
 
-    public function destroy(Blog $blog)
+    public function destroy(Product $product)
     {
-        $this->productService->delete($blog);
+        $this->productService->delete($product);
 
         return redirect()
             ->route('admin.products.index')
-            ->with('success', 'Product deleted successfully.');
+            ->with(
+                'success',
+                'Product deleted successfully.'
+            );
     }
 }

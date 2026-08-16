@@ -23,6 +23,7 @@
             <div class="card-header">
                 <div class="d-flex align-items-center">
                     <h4 class="card-title">Add Product</h4>
+
                     <a
                         href="{{ route('admin.products.index') }}"
                         class="btn btn-secondary btn-round ms-auto"
@@ -42,7 +43,9 @@
                     >
                         @csrf
 
-                        @include('admin.Product.partials.form')
+                        @include('admin.Product.partials.form', [
+                            'product' => null,
+                        ])
 
                         <x-admin.form-actions
                             submitText="Save Product"
