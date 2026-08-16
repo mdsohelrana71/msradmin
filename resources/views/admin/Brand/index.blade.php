@@ -34,73 +34,16 @@
                             placeholder="Search brands..."
                         />
 
-                        <div class="dropdown">
-                            <button
-                                class="btn btn-light border dropdown-toggle"
-                                type="button"
-                                data-bs-toggle="dropdown"
-                                aria-expanded="false"
-                            >
-                                <i class="fa fa-sort me-1"></i>
-                                Sort By
-                            </button>
-
-                            <ul class="dropdown-menu dropdown-menu-end">
-                                <li>
-                                    <a
-                                        class="dropdown-item {{ request('sort') === 'a_z' ? 'active' : '' }}"
-                                        href="{{ request()->fullUrlWithQuery(['sort' => 'a_z']) }}"
-                                    >
-                                        A to Z
-                                    </a>
-                                </li>
-
-                                <li>
-                                    <a
-                                        class="dropdown-item {{ request('sort') === 'z_a' ? 'active' : '' }}"
-                                        href="{{ request()->fullUrlWithQuery(['sort' => 'z_a']) }}"
-                                    >
-                                        Z to A
-                                    </a>
-                                </li>
-
-                                <li>
-                                    <a
-                                        class="dropdown-item {{ request('sort') === 'latest' ? 'active' : '' }}"
-                                        href="{{ request()->fullUrlWithQuery(['sort' => 'latest']) }}"
-                                    >
-                                        Latest
-                                    </a>
-                                </li>
-
-                                <li>
-                                    <a
-                                        class="dropdown-item {{ request('sort') === 'oldest' ? 'active' : '' }}"
-                                        href="{{ request()->fullUrlWithQuery(['sort' => 'oldest']) }}"
-                                    >
-                                        Oldest
-                                    </a>
-                                </li>
-
-                                <li>
-                                    <a
-                                        class="dropdown-item {{ request('sort') === 'active' ? 'active' : '' }}"
-                                        href="{{ request()->fullUrlWithQuery(['sort' => 'active']) }}"
-                                    >
-                                        Active
-                                    </a>
-                                </li>
-
-                                <li>
-                                    <a
-                                        class="dropdown-item {{ request('sort') === 'inactive' ? 'active' : '' }}"
-                                        href="{{ request()->fullUrlWithQuery(['sort' => 'inactive']) }}"
-                                    >
-                                        Inactive
-                                    </a>
-                                </li>
-                            </ul>
-                        </div>
+                        <x-admin.sort-dropdown
+                            :options="[
+                                'a_z' => 'A to Z',
+                                'z_a' => 'Z to A',
+                                'latest' => 'Latest',
+                                'oldest' => 'Oldest',
+                                'active' => 'Active',
+                                'inactive' => 'Inactive',
+                            ]"
+                        />
                     </div>
                 </div>
             </div>
