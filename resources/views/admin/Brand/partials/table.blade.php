@@ -18,14 +18,10 @@
 
                     <td>
                         @if ($brand->logo)
-                            <img
-                                src="{{ asset('storage/' . $brand->logo) }}"
-                                alt="{{ $brand->name }}"
-                                class="rounded"
+                            <img src="{{ asset('storage/' . $brand->logo) }}" alt="{{ $brand->name }}" class="rounded"
                                 style="width:65px;height:50px;object-fit:contain;">
                         @else
-                            <div
-                                class="rounded bg-light d-flex align-items-center justify-content-center"
+                            <div class="rounded bg-light d-flex align-items-center justify-content-center"
                                 style="width:65px;height:50px;">
                                 <i class="fas fa-tags text-muted"></i>
                             </div>
@@ -61,50 +57,34 @@
                     <td>
                         <div class="d-flex gap-1">
                             @can('brands.view')
-                                <a
-                                    href="{{ route('admin.brands.show', $brand) }}"
-                                    class="btn btn-info btn-sm"
-                                    title="View"
-                                    data-bs-toggle="tooltip">
+                                <a href="{{ route('admin.brands.show', $brand) }}" class="btn btn-info btn-sm"
+                                    title="View" data-bs-toggle="tooltip">
                                     <i class="fa fa-eye"></i>
                                 </a>
                             @endcan
 
                             @can('brands.edit')
-                                <a
-                                    href="{{ route('admin.brands.edit', $brand) }}"
-                                    class="btn btn-primary btn-sm"
-                                    title="Edit"
-                                    data-bs-toggle="tooltip">
+                                <a href="{{ route('admin.brands.edit', $brand) }}" class="btn btn-primary btn-sm"
+                                    title="Edit" data-bs-toggle="tooltip">
                                     <i class="fa fa-edit"></i>
                                 </a>
                             @endcan
 
                             @can('brands.delete')
-                                <form
-                                    id="deleteBrandForm{{ $brand->id }}"
-                                    action="{{ route('admin.brands.destroy', $brand) }}"
-                                    method="POST"
-                                    class="d-inline">
+                                <form id="deleteBrandForm{{ $brand->id }}"
+                                    action="{{ route('admin.brands.destroy', $brand) }}" method="POST" class="d-inline">
                                     @csrf
                                     @method('DELETE')
 
-                                    <button
-                                        type="button"
-                                        class="btn btn-danger btn-sm"
-                                        title="Delete"
-                                        data-bs-toggle="modal"
-                                        data-bs-target="#deleteBrandModal{{ $brand->id }}">
+                                    <button type="button" class="btn btn-danger btn-sm" title="Delete"
+                                        data-bs-toggle="modal" data-bs-target="#deleteBrandModal{{ $brand->id }}">
                                         <i class="fa fa-trash"></i>
                                     </button>
                                 </form>
 
-                                <x-confirm-modal
-                                    id="deleteBrandModal{{ $brand->id }}"
-                                    formId="deleteBrandForm{{ $brand->id }}"
-                                    title="Delete Brand?"
-                                    message="Are you sure you want to delete this brand?"
-                                    confirmText="Yes, Delete"
+                                <x-confirm-modal id="deleteBrandModal{{ $brand->id }}"
+                                    formId="deleteBrandForm{{ $brand->id }}" title="Delete Brand?"
+                                    message="Are you sure you want to delete this brand?" confirmText="Yes, Delete"
                                     confirmClass="btn-danger" />
                             @endcan
                         </div>
@@ -119,9 +99,7 @@
                             <h5 class="text-muted">No brands found</h5>
 
                             @can('brands.create')
-                                <a
-                                    href="{{ route('admin.brands.create') }}"
-                                    class="btn btn-primary btn-sm mt-2">
+                                <a href="{{ route('admin.brands.create') }}" class="btn btn-primary btn-sm mt-2">
                                     <i class="fa fa-plus me-1"></i>
                                     Create Brand
                                 </a>
