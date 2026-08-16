@@ -25,7 +25,7 @@
                                 src="{{ asset('storage/' . $product->thumbnail) }}"
                                 alt="{{ $product->name }}"
                                 class="rounded"
-                                style="width:65px;height:50px;object-fit:cover;"
+                                style="width:65px;height:100%;object-fit:cover;"
                             >
                         @else
                             <div

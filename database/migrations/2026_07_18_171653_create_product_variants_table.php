@@ -22,10 +22,19 @@ return new class extends Migration
                 ->constrained('product_attributes')
                 ->cascadeOnDelete();
 
+            $table->foreignId('attribute_value_id')
+                ->constrained('product_attribute_values')
+                ->cascadeOnDelete();
+
             $table->boolean('status')->default(true);
             $table->integer('sort_order')->default(0);
 
             $table->timestamps();
+
+            $table->unique(
+                ['product_id', 'attribute_id', 'attribute_value_id'],
+                'product_variant_attr_value_unique'
+            );
         });
     }
 

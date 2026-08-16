@@ -37,18 +37,18 @@
                             placeholder="Search products..."
                         />
                         <x-admin.sort-dropdown
-                            :items="[
-                                ['value' => 'a_z', 'label' => 'A to Z'],
-                                ['value' => 'z_a', 'label' => 'Z to A'],
-                                ['value' => 'latest', 'label' => 'Latest'],
-                                ['value' => 'oldest', 'label' => 'Oldest'],
-                                ['value' => 'price_low', 'label' => 'Price: Low to High'],
-                                ['value' => 'price_high', 'label' => 'Price: High to Low'],
-                                ['value' => 'stock_low', 'label' => 'Stock: Low to High'],
-                                ['value' => 'stock_high', 'label' => 'Stock: High to Low'],
-                                ['value' => 'featured', 'label' => 'Featured'],
-                                ['value' => 'active', 'label' => 'Active'],
-                                ['value' => 'inactive', 'label' => 'Inactive'],
+                            :options="[
+                                'a_z' => 'A to Z',
+                                'z_a' => 'Z to A',
+                                'latest' => 'Latest',
+                                'oldest' => 'Oldest',
+                                'price_low' => 'Price: Low to High',
+                                'price_high' => 'Price: High to Low',
+                                'stock_low' => 'Stock: Low to High',
+                                'stock_high' => 'Stock: High to Low',
+                                'featured' => 'Featured',
+                                'active' => 'Active',
+                                'inactive' => 'Inactive',
                             ]"
                         />
                     </div>
