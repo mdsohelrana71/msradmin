@@ -22,6 +22,16 @@ return [
         ],
     ],
 
+    'brands' => [
+        'label' => 'Brands',
+        'permissions' => [
+            'brands.view' => 'View brands',
+            'brands.create' => 'Create brands',
+            'brands.edit' => 'Edit brands',
+            'brands.delete' => 'Delete brands',
+        ],
+    ],
+
     'blogs' => [
         'label' => 'Blogs',
         'permissions' => [

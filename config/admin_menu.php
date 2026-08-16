@@ -38,6 +38,24 @@ return [
         'permission' => 'accounts.view',
     ],
     [
+        'title' => 'Product Categories',
+        'route' => 'admin.product-categories.index',
+        'icon' => 'fa fa-folder',
+        'permission' => 'product_categories.view',
+    ],
+    [
+        'title' => 'Products',
+        'route' => 'admin.products.index',
+        'icon' => 'fa fa-box',
+        'permission' => 'products.view',
+    ],
+    [
+        'title' => 'Brands',
+        'route' => 'admin.brands.index',
+        'icon' => 'fa fa-tags',
+        'permission' => 'brands.view',
+    ],
+    [
         'title' => 'Blog Categories',
         'route' => 'admin.blog-categories.index',
         'icon' => 'fa fa-folder',

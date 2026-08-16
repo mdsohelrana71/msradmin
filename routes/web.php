@@ -5,6 +5,7 @@ use Illuminate\Support\Facades\Artisan;
 use App\Http\Controllers\Admin\BlogController;
 use App\Http\Controllers\Admin\RoleController;
 use App\Http\Controllers\Admin\UserController;
+use App\Http\Controllers\Admin\BrandController;
 use App\Http\Controllers\Admin\ProductController;
 use App\Http\Controllers\Admin\AccountController;
 use App\Http\Controllers\Admin\SettingsController;
@@ -27,6 +28,7 @@ Route::middleware('auth')->prefix('admin')->name('admin.')->group(function () {
     Route::resource('roles', RoleController::class);
     Route::resource('accounts', AccountController::class);
     Route::resource('products', ProductController::class);
+    Route::resource('brands', BrandController::class);
     Route::resource('blogs', BlogController::class);
     Route::resource('blog-categories', BlogCategoryController::class)
         ->parameters([

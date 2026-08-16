@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Models\Brand;
 use App\Models\Category;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -45,8 +46,8 @@ class Product extends Model
         return $this->belongsTo(Category::class);
     }
 
-    // public function brand(): BelongsTo
-    // {
-    //     return $this->belongsTo(ProductBrand::class);
-    // }
+    public function brand(): BelongsTo
+    {
+        return $this->belongsTo(Brand::class);
+    }
 }
