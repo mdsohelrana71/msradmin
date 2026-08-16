@@ -326,7 +326,7 @@
                 >
 
                 <small class="text-muted">
-                    Recommended size: 1200 × 630px
+                    Recommended size: 1200 x 630px
                 </small>
 
                 @error('og_image')
