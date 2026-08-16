@@ -110,6 +110,28 @@ class ProductRequest extends FormRequest
                 'boolean',
             ],
 
+            /*
+            |--------------------------------------------------------------------------
+            | Product Attributes
+            |--------------------------------------------------------------------------
+            */
+
+            'attributes' => [
+                'nullable',
+                'array',
+            ],
+
+            'attributes.*' => [
+                'integer',
+                'exists:product_attributes,id',
+            ],
+
+            /*
+            |--------------------------------------------------------------------------
+            | Product Tags
+            |--------------------------------------------------------------------------
+            */
+
             'tags' => [
                 'nullable',
                 'array',
@@ -119,6 +141,93 @@ class ProductRequest extends FormRequest
                 'nullable',
                 'string',
                 'max:255',
+            ],
+
+            /*
+            |--------------------------------------------------------------------------
+            | Product Variants
+            |--------------------------------------------------------------------------
+            */
+
+            'variants' => [
+                'nullable',
+                'array',
+            ],
+
+            'variants.*.id' => [
+                'nullable',
+                'integer',
+                'exists:product_variants,id',
+            ],
+
+            'variants.*.sku' => [
+                'nullable',
+                'string',
+                'max:255',
+            ],
+
+            'variants.*.barcode' => [
+                'nullable',
+                'string',
+                'max:255',
+            ],
+
+            'variants.*.price' => [
+                'required',
+                'numeric',
+                'min:0',
+            ],
+
+            'variants.*.discount_price' => [
+                'nullable',
+                'numeric',
+                'min:0',
+                'lte:variants.*.price',
+            ],
+
+            'variants.*.stock' => [
+                'required',
+                'integer',
+                'min:0',
+            ],
+
+            'variants.*.image' => [
+                'nullable',
+                'image',
+                'mimes:jpg,jpeg,png,webp',
+                'max:2048',
+            ],
+
+            'variants.*.status' => [
+                'boolean',
+            ],
+
+            'variants.*.values' => [
+                'required',
+                'array',
+                'min:1',
+            ],
+
+            'variants.*.values.*.attribute_id' => [
+                'required',
+                'integer',
+                'exists:product_attributes,id',
+            ],
+
+            'variants.*.values.*.attribute_value_id' => [
+                'required',
+                'integer',
+                'exists:product_attribute_values,id',
+            ],
+
+            'removed_variant_ids' => [
+                'nullable',
+                'array',
+            ],
+
+            'removed_variant_ids.*' => [
+                'integer',
+                'exists:product_variants,id',
             ],
         ];
     }

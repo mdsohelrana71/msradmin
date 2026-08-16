@@ -7,6 +7,7 @@ use App\Models\Brand;
 use App\Models\Product;
 use App\Models\Category;
 use Illuminate\Support\Str;
+use App\Models\ProductAttribute;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Database\Eloquent\Collection;
@@ -36,33 +37,22 @@ class ProductService
             ->when($sort, function ($query) use ($sort) {
                 match ($sort) {
                     'a_z' => $query->orderBy('name'),
-
                     'z_a' => $query->orderByDesc('name'),
-
                     'latest' => $query->latest('created_at'),
-
                     'oldest' => $query->oldest('created_at'),
-
                     'price_low' => $query->orderBy('selling_price'),
-
                     'price_high' => $query->orderByDesc('selling_price'),
-
                     'stock_low' => $query->orderBy('stock'),
-
                     'stock_high' => $query->orderByDesc('stock'),
-
                     'featured' => $query
                         ->where('is_featured', true)
                         ->orderBy('name'),
-
                     'active' => $query
                         ->where('status', true)
                         ->orderBy('name'),
-
                     'inactive' => $query
                         ->where('status', false)
                         ->orderBy('name'),
-
                     default => $query->latest('created_at'),
                 };
             }, function ($query) {
@@ -72,76 +62,13 @@ class ProductService
             ->withQueryString();
     }
 
-    public function getProduct(Product $product): Product
-    {
-        return $product->load([
-            'category',
-            'brand',
-            'tags',
-        ]);
-    }
-
-    public function getCategories(): Collection
-    {
-        return Category::query()
-            ->ofType('product')
-            ->active()
-            ->orderBy('name')
-            ->get();
-    }
-
-    public function getBrands(): Collection
-    {
-        return Brand::query()
-            ->where('status', true)
-            ->orderBy('name')
-            ->get();
-    }
-
-    public function getTags(): Collection
-    {
-        return Tag::query()
-            ->orderBy('name')
-            ->get();
-    }
-
     public function create(): array
     {
         return [
             'categories' => $this->getCategories(),
             'brands' => $this->getBrands(),
-            'tags' => $this->getTags(),
+            'attributes' => $this->getAttributes(),
         ];
-    }
-
-    public function store(array $data): Product
-    {
-        return DB::transaction(function () use ($data) {
-            $tagIds = $this->prepareTags(
-                $data['tags'] ?? []
-            );
-
-            unset($data['tags']);
-
-            $data['slug'] = $this->generateUniqueSlug(
-                $data['name']
-            );
-
-            if (!empty($data['thumbnail'])) {
-                $data['thumbnail'] = $data['thumbnail']
-                    ->store('products', 'public');
-            }
-
-            $product = Product::create($data);
-
-            $product->tags()->sync($tagIds);
-
-            return $product->load([
-                'category',
-                'brand',
-                'tags',
-            ]);
-        });
     }
 
     public function edit(Product $product): array
@@ -151,76 +78,374 @@ class ProductService
                 'category',
                 'brand',
                 'tags',
+                'attributeAssignments.attribute',
+                'variants.values.attribute',
+                'variants.values.attributeValue',
             ]),
             'categories' => $this->getCategories(),
             'brands' => $this->getBrands(),
-            'tags' => $this->getTags(),
+            'attributes' => $this->getAttributes(),
         ];
     }
 
-    public function update(
-        Product $product,
-        array $data
-    ): Product {
+    public function getCategories()
+    {
+        return Category::query()
+            ->where('status', true)
+            ->orderBy('name')
+            ->get();
+    }
 
-        return DB::transaction(function () use (
-            $product,
-            $data
-        ) {
-            $tagIds = $this->prepareTags(
-                $data['tags'] ?? []
+    public function getBrands()
+    {
+        return Brand::query()
+            ->where('status', true)
+            ->orderBy('name')
+            ->get();
+    }
+
+    public function getAttributes(): Collection
+    {
+        return ProductAttribute::query()
+            ->where('status', true)
+            ->with([
+                'values' => function ($query) {
+                    $query
+                        ->where('status', true)
+                        ->orderBy('sort_order')
+                        ->orderBy('value');
+                },
+            ])
+            ->orderBy('sort_order')
+            ->orderBy('name')
+            ->get();
+    }
+
+    public function getProduct(Product $product): Product
+    {
+        return $product->load([
+            'category',
+            'brand',
+            'tags',
+            'attributeAssignments.attribute',
+            'variants.values.attribute',
+            'variants.values.attributeValue',
+        ]);
+    }
+
+    public function getTags(): Collection
+    {
+        return Tag::query()
+            ->orderBy('name')
+            ->get();
+    }
+
+    public function store(array $data): Product
+    {
+        return DB::transaction(function () use ($data) {
+            $tags = $data['tags'] ?? [];
+            $attributes = $data['attributes'] ?? [];
+            $variants = $data['variants'] ?? [];
+
+            unset(
+                $data['tags'],
+                $data['attributes'],
+                $data['variants']
             );
-
-            unset($data['tags']);
 
             $data['slug'] = $this->generateUniqueSlug(
-                $data['name'],
-                $product->id
+                $data['name']
             );
 
-            if (!empty($data['thumbnail'])) {
-                if ($product->thumbnail) {
-                    Storage::disk('public')->delete(
-                        $product->thumbnail
-                    );
-                }
+            $data['is_featured'] = $data['is_featured'] ?? false;
+            $data['status'] = $data['status'] ?? false;
 
+            if (!empty($data['thumbnail'])) {
                 $data['thumbnail'] = $data['thumbnail']
                     ->store('products', 'public');
-            } else {
-                unset($data['thumbnail']);
             }
 
-            $data['is_featured'] = $data['is_featured'] ?? false;
+            $product = Product::create($data);
 
-            $product->update($data);
+            $product->tags()->sync(
+                $this->prepareTags($tags)
+            );
 
-            $product->tags()->sync($tagIds);
+            $this->syncAttributes(
+                $product,
+                $attributes
+            );
 
-            return $product->fresh([
+            $this->syncVariants(
+                $product,
+                $variants
+            );
+
+            return $product->load([
                 'category',
                 'brand',
                 'tags',
+                'attributeAssignments.attribute',
+                'variants.values.attribute',
+                'variants.values.attributeValue',
             ]);
         });
     }
 
-    public function delete(Product $product): bool
-    {
-        return DB::transaction(function () use ($product) {
-            $product->tags()->detach();
+public function update(Product $product,array $data): Product {
 
+    return DB::transaction(function () use (
+        $product,
+        $data
+    ) {
+        $tags = $data['tags'] ?? [];
+        $attributes = $data['attributes'] ?? [];
+        $variants = $data['variants'] ?? [];
+        $removedVariantIds = $data['removed_variant_ids'] ?? [];
+
+        unset(
+            $data['tags'],
+            $data['attributes'],
+            $data['variants'],
+            $data['removed_variant_ids']
+        );
+
+        $data['slug'] = $this->generateUniqueSlug(
+            $data['name'],
+            $product->id
+        );
+
+        $data['is_featured'] = $data['is_featured'] ?? false;
+        $data['status'] = $data['status'] ?? false;
+
+        if (!empty($data['thumbnail'])) {
             if ($product->thumbnail) {
                 Storage::disk('public')->delete(
                     $product->thumbnail
                 );
             }
 
+            $data['thumbnail'] = $data['thumbnail']
+                ->store('products', 'public');
+        } else {
+            unset($data['thumbnail']);
+        }
+
+        $product->update($data);
+
+        $product->tags()->sync(
+            $this->prepareTags($tags)
+        );
+
+        $this->syncAttributes(
+            $product,
+            $attributes
+        );
+
+
+        if (!empty($removedVariantIds)) {
+            $product->variants()
+                ->whereIn('id', $removedVariantIds)
+                ->delete();
+        }
+
+        $this->syncVariants(
+            $product,
+            $variants
+        );
+
+        return $product->refresh()->load([
+            'category',
+            'brand',
+            'tags',
+            'attributeAssignments.attribute',
+            'variants.values.attribute',
+            'variants.values.attributeValue',
+        ]);
+    });
+}
+
+    public function delete(Product $product): bool
+    {
+        return DB::transaction(function () use ($product) {
+            $product->tags()->detach();
+
+            $product->variants()
+                ->each(function ($variant) {
+                    if ($variant->image) {
+                        Storage::disk('public')
+                            ->delete($variant->image);
+                    }
+                });
+
+            $product->attributeAssignments()->delete();
+            $product->variants()->delete();
+
+            if ($product->thumbnail) {
+                Storage::disk('public')
+                    ->delete($product->thumbnail);
+            }
+
             return $product->delete();
         });
     }
 
-    protected function prepareTags(array $tags): array
+    protected function syncAttributes(
+        Product $product,
+        array $attributes
+    ): void {
+        $attributeIds = collect($attributes)
+            ->map(fn ($attribute) => (int) $attribute)
+            ->filter()
+            ->unique()
+            ->values();
+
+        $product->attributeAssignments()->delete();
+
+        foreach ($attributeIds as $attributeId) {
+            $product->attributeAssignments()->create([
+                'attribute_id' => $attributeId,
+            ]);
+        }
+    }
+
+    protected function syncVariants(Product $product, array $variants): void
+    {
+        $existingVariantIds = $product->variants()
+            ->pluck('id')
+            ->all();
+
+        $submittedVariantIds = [];
+
+        foreach ($variants as $index => $variantData) {
+            $variantId = $variantData['id'] ?? null;
+            $variantAttributes = $variantData['values'] ?? [];
+            $image = $variantData['image'] ?? null;
+            $removeImage = !empty($variantData['remove_image'])
+                && $variantData['remove_image'] == 1;
+
+            $variantData = collect($variantData)
+                ->except([
+                    'id',
+                    'values',
+                    'image',
+                    'remove_image',
+                ])
+                ->toArray();
+
+            $variantData['status'] =
+                $variantData['status'] ?? true;
+
+            $variantData['sort_order'] =
+                $variantData['sort_order'] ?? $index;
+
+            /*
+            * Existing variant
+            */
+            if ($variantId) {
+                $variant = $product->variants()
+                    ->whereKey($variantId)
+                    ->first();
+
+                if (!$variant) {
+                    continue;
+                }
+
+                /*
+                * Remove existing image
+                */
+                if ($removeImage && $variant->image) {
+                    Storage::disk('public')
+                        ->delete($variant->image);
+
+                    $variantData['image'] = null;
+                }
+
+                /*
+                * Upload new image
+                *
+                * If a new image is uploaded,
+                * old image will be deleted first.
+                */
+                if ($image) {
+                    if ($variant->image) {
+                        Storage::disk('public')
+                            ->delete($variant->image);
+                    }
+
+                    $variantData['image'] = $image
+                        ->store('products/variants', 'public');
+                }
+
+                $variant->update($variantData);
+            }
+
+            /*
+            * New variant
+            */
+            else {
+                if ($image) {
+                    $variantData['image'] = $image
+                        ->store('products/variants', 'public');
+                }
+
+                $variant = $product->variants()
+                    ->create($variantData);
+            }
+
+            $submittedVariantIds[] = $variant->id;
+
+            $this->syncVariantValues(
+                $variant,
+                $variantAttributes
+            );
+        }
+
+        /*
+        * Delete removed variants
+        * and their images
+        */
+        $variantsToDelete = array_diff(
+            $existingVariantIds,
+            $submittedVariantIds
+        );
+
+        if (!empty($variantsToDelete)) {
+            $product->variants()
+                ->whereIn('id', $variantsToDelete)
+                ->each(function ($variant) {
+                    if ($variant->image) {
+                        Storage::disk('public')
+                            ->delete($variant->image);
+                    }
+
+                    $variant->delete();
+                });
+        }
+    }
+
+    protected function syncVariantValues(
+        $variant,
+        array $values
+    ): void {
+        $variant->values()->delete();
+
+        foreach ($values as $value) {
+            if (
+                empty($value['attribute_id']) ||
+                empty($value['attribute_value_id'])
+            ) {
+                continue;
+            }
+
+            $variant->values()->create([
+                'attribute_id' => $value['attribute_id'],
+                'attribute_value_id' => $value['attribute_value_id'],
+            ]);
+        }
+    }
+
+    private function prepareTags(array $tags): array
     {
         return collect($tags)
             ->map(function ($tag) {
@@ -234,15 +459,9 @@ class ProductService
                     return null;
                 }
 
-                $slug = Str::slug($name);
-
-                if ($slug === '') {
-                    return null;
-                }
-
                 return Tag::firstOrCreate(
                     [
-                        'slug' => $slug,
+                        'slug' => Str::slug($name),
                     ],
                     [
                         'name' => $name,

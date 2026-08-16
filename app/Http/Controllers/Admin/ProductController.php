@@ -41,13 +41,15 @@ class ProductController extends Controller
         $categories = $this->productService->getCategories();
         $brands = $this->productService->getBrands();
         $tags = $this->productService->getTags();
+        $attributes = $this->productService->getAttributes();
 
         return view(
             'admin.Product.create',
             compact(
                 'categories',
                 'brands',
-                'tags'
+                'tags',
+                'attributes'
             )
         );
     }
@@ -68,15 +70,12 @@ class ProductController extends Controller
 
     public function edit(Product $product)
     {
+        $product = $this->productService->getProduct($product);
+
         $categories = $this->productService->getCategories();
         $brands = $this->productService->getBrands();
         $tags = $this->productService->getTags();
-
-        $product->load([
-            'category',
-            'brand',
-            'tags',
-        ]);
+        $attributes = $this->productService->getAttributes();
 
         return view(
             'admin.Product.edit',
@@ -84,7 +83,8 @@ class ProductController extends Controller
                 'product',
                 'categories',
                 'brands',
-                'tags'
+                'tags',
+                'attributes'
             )
         );
     }

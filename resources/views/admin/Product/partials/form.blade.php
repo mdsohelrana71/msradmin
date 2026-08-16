@@ -231,36 +231,21 @@
                 <div class="form-group mb-1">
                     <label for="tags">Tags</label>
 
-                    <div class="form-control gap-2"
-                        id="tags-container"
-                        style="min-height: 45px; cursor: text;"
-                    >
+                    <div class="form-control gap-2" id="tags-container" style="min-height: 45px; cursor: text;">
                         @foreach ($product->tags ?? [] as $tag)
                             <span class="badge bg-primary gap-1 tag-item">
                                 {{ ucfirst($tag->name) }}
 
-                                <button
-                                    type="button"
-                                    class="btn-close btn-close-white remove-tag"
-                                    style="font-size: 8px;"
-                                ></button>
+                                <button type="button" class="btn-close btn-close-white remove-tag"
+                                    style="font-size: 8px;"></button>
 
-                                <input
-                                    type="hidden"
-                                    name="tags[]"
-                                    value="{{ $tag->id }}"
-                                >
+                                <input type="hidden" name="tags[]" value="{{ $tag->id }}">
                             </span>
                         @endforeach
 
-                        <input
-                            type="text"
-                            id="tag-input"
-                            class="border-0 outline-none grow"
-                            placeholder="Type a tag and press Enter..."
-                            autocomplete="off"
-                            style="min-width: 180px; outline: none;"
-                        >
+                        <input type="text" id="tag-input" class="border-0 outline-none grow"
+                            placeholder="Type a tag and press Enter..." autocomplete="off"
+                            style="min-width: 180px; outline: none;">
                     </div>
 
                     @error('tags')
@@ -368,9 +353,90 @@
             </div>
         </div>
     </div>
+    <div class="col-12">
+        <div class="card border mt-4 shadow-none">
+            <div class="card-header d-flex justify-content-between align-items-center">
+                <h5 class="card-title mb-0">Product Variants</h5>
+
+                <button type="button" id="generate-variants" class="btn btn-primary btn-sm">
+                    <i class="fa fa-refresh me-1"></i>
+                    Generate Variants
+                </button>
+            </div>
+
+            <div class="card-body">
+                @php
+                    $assignedAttributeIds = collect($product?->attributeAssignments ?? [])
+                        ->pluck('attribute_id')
+                        ->map(fn ($id) => (int) $id)
+                        ->toArray();
+
+                    $existingVariantValueIds = collect($product?->variants ?? [])
+                        ->flatMap(function ($variant) {
+                            return $variant->values->pluck('attribute_value_id');
+                        })
+                        ->map(fn ($id) => (int) $id)
+                        ->unique()
+                        ->values()
+                        ->toArray();
+                @endphp
+
+                <div class="form-group mb-4">
+                    <label class="form-label">
+                        Attributes
+                    </label>
+
+                    <div class="row">
+                        @foreach ($attributes as $attribute)
+                            <div class="col-md-4 mb-3">
+                                <div class="form-check">
+                                    <input
+                                        type="checkbox"
+                                        name="attributes[]"
+                                        class="form-check-input attribute-checkbox"
+                                        id="attribute_{{ $attribute->id }}"
+                                        value="{{ $attribute->id }}"
+                                        data-name="{{ $attribute->name }}"
+                                        @checked(
+                                            collect($product?->attributeAssignments ?? [])
+                                                ->contains('attribute_id', $attribute->id)
+                                        )
+                                    >
+
+                                    <label
+                                        class="form-check-label"
+                                        for="attribute_{{ $attribute->id }}"
+                                    >
+                                        {{ $attribute->name }}
+                                    </label>
+                                </div>
+                            </div>
+                        @endforeach
+                    </div>
+
+                    @error('attributes')
+                        <div class="text-danger small mt-2">
+                            {{ $message }}
+                        </div>
+                    @enderror
+                </div>
+
+                <div id="attribute-values-container"></div>
+
+                <div id="variants-container" class="mt-4"></div>
+            </div>
+        </div>
+    </div>
 </div>
 
 @push('scripts')
+    <script>
+        window.productVariantData = {
+            attributes: @json($attributes),
+            existingVariants: @json($product?->variants ?? []),
+        };
+    </script>
+    <script src="{{ asset('assets/js/variants.js') }}"></script>
     <script src="{{ asset('assets/js/plugin/ckeditor.js') }}"></script>
     <script src="{{ asset('assets/js/tags.js') }}"></script>
 

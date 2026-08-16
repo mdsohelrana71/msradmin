@@ -24,4 +24,12 @@ class ProductAttribute extends Model
     {
         return $this->hasMany(ProductAttributeValue::class, 'attribute_id');
     }
+
+    public function productAssignments(): HasMany
+    {
+        return $this->hasMany(
+            ProductAttributeAssignment::class,
+            'attribute_id'
+        );
+    }
 }

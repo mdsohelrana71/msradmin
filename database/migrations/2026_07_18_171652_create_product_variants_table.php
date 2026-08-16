@@ -6,9 +6,6 @@ use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
 {
-    /**
-     * Run the migrations.
-     */
     public function up(): void
     {
         Schema::create('product_variants', function (Blueprint $table) {
@@ -18,29 +15,28 @@ return new class extends Migration
                 ->constrained('products')
                 ->cascadeOnDelete();
 
-            $table->foreignId('attribute_id')
-                ->constrained('product_attributes')
-                ->cascadeOnDelete();
+            $table->string('sku')->unique();
+            $table->string('barcode')->nullable();
 
-            $table->foreignId('attribute_value_id')
-                ->constrained('product_attribute_values')
-                ->cascadeOnDelete();
+            $table->decimal('price', 12, 2)->nullable();
+            $table->decimal('discount_price', 12, 2)->nullable();
+
+            $table->integer('stock')->default(0);
+
+            $table->string('image')->nullable();
 
             $table->boolean('status')->default(true);
             $table->integer('sort_order')->default(0);
 
             $table->timestamps();
 
-            $table->unique(
-                ['product_id', 'attribute_id', 'attribute_value_id'],
-                'product_variant_attr_value_unique'
-            );
+            $table->index([
+                'product_id',
+                'status',
+            ]);
         });
     }
 
-    /**
-     * Reverse the migrations.
-     */
     public function down(): void
     {
         Schema::dropIfExists('product_variants');

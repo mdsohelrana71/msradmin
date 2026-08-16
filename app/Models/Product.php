@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
@@ -63,4 +64,19 @@ class Product extends Model
             'tag_id'
         );
     }
+
+    public function variants(): HasMany
+    {
+        return $this->hasMany(ProductVariant::class);
+    }
+
+    public function attributeAssignments(): HasMany
+    {
+        return $this->hasMany(
+            ProductAttributeAssignment::class,
+            'product_id'
+        );
+    }
+
+    
 }
