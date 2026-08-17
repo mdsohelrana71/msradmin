@@ -74,9 +74,15 @@ return [
         'permission' => 'blogs.view',
     ],
     [
-        'title' => 'Site settings',
+        'title' => 'Settings',
         'route' => 'admin.settings.index',
         'icon' => 'fa fa-cog',
         'permission' => 'settings.view',
+    ],
+    [
+        'title' => 'Store Settings',
+        'route' => 'admin.store-settings.index',
+        'icon' => 'fa fa-cog',
+        'permission' => 'store-settings.view',
     ],
 ];

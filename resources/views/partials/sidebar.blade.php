@@ -346,7 +346,7 @@
                     </li>
                 @endcanany
 
-                @can('settings.view')
+                @can(['settings.view', 'store_settings.view'])
                     <li class="nav-section">
                         <span class="sidebar-mini-icon">
                             <i class="fa fa-ellipsis-h"></i>
@@ -358,6 +358,15 @@
                         <a href="{{ route('admin.settings.index') }}" class="{{ request()->routeIs('admin.settings.index') ? '' : 'collapsed' }}">
                             <i class="fas fa-cog"></i>
                             <p>Settings</p>
+                        </a>
+                    </li>
+                    <li class="nav-item {{ request()->routeIs('admin.store-settings.*') ? 'active' : '' }}">
+                        <a
+                            href="{{ route('admin.store-settings.index') }}"
+                            class="{{ request()->routeIs('admin.store-settings.*') ? '' : 'collapsed' }}"
+                        >
+                            <i class="fas fa-store"></i>
+                            <p>Store Settings</p>
                         </a>
                     </li>
                 @endcan

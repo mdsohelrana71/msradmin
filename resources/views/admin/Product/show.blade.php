@@ -53,7 +53,7 @@
 
                         <div class="mb-4">
                             <label class="form-label text-muted small mb-1">Short Description</label>
-                            <p class="mb-0 text-muted">
+                            <p class="mb-0">
                                 {{ $product->short_description ?: '—' }}
                             </p>
                         </div>
@@ -202,7 +202,7 @@
                             <label class="form-label text-muted small mb-1">Tags</label>
                             <div>
                                 @if ($product->tags->isNotEmpty())
-                                    <div class="d-flex flex-wrap gap-1">
+                                    <div class="gap-1">
                                         @foreach ($product->tags as $tag)
                                             <span class="badge bg-light text-dark border">
                                                 {{ ucfirst($tag->name) }}
@@ -311,7 +311,7 @@
                                             <th style="width: 80px;">Image</th>
                                             <th>Variant Name</th>
                                             <th>SKU</th>
-                                            <th class="text-end">Selling Price</th>
+                                            <th class="text-end">Price</th>
                                             <th class="text-end">Discount</th>
                                             <th class="text-end">Stock</th>
                                             <th class="text-center">Status</th>
@@ -340,7 +340,7 @@
                                                 {{-- Variant Name (Attribute combination) --}}
                                                 <td>
                                                     @if ($variant->values && $variant->values->count())
-                                                        <div class="d-flex flex-wrap gap-1">
+                                                        <div class="text-center gap-1">
                                                             @foreach ($variant->values as $value)
                                                                 <span class="badge bg-light text-dark border">
                                                                     <small class="text-muted">
@@ -359,17 +359,17 @@
                                                 <td>{{ $variant->sku ?: '—' }}</td>
 
                                                 {{-- Selling Price --}}
-                                                <td class="text-end fw-semibold text-success">
+                                                <td class="text-center fw-semibold text-success">
                                                     {{ number_format($variant->selling_price ?? $variant->price ?? 0, 2) }}
                                                 </td>
 
                                                 {{-- Discount Price --}}
-                                                <td class="text-end text-danger">
+                                                <td class="text-center text-danger">
                                                     {{ $variant->discount_price !== null ? number_format($variant->discount_price, 2) : '—' }}
                                                 </td>
 
                                                 {{-- Stock --}}
-                                                <td class="text-end">
+                                                <td class="text-center">
                                                     {{ $variant->stock ?? 0 }}
                                                 </td>
 

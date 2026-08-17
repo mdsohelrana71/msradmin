@@ -522,6 +522,20 @@ class ProductService
 
         /*
         |--------------------------------------------------------------------------
+        | Update Existing Images (Alt Text)
+        |--------------------------------------------------------------------------
+        */
+        if (!empty($existingImages)) {
+            foreach ($existingImages as $imageId => $imageData) {
+                $product->images()
+                    ->whereKey($imageId)
+                    ->update([
+                        'alt' => $imageData['alt'] ?? null,
+                    ]);
+            }
+        }
+                /*
+        |--------------------------------------------------------------------------
         | Upload New Gallery Images
         |--------------------------------------------------------------------------
         */
@@ -557,7 +571,7 @@ class ProductService
             }
         }
     }
-    
+
     private function prepareTags(array $tags): array
     {
         return collect($tags)

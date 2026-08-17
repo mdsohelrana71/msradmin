@@ -89,4 +89,12 @@ return [
             'settings.edit' => 'Edit settings',
         ],
     ],
+
+    'store_settings' => [
+        'label' => 'Store Settings',
+        'permissions' => [
+            'store_settings.view' => 'View store settings',
+            'store_settings.edit' => 'Edit store settings',
+        ],
+    ],
 ];

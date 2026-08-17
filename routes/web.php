@@ -10,6 +10,7 @@ use App\Http\Controllers\Admin\ProductController;
 use App\Http\Controllers\Admin\AccountController;
 use App\Http\Controllers\Admin\SettingsController;
 use App\Http\Controllers\Admin\DashboardController;
+use App\Http\Controllers\Admin\StoreSettingController;
 use App\Http\Controllers\Admin\BlogCategoryController;
 use App\Http\Controllers\Admin\ProductCategoryController;
 use App\Http\Controllers\Admin\ProductAttributeController;
@@ -26,6 +27,8 @@ Route::middleware('auth')->prefix('admin')->name('admin.')->group(function () {
     Route::get('settings', [SettingsController::class, 'index'])->name('settings.index');
     Route::put('settings', [SettingsController::class, 'update'])->name('settings.update');
     Route::post('settings/theme-colors', [SettingsController::class, 'updateThemeColors'])->name('settings.theme-colors');
+    Route::get('store-settings', [StoreSettingController::class, 'index'])->name('store-settings.index');
+    Route::put('store-settings', [StoreSettingController::class, 'update'])->name('store-settings.update');
     Route::resource('users', UserController::class);
     Route::resource('roles', RoleController::class);
     Route::resource('accounts', AccountController::class);
