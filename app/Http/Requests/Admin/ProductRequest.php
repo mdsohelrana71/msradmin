@@ -54,6 +54,61 @@ class ProductRequest extends FormRequest
                 'max:2048',
             ],
 
+            /*
+            |--------------------------------------------------------------------------
+            | Product Gallery Images
+            |--------------------------------------------------------------------------
+            */
+
+            'images' => [
+                'nullable',
+                'array',
+            ],
+
+            'images.*.image' => [
+                'nullable',
+                'image',
+                'mimes:jpg,jpeg,png,webp',
+                'max:2048',
+            ],
+
+            'images.*.alt' => [
+                'nullable',
+                'string',
+                'max:255',
+            ],
+
+            'removed_image_ids' => [
+                'nullable',
+                'array',
+            ],
+
+            'removed_image_ids.*' => [
+                'integer',
+                'exists:product_images,id',
+            ],
+
+            'image_order' => [
+                'nullable',
+                'array',
+            ],
+
+            'image_order.*' => [
+                'integer',
+                'exists:product_images,id',
+            ],
+
+            'existing_images' => [
+                'nullable',
+                'array',
+            ],
+
+            'existing_images.*.alt' => [
+                'nullable',
+                'string',
+                'max:255',
+            ],
+
             'short_description' => [
                 'nullable',
                 'string',

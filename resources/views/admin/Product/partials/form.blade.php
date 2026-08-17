@@ -144,31 +144,83 @@
             </div>
         </div>
 
-        <div class="card border shadow-none">
+        <div class="card border shadow-none mb-4">
             <div class="card-header">
-                <h5 class="card-title mb-0">Product Dimensions</h5>
+                <h5 class="card-title mb-0">Product Gallery</h5>
             </div>
 
             <div class="card-body">
-                <div class="row">
-                    <div class="col-md-6">
-                        <div class="form-group mb-0">
-                            <label for="weight">
-                                Weight
-                            </label>
+                <div id="product-gallery" class="row g-3 mb-3">
+                    @if (!empty($product?->images) && $product->images->count())
+                        @foreach ($product->images as $image)
+                            <div class="col-6">
+                                <div class="gallery-item border rounded-3 p-3 bg-light bg-opacity-50"
+                                    data-image-id="{{ $image->id }}">
+                                    <div class="row g-3 align-items-center">
+                                        {{-- Image Preview --}}
+                                        <div class="col-auto">
+                                            <div class="position-relative">
+                                                <img src="{{ asset('storage/' . $image->image) }}"
+                                                    alt="{{ $image->alt ?? $product->name }}"
+                                                    class="rounded-3 border" width="100" height="100"
+                                                    style="object-fit: cover;">
+                                            </div>
+                                        </div>
 
-                            <input type="number" name="weight" id="weight" min="0" step="0.01"
-                                class="form-control @error('weight') is-invalid @enderror"
-                                value="{{ old('weight', $product->weight ?? '') }}" placeholder="Enter weight">
+                                        {{-- Alt Text --}}
+                                        <div class="col">
+                                            <input type="hidden" name="image_order[]" value="{{ $image->id }}">
 
-                            @error('weight')
-                                <div class="invalid-feedback">
-                                    {{ $message }}
+                                            <div class="mb-0">
+                                                <label class="form-label small text-muted mb-1">
+                                                    Alt Text
+                                                </label>
+                                                <input type="text"
+                                                    name="existing_images[{{ $image->id }}][alt]"
+                                                    value="{{ old("existing_images.{$image->id}.alt", $image->alt) }}"
+                                                    class="form-control form-control-sm"
+                                                    placeholder="Enter image alt text">
+                                            </div>
+                                        </div>
+
+                                        {{-- Remove Button --}}
+                                        <div class="col-auto">
+                                            <button type="button"
+                                                class="btn btn-outline-danger btn-sm remove-existing-gallery-image"
+                                                data-image-id="{{ $image->id }}" title="Remove image">
+                                                <i class="fa fa-trash"></i>
+                                            </button>
+                                        </div>
+                                    </div>
                                 </div>
-                            @enderror
+                            </div>
+                        @endforeach
+                    @else
+                        <div class="col-12">
+                            <div class="text-center py-4 text-muted">
+                                <i class="fa fa-image fa-2x mb-2 opacity-50"></i>
+                                <p class="mb-0 small">No gallery images added yet</p>
+                            </div>
                         </div>
-                    </div>
+                    @endif
                 </div>
+
+                <div id="new-gallery-images"></div>
+
+                <button type="button" id="add-gallery-image" class="btn btn-outline-primary btn-sm">
+                    <i class="fa fa-plus me-1"></i>
+                    Add Gallery Image
+                </button>
+
+                <small class="text-muted d-block mt-2">
+                    You can upload multiple gallery images.
+                </small>
+
+                @error('images')
+                    <div class="text-danger small mt-2">
+                        {{ $message }}
+                    </div>
+                @enderror
             </div>
         </div>
     </div>
@@ -294,6 +346,22 @@
                 </div>
 
                 <div class="form-group mb-3">
+                    <label for="weight">
+                        Weight
+                    </label>
+
+                    <input type="number" name="weight" id="weight" min="0" step="0.01"
+                        class="form-control @error('weight') is-invalid @enderror"
+                        value="{{ old('weight', $product->weight ?? '') }}" placeholder="Enter weight">
+
+                    @error('weight')
+                        <div class="invalid-feedback">
+                            {{ $message }}
+                        </div>
+                    @enderror
+                </div>
+
+                <div class="form-group mb-3">
                     <label for="status">Status</label>
 
                     <select name="status" id="status" class="form-select @error('status') is-invalid @enderror">
@@ -326,7 +394,10 @@
 
         <div class="card border shadow-none mb-4">
             <div class="card-header">
-                <h5 class="card-title mb-0">Product Image</h5>
+                <h5 class="card-title mb-0">Product Thumbnail</h5>
+                <p class="mb-0 small text-muted">
+                    Main product image for listing & details.
+                </p>
             </div>
 
             <div class="card-body">
@@ -368,14 +439,14 @@
                 @php
                     $assignedAttributeIds = collect($product?->attributeAssignments ?? [])
                         ->pluck('attribute_id')
-                        ->map(fn ($id) => (int) $id)
+                        ->map(fn($id) => (int) $id)
                         ->toArray();
 
                     $existingVariantValueIds = collect($product?->variants ?? [])
                         ->flatMap(function ($variant) {
                             return $variant->values->pluck('attribute_value_id');
                         })
-                        ->map(fn ($id) => (int) $id)
+                        ->map(fn($id) => (int) $id)
                         ->unique()
                         ->values()
                         ->toArray();
@@ -390,23 +461,12 @@
                         @foreach ($attributes as $attribute)
                             <div class="col-md-4 mb-3">
                                 <div class="form-check">
-                                    <input
-                                        type="checkbox"
-                                        name="attributes[]"
+                                    <input type="checkbox" name="attributes[]"
                                         class="form-check-input attribute-checkbox"
-                                        id="attribute_{{ $attribute->id }}"
-                                        value="{{ $attribute->id }}"
-                                        data-name="{{ $attribute->name }}"
-                                        @checked(
-                                            collect($product?->attributeAssignments ?? [])
-                                                ->contains('attribute_id', $attribute->id)
-                                        )
-                                    >
+                                        id="attribute_{{ $attribute->id }}" value="{{ $attribute->id }}"
+                                        data-name="{{ $attribute->name }}" @checked(collect($product?->attributeAssignments ?? [])->contains('attribute_id', $attribute->id))>
 
-                                    <label
-                                        class="form-check-label"
-                                        for="attribute_{{ $attribute->id }}"
-                                    >
+                                    <label class="form-check-label" for="attribute_{{ $attribute->id }}">
                                         {{ $attribute->name }}
                                     </label>
                                 </div>
@@ -437,6 +497,7 @@
         };
     </script>
     <script src="{{ asset('assets/js/variants.js') }}"></script>
+    <script src="{{ asset('assets/js/product-images.js') }}"></script>
     <script src="{{ asset('assets/js/plugin/ckeditor.js') }}"></script>
     <script src="{{ asset('assets/js/tags.js') }}"></script>
 
