@@ -146,10 +146,74 @@
 
         <div class="card border shadow-none mb-4">
             <div class="card-header">
-                <h5 class="card-title mb-0">Product Gallery</h5>
+                <h5 class="card-title mb-0">Inventory & Stock</h5>
             </div>
 
             <div class="card-body">
+                <div class="row">
+                    <div class="col-md-4">
+                        <div class="form-group mb-0">
+                            <label for="stock">
+                                Stock <span class="text-danger">*</span>
+                            </label>
+
+                            <input type="number" name="stock" id="stock" min="0"
+                                class="form-control @error('stock') is-invalid @enderror"
+                                value="{{ old('stock', $product->stock ?? 0) }}" placeholder="0" required>
+
+                            @error('stock')
+                                <div class="invalid-feedback">
+                                    {{ $message }}
+                                </div>
+                            @enderror
+                        </div>
+                    </div>
+
+                    <div class="col-md-4">
+                        <div class="form-group mb-0">
+                            <label for="unit">
+                                Unit <span class="text-danger">*</span>
+                            </label>
+
+                            <input type="text" name="unit" id="unit"
+                                class="form-control @error('unit') is-invalid @enderror"
+                                value="{{ old('unit', $product->unit ?? 'pcs') }}" placeholder="pcs" required>
+
+                            @error('unit')
+                                <div class="invalid-feedback">
+                                    {{ $message }}
+                                </div>
+                            @enderror
+                        </div>
+                    </div>
+
+                    <div class="col-md-4">
+                        <div class="form-group mb-0">
+                            <label for="weight">
+                                Weight
+                            </label>
+
+                            <input type="number" name="weight" id="weight" min="0" step="0.01"
+                                class="form-control @error('weight') is-invalid @enderror"
+                                value="{{ old('weight', $product->weight ?? '') }}" placeholder="Enter weight">
+
+                            @error('weight')
+                                <div class="invalid-feedback">
+                                    {{ $message }}
+                                </div>
+                            @enderror
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="card border shadow-none mb-4">
+            <div class="card-header">
+                <h5 class="card-title mb-0">Product Gallery</h5>
+            </div>
+
+            <div class="card-body text-center">
                 <div id="product-gallery" class="row g-3 mb-3">
                     @if (!empty($product?->images) && $product->images->count())
                         @foreach ($product->images as $image)
@@ -205,7 +269,7 @@
                     @endif
                 </div>
 
-                <div id="new-gallery-images"></div>
+                <div class="row" id="new-gallery-images"></div>
 
                 <button type="button" id="add-gallery-image" class="btn btn-outline-primary btn-sm">
                     <i class="fa fa-plus me-1"></i>
@@ -302,60 +366,6 @@
 
                     @error('tags')
                         <div class="invalid-feedback d-block">
-                            {{ $message }}
-                        </div>
-                    @enderror
-                </div>
-
-                <div class="row">
-                    <div class="col-md-6">
-                        <div class="form-group mb-3">
-                            <label for="stock">
-                                Stock <span class="text-danger">*</span>
-                            </label>
-
-                            <input type="number" name="stock" id="stock" min="0"
-                                class="form-control @error('stock') is-invalid @enderror"
-                                value="{{ old('stock', $product->stock ?? 0) }}" placeholder="0" required>
-
-                            @error('stock')
-                                <div class="invalid-feedback">
-                                    {{ $message }}
-                                </div>
-                            @enderror
-                        </div>
-                    </div>
-
-                    <div class="col-md-6">
-                        <div class="form-group mb-3">
-                            <label for="unit">
-                                Unit <span class="text-danger">*</span>
-                            </label>
-
-                            <input type="text" name="unit" id="unit"
-                                class="form-control @error('unit') is-invalid @enderror"
-                                value="{{ old('unit', $product->unit ?? 'pcs') }}" placeholder="pcs" required>
-
-                            @error('unit')
-                                <div class="invalid-feedback">
-                                    {{ $message }}
-                                </div>
-                            @enderror
-                        </div>
-                    </div>
-                </div>
-
-                <div class="form-group mb-3">
-                    <label for="weight">
-                        Weight
-                    </label>
-
-                    <input type="number" name="weight" id="weight" min="0" step="0.01"
-                        class="form-control @error('weight') is-invalid @enderror"
-                        value="{{ old('weight', $product->weight ?? '') }}" placeholder="Enter weight">
-
-                    @error('weight')
-                        <div class="invalid-feedback">
                             {{ $message }}
                         </div>
                     @enderror

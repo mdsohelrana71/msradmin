@@ -11,56 +11,58 @@ $(document).ready(function () {
         const index = newImageIndex++;
 
         const html = `
-            <div
-                class="new-gallery-item border rounded p-3 mb-3"
-                data-index="${index}"
-            >
-                <div class="row align-items-center">
-                    <div class="col-md-2">
-                        <div
-                            class="gallery-preview border rounded d-flex align-items-center justify-content-center"
-                            style="height: 100px; width: 100px;"
-                        >
-                            <i class="fa fa-image text-muted fa-2x"></i>
-                        </div>
-                    </div>
-
-                    <div class="col-md-8">
-                        <div class="form-group mb-2">
-                            <label class="form-label">
-                                Image
-                            </label>
-
-                            <input
-                                type="file"
-                                name="images[${index}][image]"
-                                class="form-control gallery-image-input"
-                                accept="image/jpeg,image/png,image/webp"
+            <div class="col-6">
+                <div
+                    class="new-gallery-item border rounded p-3 mb-3"
+                    data-index="${index}"
+                >
+                    <div class="row align-items-center">
+                        <div class="col-md-2">
+                            <div
+                                class="gallery-preview border rounded d-flex align-items-center justify-content-center"
+                                style="height: 100px; width: 100px;"
                             >
+                                <i class="fa fa-image text-muted fa-2x"></i>
+                            </div>
                         </div>
 
-                        <div class="form-group mb-0">
-                            <label class="form-label">
-                                Alt Text
-                            </label>
+                        <div class="col-md-8">
+                            <div class="form-group mb-2">
+                                <label class="form-label">
+                                    Image
+                                </label>
 
-                            <input
-                                type="text"
-                                name="images[${index}][alt]"
-                                class="form-control"
-                                placeholder="Image alt text"
+                                <input
+                                    type="file"
+                                    name="images[${index}][image]"
+                                    class="form-control gallery-image-input"
+                                    accept="image/jpeg,image/png,image/webp"
+                                >
+                            </div>
+
+                            <div class="form-group mb-0">
+                                <label class="form-label">
+                                    Alt Text
+                                </label>
+
+                                <input
+                                    type="text"
+                                    name="images[${index}][alt]"
+                                    class="form-control"
+                                    placeholder="Image alt text"
+                                >
+                            </div>
+                        </div>
+
+                        <div class="col-md-2 text-end">
+                            <button
+                                type="button"
+                                class="btn btn-outline-danger btn-sm remove-new-gallery-image"
+                                title="Remove"
                             >
+                                <i class="fa fa-trash"></i>
+                            </button>
                         </div>
-                    </div>
-
-                    <div class="col-md-2 text-end">
-                        <button
-                            type="button"
-                            class="btn btn-outline-danger btn-sm remove-new-gallery-image"
-                            title="Remove"
-                        >
-                            <i class="fa fa-trash"></i>
-                        </button>
                     </div>
                 </div>
             </div>

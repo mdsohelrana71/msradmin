@@ -26,96 +26,73 @@
         <x-admin.alert />
 
         <div class="row">
-            {{-- Left Column --}}
+            {{-- ==================== LEFT COLUMN ==================== --}}
             <div class="col-lg-8">
-                {{-- Product Details --}}
+
+                {{-- Product Content --}}
                 <div class="card border shadow-none mb-4">
                     <div class="card-header">
-                        <h4 class="card-title mb-0">Product Details</h4>
+                        <h5 class="card-title mb-0">Product Content</h5>
                     </div>
-
                     <div class="card-body">
-                        {{-- Name --}}
-                        <div class="border rounded p-3 mb-3">
-                            <h6 class="text-muted mb-2">
-                                <i class="fa fa-tag me-1"></i>
-                                Product Name
-                            </h6>
-                            <h2 class="mb-0">{{ $product->name }}</h2>
+                        <div class="mb-4">
+                            <label class="form-label text-muted small mb-1">Product Name</label>
+                            <h3 class="mb-0">{{ $product->name }}</h3>
                         </div>
 
-                        {{-- SKU & Barcode --}}
-                        <div class="row mb-3">
+                        <div class="row mb-4">
                             <div class="col-md-6">
-                                <div class="border rounded p-3 h-100">
-                                    <h6 class="text-muted mb-2">
-                                        <i class="fa fa-barcode me-1"></i>
-                                        SKU
-                                    </h6>
-                                    <div class="fw-medium">{{ $product->sku ?: '—' }}</div>
-                                </div>
+                                <label class="form-label text-muted small mb-1">SKU</label>
+                                <div class="fw-medium">{{ $product->sku ?: '—' }}</div>
                             </div>
                             <div class="col-md-6">
-                                <div class="border rounded p-3 h-100">
-                                    <h6 class="text-muted mb-2">
-                                        <i class="fa fa-qrcode me-1"></i>
-                                        Barcode
-                                    </h6>
-                                    <div class="fw-medium">{{ $product->barcode ?: '—' }}</div>
-                                </div>
+                                <label class="form-label text-muted small mb-1">Barcode</label>
+                                <div class="fw-medium">{{ $product->barcode ?: '—' }}</div>
                             </div>
                         </div>
 
-                        {{-- Short Description --}}
-                        <div class="border rounded p-3 mb-3">
-                            <h6 class="text-muted mb-2">
-                                <i class="fa fa-align-left me-1"></i>
-                                Short Description
-                            </h6>
+                        <div class="mb-4">
+                            <label class="form-label text-muted small mb-1">Short Description</label>
                             <p class="mb-0 text-muted">
                                 {{ $product->short_description ?: '—' }}
                             </p>
                         </div>
 
-                        {{-- Description --}}
-                        <div class="border rounded p-3">
-                            <h6 class="text-muted mb-3">
-                                <i class="fa fa-file-alt me-1"></i>
-                                Description
-                            </h6>
-                            <div class="product-content">
+                        <div>
+                            <label class="form-label text-muted small mb-2">Description</label>
+                            <div class="product-content border rounded p-3 bg-light bg-opacity-50">
                                 {!! $product->description ?: '<span class="text-muted">—</span>' !!}
                             </div>
                         </div>
                     </div>
                 </div>
 
-                {{-- Pricing --}}
+                {{-- Product Pricing --}}
                 <div class="card border shadow-none mb-4">
                     <div class="card-header">
                         <h5 class="card-title mb-0">Product Pricing</h5>
                     </div>
                     <div class="card-body">
-                        <div class="row">
+                        <div class="row g-3">
                             <div class="col-md-4">
-                                <div class="border rounded p-3 text-center">
-                                    <h6 class="text-muted mb-2">Cost Price</h6>
+                                <div class="border rounded p-3 h-100 text-center">
+                                    <label class="form-label text-muted small mb-2 d-block">Cost Price</label>
                                     <div class="fs-5 fw-semibold">
                                         {{ number_format($product->cost_price ?? 0, 2) }}
                                     </div>
                                 </div>
                             </div>
                             <div class="col-md-4">
-                                <div class="border rounded p-3 text-center">
-                                    <h6 class="text-muted mb-2">Selling Price</h6>
+                                <div class="border rounded p-3 h-100 text-center">
+                                    <label class="form-label text-muted small mb-2 d-block">Selling Price</label>
                                     <div class="fs-5 fw-semibold text-success">
                                         {{ number_format($product->selling_price ?? 0, 2) }}
                                     </div>
                                 </div>
                             </div>
                             <div class="col-md-4">
-                                <div class="border rounded p-3 text-center">
-                                    <h6 class="text-muted mb-2">Discount Price</h6>
+                                <div class="border rounded p-3 h-100 text-center">
+                                    <label class="form-label text-muted small mb-2 d-block">Discount Price</label>
                                     <div class="fs-5 fw-semibold text-danger">
                                         {{ $product->discount_price !== null ? number_format($product->discount_price, 2) : '—' }}
                                     </div>
@@ -125,150 +102,168 @@
                     </div>
                 </div>
 
-                {{-- Dimensions --}}
+                {{-- Inventory & Stock --}}
                 <div class="card border shadow-none mb-4">
                     <div class="card-header">
-                        <h5 class="card-title mb-0">Product Dimensions</h5>
+                        <h5 class="card-title mb-0">Inventory & Stock</h5>
                     </div>
                     <div class="card-body">
-                        <div class="border rounded p-3">
-                            <h6 class="text-muted mb-2">
-                                <i class="fa fa-weight-hanging me-1"></i>
-                                Weight
-                            </h6>
-                            <div>
-                                {{ $product->weight !== null ? $product->weight : '—' }}
+                        <div class="row g-3">
+                            <div class="col-md-4">
+                                <div class="border rounded p-3 h-100 text-center">
+                                    <label class="form-label text-muted small mb-2 d-block">Stock</label>
+                                    <div class="fs-5 fw-semibold">{{ $product->stock ?? 0 }}</div>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="border rounded p-3 h-100 text-center">
+                                    <label class="form-label text-muted small mb-2 d-block">Unit</label>
+                                    <div class="fs-5 fw-semibold">{{ $product->unit ?? 'pcs' }}</div>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="border rounded p-3 h-100 text-center">
+                                    <label class="form-label text-muted small mb-2 d-block">Weight</label>
+                                    <div class="fs-5 fw-semibold">
+                                        {{ $product->weight !== null ? $product->weight : '—' }}
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
-            </div>
 
-            {{-- Right Column --}}
-            <div class="col-lg-4">
-                {{-- Product Settings / Info --}}
+                {{-- Product Gallery --}}
                 <div class="card border shadow-none mb-4">
                     <div class="card-header">
-                        <h5 class="card-title mb-0">Product Information</h5>
+                        <h5 class="card-title mb-0">Product Gallery</h5>
                     </div>
                     <div class="card-body">
-                        {{-- Category --}}
-                        <div class="border rounded p-3 mb-3">
-                            <h6 class="text-muted mb-2">
-                                <i class="fa fa-folder me-1"></i>
-                                Category
-                            </h6>
-                            @if ($product->category)
-                                <span class="badge bg-info">{{ $product->category->name }}</span>
-                            @else
-                                <span class="text-muted">—</span>
-                            @endif
-                        </div>
-
-                        {{-- Brand --}}
-                        <div class="border rounded p-3 mb-3">
-                            <h6 class="text-muted mb-2">
-                                <i class="fa fa-copyright me-1"></i>
-                                Brand
-                            </h6>
-                            @if ($product->brand)
-                                <span class="badge bg-secondary">{{ $product->brand->name }}</span>
-                            @else
-                                <span class="text-muted">—</span>
-                            @endif
-                        </div>
-
-                        {{-- Tags --}}
-                        <div class="border rounded p-3 mb-3">
-                            <h6 class="text-muted mb-2">
-                                <i class="fa fa-tags me-1"></i>
-                                Tags
-                            </h6>
-                            @if ($product->tags->isNotEmpty())
-                                <div class="gap-1">
-                                    @foreach ($product->tags as $tag)
-                                        <span class="badge bg-light text-dark">
-                                            {{ ucfirst($tag->name) }}
-                                        </span>
-                                    @endforeach
-                                </div>
-                            @else
-                                <span class="text-muted">—</span>
-                            @endif
-                        </div>
-
-                        {{-- Stock & Unit --}}
-                        <div class="row mb-3">
-                            <div class="col-6">
-                                <div class="border rounded p-3 h-100">
-                                    <h6 class="text-muted mb-2">Stock</h6>
-                                    <div class="fw-medium">{{ $product->stock ?? 0 }}</div>
-                                </div>
+                        @if ($product->images && $product->images->count())
+                            <div class="row g-3">
+                                @foreach ($product->images as $image)
+                                    <div class="col-6 col-md-4 col-lg-3">
+                                        <div class="border rounded-3 p-2 bg-light bg-opacity-50 text-center">
+                                            <img src="{{ asset('storage/' . $image->image) }}"
+                                                 alt="{{ $image->alt ?? $product->name }}"
+                                                 class="rounded-3 img-fluid"
+                                                 style="height: 140px; object-fit: cover; width: 100%;">
+                                            @if ($image->alt)
+                                                <small class="d-block text-muted mt-2 text-truncate">
+                                                    {{ $image->alt }}
+                                                </small>
+                                            @endif
+                                        </div>
+                                    </div>
+                                @endforeach
                             </div>
-                            <div class="col-6">
-                                <div class="border rounded p-3 h-100">
-                                    <h6 class="text-muted mb-2">Unit</h6>
-                                    <div class="fw-medium">{{ $product->unit ?? 'pcs' }}</div>
-                                </div>
+                        @else
+                            <div class="text-center py-5 text-muted">
+                                <i class="fa fa-image fa-2x mb-2 opacity-50"></i>
+                                <p class="mb-0 small">No gallery images added</p>
                             </div>
-                        </div>
+                        @endif
+                    </div>
+                </div>
+            </div>
 
-                        {{-- Status --}}
-                        <div class="border rounded p-3 mb-3">
-                            <h6 class="text-muted mb-2">
-                                <i class="fa fa-circle-check me-1"></i>
-                                Status
-                            </h6>
-                            @if ($product->status)
-                                <span class="badge bg-success">Active</span>
-                            @else
-                                <span class="badge bg-secondary">Inactive</span>
-                            @endif
-                        </div>
+            {{-- ==================== RIGHT COLUMN ==================== --}}
+            <div class="col-lg-4">
 
-                        {{-- Featured --}}
-                        <div class="border rounded p-3 mb-3">
-                            <h6 class="text-muted mb-2">
-                                <i class="fa fa-star me-1"></i>
-                                Featured
-                            </h6>
-                            @if ($product->is_featured)
-                                <span class="badge bg-warning text-dark">Yes</span>
-                            @else
-                                <span class="badge bg-light text-dark">No</span>
-                            @endif
-                        </div>
-
-                        {{-- Created --}}
-                        <div class="border rounded p-3">
-                            <h6 class="text-muted mb-2">
-                                <i class="fa fa-clock me-1"></i>
-                                Created
-                            </h6>
+                {{-- Product Settings --}}
+                <div class="card border shadow-none mb-4">
+                    <div class="card-header">
+                        <h5 class="card-title mb-0">Product Settings</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="mb-3">
+                            <label class="form-label text-muted small mb-1">Category</label>
                             <div>
+                                @if ($product->category)
+                                    <span class="badge bg-info">{{ $product->category->name }}</span>
+                                @else
+                                    <span class="text-muted">—</span>
+                                @endif
+                            </div>
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label text-muted small mb-1">Brand</label>
+                            <div>
+                                @if ($product->brand)
+                                    <span class="badge bg-secondary">{{ $product->brand->name }}</span>
+                                @else
+                                    <span class="text-muted">—</span>
+                                @endif
+                            </div>
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label text-muted small mb-1">Tags</label>
+                            <div>
+                                @if ($product->tags->isNotEmpty())
+                                    <div class="d-flex flex-wrap gap-1">
+                                        @foreach ($product->tags as $tag)
+                                            <span class="badge bg-light text-dark border">
+                                                {{ ucfirst($tag->name) }}
+                                            </span>
+                                        @endforeach
+                                    </div>
+                                @else
+                                    <span class="text-muted">—</span>
+                                @endif
+                            </div>
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label text-muted small mb-1">Status</label>
+                            <div>
+                                @if ($product->status)
+                                    <span class="badge bg-success">Active</span>
+                                @else
+                                    <span class="badge bg-secondary">Inactive</span>
+                                @endif
+                            </div>
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label text-muted small mb-1">Featured Product</label>
+                            <div>
+                                @if ($product->is_featured)
+                                    <span class="badge bg-warning text-dark">
+                                        <i class="fa fa-star me-1"></i> Yes
+                                    </span>
+                                @else
+                                    <span class="badge bg-light text-dark border">No</span>
+                                @endif
+                            </div>
+                        </div>
+
+                        <div>
+                            <label class="form-label text-muted small mb-1">Created</label>
+                            <div class="fw-medium">
                                 {{ $product->created_at?->format('d M Y, h:i A') ?? '—' }}
                             </div>
                         </div>
                     </div>
                 </div>
 
-                {{-- Thumbnail --}}
+                {{-- Product Thumbnail --}}
                 <div class="card border shadow-none mb-4">
                     <div class="card-header">
-                        <h5 class="card-title mb-0">Product Image</h5>
+                        <h5 class="card-title mb-0">Product Thumbnail</h5>
+                        <p class="mb-0 small text-muted">Main product image</p>
                     </div>
-                    <div class="card-body">
+                    <div class="card-body text-center">
                         @if ($product->thumbnail)
-                            <img
-                                src="{{ asset('storage/' . $product->thumbnail) }}"
-                                alt="{{ $product->name }}"
-                                class="img-fluid rounded"
-                                style="max-height: 280px; width: 100%; object-fit: contain;"
-                            >
+                            <img src="{{ asset('storage/' . $product->thumbnail) }}"
+                                 alt="{{ $product->name }}"
+                                 class="img-fluid rounded"
+                                 style="max-height: 260px; width: 100%; object-fit: contain;">
                         @else
-                            <div class="text-center py-4 text-muted">
-                                <i class="fas fa-image fa-2x mb-2"></i>
-                                <div>No image</div>
+                            <div class="text-center py-5 text-muted">
+                                <i class="fa fa-image fa-3x mb-2 opacity-50"></i>
+                                <p class="mb-0">No thumbnail</p>
                             </div>
                         @endif
                     </div>
@@ -280,25 +275,123 @@
                         <h5 class="card-title mb-0">Actions</h5>
                     </div>
                     <div class="card-body">
-                        <div class="d-flex gap-2">
+                        <div class="d-grid gap-2">
                             @can('products.edit')
-                                <a
-                                    href="{{ route('admin.products.edit', $product) }}"
-                                    class="btn btn-primary"
-                                >
-                                    <i class="fa fa-edit me-1"></i>
-                                    Edit
+                                <a href="{{ route('admin.products.edit', $product) }}"
+                                   class="btn btn-primary">
+                                    <i class="fa fa-edit me-1"></i> Edit Product
                                 </a>
                             @endcan
 
-                            <a
-                                href="{{ route('admin.products.index') }}"
-                                class="btn btn-light"
-                            >
-                                <i class="fa fa-arrow-left me-1"></i>
-                                Back
+                            <a href="{{ route('admin.products.index') }}"
+                               class="btn btn-light">
+                                <i class="fa fa-arrow-left me-1"></i> Back to List
                             </a>
                         </div>
+                    </div>
+                </div>
+            </div>
+
+            {{-- ==================== VARIANTS (Full Width) ==================== --}}
+            <div class="col-12">
+                <div class="card border shadow-none mb-4">
+                    <div class="card-header d-flex justify-content-between align-items-center">
+                        <h5 class="card-title mb-0">Product Variants</h5>
+                        <span class="badge bg-primary">
+                            {{ $product->variants->count() }} Variant(s)
+                        </span>
+                    </div>
+
+                    <div class="card-body">
+                        @if ($product->variants && $product->variants->count())
+                            <div class="table-responsive">
+                                <table class="table table-bordered table-hover align-middle mb-0">
+                                    <thead class="table-light">
+                                        <tr>
+                                            <th style="width: 80px;">Image</th>
+                                            <th>Variant Name</th>
+                                            <th>SKU</th>
+                                            <th class="text-end">Selling Price</th>
+                                            <th class="text-end">Discount</th>
+                                            <th class="text-end">Stock</th>
+                                            <th class="text-center">Status</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @foreach ($product->variants as $variant)
+                                            <tr>
+                                                {{-- Image --}}
+                                                <td>
+                                                    @if ($variant->image)
+                                                        <img src="{{ asset('storage/' . $variant->image) }}"
+                                                             alt="Variant"
+                                                             class="rounded border"
+                                                             width="60"
+                                                             height="60"
+                                                             style="object-fit: cover;">
+                                                    @else
+                                                        <div class="bg-light rounded border d-flex align-items-center justify-content-center"
+                                                             style="width: 60px; height: 60px;">
+                                                            <i class="fa fa-image text-muted"></i>
+                                                        </div>
+                                                    @endif
+                                                </td>
+
+                                                {{-- Variant Name (Attribute combination) --}}
+                                                <td>
+                                                    @if ($variant->values && $variant->values->count())
+                                                        <div class="d-flex flex-wrap gap-1">
+                                                            @foreach ($variant->values as $value)
+                                                                <span class="badge bg-light text-dark border">
+                                                                    <small class="text-muted">
+                                                                        {{ $value->attribute->name ?? '' }}:
+                                                                    </small>
+                                                                    {{ $value->attributeValue->value ?? $value->attributeValue->name ?? '—' }}
+                                                                </span>
+                                                            @endforeach
+                                                        </div>
+                                                    @else
+                                                        <span class="text-muted">—</span>
+                                                    @endif
+                                                </td>
+
+                                                {{-- SKU --}}
+                                                <td>{{ $variant->sku ?: '—' }}</td>
+
+                                                {{-- Selling Price --}}
+                                                <td class="text-end fw-semibold text-success">
+                                                    {{ number_format($variant->selling_price ?? $variant->price ?? 0, 2) }}
+                                                </td>
+
+                                                {{-- Discount Price --}}
+                                                <td class="text-end text-danger">
+                                                    {{ $variant->discount_price !== null ? number_format($variant->discount_price, 2) : '—' }}
+                                                </td>
+
+                                                {{-- Stock --}}
+                                                <td class="text-end">
+                                                    {{ $variant->stock ?? 0 }}
+                                                </td>
+
+                                                {{-- Status --}}
+                                                <td class="text-center">
+                                                    @if ($variant->status ?? true)
+                                                        <span class="badge bg-success">Active</span>
+                                                    @else
+                                                        <span class="badge bg-secondary">Inactive</span>
+                                                    @endif
+                                                </td>
+                                            </tr>
+                                        @endforeach
+                                    </tbody>
+                                </table>
+                            </div>
+                        @else
+                            <div class="text-center py-5 text-muted">
+                                <i class="fa fa-layer-group fa-2x mb-2 opacity-50"></i>
+                                <p class="mb-0">No variants found for this product</p>
+                            </div>
+                        @endif
                     </div>
                 </div>
             </div>
