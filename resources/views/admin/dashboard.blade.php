@@ -263,7 +263,7 @@
   <div class="row">
     <div class="col-md-4">
       <div class="card card-round">
-        <div class="card-body">
+        <div class="card-header">
           <div class="card-head-row card-tools-still-right">
             <div class="card-title">New Customers</div>
             <div class="card-tools">
@@ -279,7 +279,9 @@
               </div>
             </div>
           </div>
-          <div class="card-list py-4">
+        </div>
+        <div class="card-body">
+          <div class="card-list">
             <div class="item-list">
               <div class="avatar">
                 <img src="{{ asset('assets/img/jm_denis.jpg') }}" alt="..." class="avatar-img rounded-circle" />
