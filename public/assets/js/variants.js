@@ -51,7 +51,7 @@ $(document).ready(function () {
                 );
 
                 html += `
-                    <div class="col-md-3 mb-2">
+                    <div class="col-md-2 mb-2">
                         <div class="form-check">
                             <input
                                 type="checkbox"
@@ -386,7 +386,7 @@ $(document).ready(function () {
                         ${renderVariantImage(existing, index)}
                     </td>
 
-                    <td>
+                    <td class="text-center">
                         ${
                             existing
                                 ? `

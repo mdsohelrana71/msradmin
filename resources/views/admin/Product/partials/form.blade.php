@@ -462,14 +462,14 @@
                         ->toArray();
                 @endphp
 
-                <div class="form-group mb-4">
-                    <label class="form-label">
+                <div class="form-group">
+                    <label class="fw-semibold mb-3 form-label">
                         Attributes
                     </label>
 
                     <div class="row">
                         @foreach ($attributes as $attribute)
-                            <div class="col-md-4 mb-3">
+                            <div class="col-md-2 mb-3">
                                 <div class="form-check">
                                     <input type="checkbox" name="attributes[]"
                                         class="form-check-input attribute-checkbox"
