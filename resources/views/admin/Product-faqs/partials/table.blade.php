@@ -27,7 +27,7 @@
                     </td>
                     {{-- Products --}}
                     <td>
-                        @forelse ($faq->products->take(5) as $product)
+                        @forelse ($faq->products->take(4) as $product)
                             <span class="badge bg-info me-1 mb-1">
                                 {{ $product->name }}
                             </span>
@@ -36,10 +36,17 @@
                                 No products
                             </span>
                         @endforelse
-                        @if ($faq->products->count() > 5)
-                            <span class="small text-primary">
-                                +{{ $faq->products->count() - 5 }} more
-                            </span>
+
+                        @if ($faq->products->count() > 4)
+                            <a
+                                href="{{ route('admin.product-faqs.show', $faq) }}"
+                                class="btn btn-info btn-sm p-0 ms-1 d-inline-flex align-items-center justify-content-center"
+                                style="width: 25px; height: 20px;"
+                                title="View all products"
+                                data-bs-toggle="tooltip"
+                            >
+                                <i class="fa fa-eye"></i>
+                            </a>
                         @endif
                     </td>
                     {{-- Status --}}
