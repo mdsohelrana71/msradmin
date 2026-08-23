@@ -433,7 +433,57 @@
                 @enderror
             </div>
         </div>
+
+        <div class="card border shadow-none mb-4">
+            <div class="card-header">
+                <h5 class="card-title mb-0">Product SEO</h5>
+            </div>
+
+            <div class="card-body">
+                <div class="form-group mb-1">
+                    <label for="meta_title">Meta Title</label>
+                    <input type="text" name="meta_title" id="meta_title"
+                        class="form-control @error('meta_title') is-invalid @enderror"
+                        value="{{ old('meta_title', $product->seo->meta_title ?? '') }}"
+                        placeholder="Enter meta title">
+                    @error('meta_title')
+                        <div class="invalid-feedback">{{ $message }}</div>
+                    @enderror
+                </div>
+                <div class="form-group mb-1">
+                    <label for="meta_description">Meta Description</label>
+                    <textarea name="meta_description" id="meta_description"
+                        class="form-control @error('meta_description') is-invalid @enderror"
+                        rows="4"
+                        placeholder="Enter meta description">{{ old('meta_description', $product->seo->meta_description ?? '') }}</textarea>
+                    @error('meta_description')
+                        <div class="invalid-feedback">{{ $message }}</div>
+                    @enderror
+                </div>
+                <div class="form-group mb-1">
+                    <label for="meta_keywords">Meta Keywords</label>
+                    <input type="text" name="meta_keywords" id="meta_keywords"
+                        class="form-control @error('meta_keywords') is-invalid @enderror"
+                        value="{{ old('meta_keywords', $product->seo->meta_keywords ?? '') }}"
+                        placeholder="Enter meta keywords">
+                    @error('meta_keywords')
+                        <div class="invalid-feedback">{{ $message }}</div>
+                    @enderror
+                </div>
+                <div class="form-group mb-1">
+                    <label for="canonical_url">Canonical URL</label>
+                    <input type="url" name="canonical_url" id="canonical_url"
+                        class="form-control @error('canonical_url') is-invalid @enderror"
+                        value="{{ old('canonical_url', $product->seo->canonical_url ?? '') }}"
+                        placeholder="https://example.com/product/example">
+                    @error('canonical_url')
+                        <div class="invalid-feedback">{{ $message }}</div>
+                    @enderror
+                </div>
+            </div>
+        </div>
     </div>
+    
     <div class="col-12">
         <div class="card border mt-4 shadow-none">
             <div class="card-header d-flex justify-content-between align-items-center">

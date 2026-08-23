@@ -88,6 +88,7 @@ class ProductService
             'attributes' => $this->getAttributes(),
         ];
     }
+
     public function getCategories()
     {
         return Category::query()
@@ -127,6 +128,7 @@ class ProductService
             'category',
             'brand',
             'tags',
+            'seo',
             'images',
             'attributeAssignments.attribute',
             'variants.values.attribute',
@@ -148,31 +150,35 @@ class ProductService
             $attributes = $data['attributes'] ?? [];
             $variants = $data['variants'] ?? [];
             $images = $data['images'] ?? [];
-
+            $seo = [
+                'meta_title' => $data['meta_title'] ?? null,
+                'meta_description' => $data['meta_description'] ?? null,
+                'meta_keywords' => $data['meta_keywords'] ?? null,
+                'canonical_url' => $data['canonical_url'] ?? null,
+            ];
             unset(
                 $data['tags'],
                 $data['attributes'],
                 $data['variants'],
-                $data['images']
+                $data['images'],
+                $data['meta_title'],
+                $data['meta_description'],
+                $data['meta_keywords'],
+                $data['canonical_url']
             );
 
             $data['slug'] = $this->generateUniqueSlug(
                 $data['name']
             );
-
-            $data['is_featured'] =
-                $data['is_featured'] ?? false;
-
-            $data['status'] =
-                $data['status'] ?? false;
-
+            $data['is_featured'] = $data['is_featured'] ?? false;
+            $data['status'] = $data['status'] ?? false;
             if (!empty($data['thumbnail'])) {
                 $data['thumbnail'] = $data['thumbnail']
                     ->store('products', 'public');
             }
 
             $product = Product::create($data);
-
+            $product->seo()->create($seo);
             $product->tags()->sync(
                 $this->prepareTags($tags)
             );
@@ -196,6 +202,7 @@ class ProductService
                 'category',
                 'brand',
                 'tags',
+                'seo',
                 'images',
                 'attributeAssignments.attribute',
                 'variants.values.attribute',
@@ -204,8 +211,8 @@ class ProductService
         });
     }
 
-    public function update(Product $product,array $data): Product {
-
+    public function update(Product $product, array $data): Product
+    {
         return DB::transaction(function () use (
             $product,
             $data
@@ -218,10 +225,13 @@ class ProductService
             $removedImageIds = $data['removed_image_ids'] ?? [];
             $imageOrder = $data['image_order'] ?? [];
             $existingImages = $data['existing_images'] ?? [];
-
-            $removedVariantIds =
-                $data['removed_variant_ids'] ?? [];
-
+            $removedVariantIds = $data['removed_variant_ids'] ?? [];
+            $seo = [
+                'meta_title' => $data['meta_title'] ?? null,
+                'meta_description' => $data['meta_description'] ?? null,
+                'meta_keywords' => $data['meta_keywords'] ?? null,
+                'canonical_url' => $data['canonical_url'] ?? null,
+            ];
             unset(
                 $data['tags'],
                 $data['attributes'],
@@ -230,20 +240,19 @@ class ProductService
                 $data['removed_image_ids'],
                 $data['existing_images'],
                 $data['image_order'],
-                $data['removed_variant_ids']
+                $data['removed_variant_ids'],
+                $data['meta_title'],
+                $data['meta_description'],
+                $data['meta_keywords'],
+                $data['canonical_url']
             );
 
             $data['slug'] = $this->generateUniqueSlug(
                 $data['name'],
                 $product->id
             );
-
-            $data['is_featured'] =
-                $data['is_featured'] ?? false;
-
-            $data['status'] =
-                $data['status'] ?? false;
-
+            $data['is_featured'] = $data['is_featured'] ?? false;
+            $data['status'] = $data['status'] ?? false;
             if (!empty($data['thumbnail'])) {
                 if ($product->thumbnail) {
                     Storage::disk('public')->delete(
@@ -258,7 +267,10 @@ class ProductService
             }
 
             $product->update($data);
-
+            $product->seo()->updateOrCreate(
+                ['product_id' => $product->id],
+                $seo
+            );
             $product->tags()->sync(
                 $this->prepareTags($tags)
             );
@@ -297,6 +309,7 @@ class ProductService
                 'category',
                 'brand',
                 'tags',
+                'seo',
                 'images',
                 'attributeAssignments.attribute',
                 'variants.values.attribute',

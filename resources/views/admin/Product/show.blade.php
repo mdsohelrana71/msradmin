@@ -269,24 +269,50 @@
                     </div>
                 </div>
 
-                {{-- Actions --}}
+                {{-- Product SEO --}}
                 <div class="card border shadow-none">
                     <div class="card-header">
-                        <h5 class="card-title mb-0">Actions</h5>
+                        <h5 class="card-title mb-0">Product SEO</h5>
                     </div>
                     <div class="card-body">
-                        <div class="d-grid gap-2">
-                            @can('products.edit')
-                                <a href="{{ route('admin.products.edit', $product) }}"
-                                   class="btn btn-primary">
-                                    <i class="fa fa-edit me-1"></i> Edit Product
-                                </a>
-                            @endcan
+                        <div class="mb-4">
+                            <label class="form-label text-muted small mb-1">Meta Title</label>
+                            <div class="fw-medium">
+                                {{ $product->seo->meta_title ?? '—' }}
+                            </div>
+                        </div>
 
-                            <a href="{{ route('admin.products.index') }}"
-                               class="btn btn-light">
-                                <i class="fa fa-arrow-left me-1"></i> Back to List
-                            </a>
+                        <div class="mb-4">
+                            <label class="form-label text-muted small mb-1">Meta Description</label>
+                            <div class="fw-medium">
+                                {{ $product->seo->meta_description ?? '—' }}
+                            </div>
+                        </div>
+
+                        <div class="mb-4">
+                            <label class="form-label text-muted small mb-1">Meta Keywords</label>
+                            <div class="gap-2">
+                                @if ($product->seo?->meta_keywords)
+                                    @foreach (array_filter(array_map('trim', explode(',', $product->seo->meta_keywords))) as $keyword)
+                                        <span class="badge bg-light text-dark border">{{ $keyword }}</span>
+                                    @endforeach
+                                @else
+                                    <span class="text-muted">—</span>
+                                @endif
+                            </div>
+                        </div>
+
+                        <div>
+                            <label class="form-label text-muted small mb-1">Canonical URL</label>
+                            @if ($product->seo?->canonical_url)
+                                <div class="fw-medium">
+                                    <a href="{{ $product->seo->canonical_url }}" target="_blank" rel="noopener noreferrer">
+                                        {{ $product->seo->canonical_url }}
+                                    </a>
+                                </div>
+                            @else
+                                <div>—</div>
+                            @endif
                         </div>
                     </div>
                 </div>

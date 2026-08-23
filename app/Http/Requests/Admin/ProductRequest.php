@@ -284,6 +284,34 @@ class ProductRequest extends FormRequest
                 'integer',
                 'exists:product_variants,id',
             ],
+
+            /*
+            |--------------------------------------------------------------------------
+            | Product SEO
+            |--------------------------------------------------------------------------
+            */
+
+            'meta_title' => [
+                'nullable',
+                'string',
+                'max:255',
+            ],
+
+            'meta_description' => [
+                'nullable',
+                'string',
+            ],
+
+            'meta_keywords' => [
+                'nullable',
+                'string',
+            ],
+
+            'canonical_url' => [
+                'nullable',
+                'url',
+                'max:255',
+            ],
         ];
     }
 }
