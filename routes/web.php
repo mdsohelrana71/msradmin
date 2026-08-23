@@ -10,6 +10,7 @@ use App\Http\Controllers\Admin\ProductController;
 use App\Http\Controllers\Admin\AccountController;
 use App\Http\Controllers\Admin\SettingsController;
 use App\Http\Controllers\Admin\DashboardController;
+use App\Http\Controllers\Admin\ProductFaqController;
 use App\Http\Controllers\Admin\StoreSettingController;
 use App\Http\Controllers\Admin\BlogCategoryController;
 use App\Http\Controllers\Admin\ProductCategoryController;
@@ -33,6 +34,7 @@ Route::middleware('auth')->prefix('admin')->name('admin.')->group(function () {
     Route::resource('roles', RoleController::class);
     Route::resource('accounts', AccountController::class);
     Route::resource('products', ProductController::class);
+    Route::resource('product-faqs', ProductFaqController::class);
     Route::resource('product-categories', ProductCategoryController::class)
     ->parameters([
         'product-categories' => 'category',

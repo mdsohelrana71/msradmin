@@ -79,6 +79,7 @@
     <script src="{{ asset('assets/js/plugin/jsvectormap/jsvectormap.min.js') }}"></script>
     <script src="{{ asset('assets/js/plugin/jsvectormap/world.js') }}"></script>
     <script src="{{ asset('assets/js/plugin/sweetalert/sweetalert.min.js') }}"></script>
+    <script src="{{ asset('assets/js/plugin/select2/select2.full.min.js') }}"></script>
     <script src="{{ asset('assets/js/msradmin.min.js') }}"></script>
     <script src="{{ asset('assets/js/setting-demo.js') }}"></script>
     <script src="{{ asset('assets/js/admin.js') }}"></script>

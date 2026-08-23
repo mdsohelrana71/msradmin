@@ -22,7 +22,7 @@ return [
     ],
 
     'brands' => [
-        'label' => 'Brands',
+        'label' => 'Product Brands',
         'permissions' => [
             'brands.view' => 'View brands',
             'brands.create' => 'Create brands',
@@ -38,6 +38,16 @@ return [
             'product-attributes.create' => 'Create product attributes',
             'product-attributes.edit' => 'Edit product attributes',
             'product-attributes.delete' => 'Delete product attributes',
+        ],
+    ],
+
+    'product-faqs' => [
+        'label' => 'Product FAQs',
+        'permissions' => [
+            'product-faqs.view' => 'View product FAQs',
+            'product-faqs.create' => 'Create product FAQs',
+            'product-faqs.edit' => 'Edit product FAQs',
+            'product-faqs.delete' => 'Delete product FAQs',
         ],
     ],
 

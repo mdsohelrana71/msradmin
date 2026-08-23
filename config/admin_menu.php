@@ -50,7 +50,7 @@ return [
         'permission' => 'products.view',
     ],
     [
-        'title' => 'Brands',
+        'title' => 'Product Brands',
         'route' => 'admin.brands.index',
         'icon' => 'fa fa-tags',
         'permission' => 'brands.view',
@@ -60,6 +60,12 @@ return [
         'route' => 'admin.product-attributes.index',
         'icon' => 'fa fa-sliders-h',
         'permission' => 'product-attributes.view',
+    ],
+    [
+        'title' => 'Product FAQs',
+        'route' => 'admin.product-faqs.index',
+        'icon' => 'fas fa-question-circle',
+        'permission' => 'product-faqs.view',
     ],
     [
         'title' => 'Blog Categories',

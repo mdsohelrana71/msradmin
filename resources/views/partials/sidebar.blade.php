@@ -122,7 +122,7 @@
                             class="{{ request()->routeIs('admin.brands.*') ? '' : 'collapsed' }}"
                             aria-expanded="{{ request()->routeIs('admin.brands.*') ? 'true' : 'false' }}">
                             <i class="fas fa-tags"></i>
-                            <p>Brand</p>
+                            <p>Product Brand</p>
                             <span class="caret"></span>
                         </a>
 
@@ -187,6 +187,48 @@
                                         </a>
                                     </li>
                                 @endcan
+                            </ul>
+                        </div>
+                    </li>
+                @endcanany
+
+                @canany(['product-faqs.view', 'product-faqs.create'])
+                    <li class="nav-item {{ request()->routeIs('admin.product-faqs.*') ? 'active' : '' }}">
+                        <a
+                            data-bs-toggle="collapse"
+                            href="#productFaqs"
+                            class="{{ request()->routeIs('admin.product-faqs.*') ? '' : 'collapsed' }}"
+                            aria-expanded="{{ request()->routeIs('admin.product-faqs.*') ? 'true' : 'false' }}">
+                            <i class="fas fa-question-circle"></i>
+                            <p>Product FAQs</p>
+                            <span class="caret"></span>
+                        </a>
+
+                        <div
+                            class="collapse {{ request()->routeIs('admin.product-faqs.*') ? 'show' : '' }}"
+                            id="productFaqs">
+                            <ul class="nav nav-collapse">
+
+                                @can('product-faqs.view')
+                                    <li class="{{ request()->routeIs('admin.product-faqs.index') ? 'active' : '' }}">
+                                        <a href="{{ route('admin.product-faqs.index') }}">
+                                            <span class="sub-item">
+                                                All FAQs
+                                            </span>
+                                        </a>
+                                    </li>
+                                @endcan
+
+                                @can('product-faqs.create')
+                                    <li class="{{ request()->routeIs('admin.product-faqs.create') ? 'active' : '' }}">
+                                        <a href="{{ route('admin.product-faqs.create') }}">
+                                            <span class="sub-item">
+                                                Create FAQ
+                                            </span>
+                                        </a>
+                                    </li>
+                                @endcan
+
                             </ul>
                         </div>
                     </li>

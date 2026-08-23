@@ -84,5 +84,13 @@ class Product extends Model
             ->orderBy('sort_order');
     }
 
+    public function faqs()
+    {
+        return $this->belongsToMany(
+            ProductFaq::class,
+            'product_faq_product'
+        );
+    }
+
     
 }
