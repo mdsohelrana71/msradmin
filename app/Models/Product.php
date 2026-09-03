@@ -23,7 +23,6 @@ class Product extends Model
         'cost_price',
         'selling_price',
         'discount_price',
-        'stock',
         'weight',
         'unit',
         'is_featured',
@@ -35,7 +34,6 @@ class Product extends Model
         'selling_price' => 'decimal:2',
         'discount_price' => 'decimal:2',
         'weight' => 'decimal:2',
-        'stock' => 'integer',
         'is_featured' => 'boolean',
         'status' => 'boolean',
     ];
@@ -96,6 +94,17 @@ class Product extends Model
     public function seo(): HasOne
     {
         return $this->hasOne(ProductSeo::class);
+    }
+
+    public function inventories(): HasMany
+    {
+        return $this->hasMany(ProductInventory::class);
+    }
+
+    public function inventory(): HasOne
+    {
+        return $this->hasOne(ProductInventory::class)
+            ->whereNull('product_variant_id');
     }
 
 }

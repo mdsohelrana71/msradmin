@@ -249,7 +249,6 @@ $(document).ready(function () {
                             <th width="160">SKU</th>
                             <th width="140">Price</th>
                             <th width="140">Discount Price</th>
-                            <th width="110">Stock</th>
                             <th width="100">Status</th>
                             <th width="230">Image</th>
                             <th width="80">Action</th>
@@ -343,16 +342,6 @@ $(document).ready(function () {
                             class="form-control form-control-sm"
                             value="${existing?.discount_price ?? ''}"
                             placeholder="0.00"
-                        >
-                    </td>
-
-                    <td>
-                        <input
-                            type="number"
-                            min="0"
-                            name="variants[${index}][stock]"
-                            class="form-control form-control-sm"
-                            value="${existing?.stock ?? 0}"
                         >
                     </td>
 

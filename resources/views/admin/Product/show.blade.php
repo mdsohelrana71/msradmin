@@ -102,26 +102,20 @@
                     </div>
                 </div>
 
-                {{-- Inventory & Stock --}}
+                {{-- Product Specifications --}}
                 <div class="card border shadow-none mb-4">
                     <div class="card-header">
-                        <h5 class="card-title mb-0">Inventory & Stock</h5>
+                        <h5 class="card-title mb-0">Product Specifications</h5>
                     </div>
                     <div class="card-body">
                         <div class="row g-3">
-                            <div class="col-md-4">
-                                <div class="border rounded p-3 h-100 text-center">
-                                    <label class="form-label text-muted small mb-2 d-block">Stock</label>
-                                    <div class="fs-5 fw-semibold">{{ $product->stock ?? 0 }}</div>
-                                </div>
-                            </div>
-                            <div class="col-md-4">
+                            <div class="col-md-6">
                                 <div class="border rounded p-3 h-100 text-center">
                                     <label class="form-label text-muted small mb-2 d-block">Unit</label>
                                     <div class="fs-5 fw-semibold">{{ $product->unit ?? 'pcs' }}</div>
                                 </div>
                             </div>
-                            <div class="col-md-4">
+                            <div class="col-md-6">
                                 <div class="border rounded p-3 h-100 text-center">
                                     <label class="form-label text-muted small mb-2 d-block">Weight</label>
                                     <div class="fs-5 fw-semibold">
@@ -339,7 +333,6 @@
                                             <th>SKU</th>
                                             <th class="text-end">Price</th>
                                             <th class="text-end">Discount</th>
-                                            <th class="text-end">Stock</th>
                                             <th class="text-center">Status</th>
                                         </tr>
                                     </thead>
@@ -392,11 +385,6 @@
                                                 {{-- Discount Price --}}
                                                 <td class="text-center text-danger">
                                                     {{ $variant->discount_price !== null ? number_format($variant->discount_price, 2) : '—' }}
-                                                </td>
-
-                                                {{-- Stock --}}
-                                                <td class="text-center">
-                                                    {{ $variant->stock ?? 0 }}
                                                 </td>
 
                                                 {{-- Status --}}

@@ -37,8 +37,6 @@ return new class extends Migration
             $table->decimal('selling_price', 12, 2);
             $table->decimal('discount_price', 12, 2)->nullable();
 
-            $table->integer('stock')->default(0);
-
             $table->decimal('weight', 8, 2)->nullable();
             $table->string('unit')->default('pcs');
 

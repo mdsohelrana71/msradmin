@@ -146,30 +146,12 @@
 
         <div class="card border shadow-none mb-4">
             <div class="card-header">
-                <h5 class="card-title mb-0">Inventory & Stock</h5>
+                <h5 class="card-title mb-0">Product Specifications</h5>
             </div>
 
             <div class="card-body">
                 <div class="row">
-                    <div class="col-md-4">
-                        <div class="form-group mb-0">
-                            <label for="stock">
-                                Stock <span class="text-danger">*</span>
-                            </label>
-
-                            <input type="number" name="stock" id="stock" min="0"
-                                class="form-control @error('stock') is-invalid @enderror"
-                                value="{{ old('stock', $product->stock ?? 0) }}" placeholder="0" required>
-
-                            @error('stock')
-                                <div class="invalid-feedback">
-                                    {{ $message }}
-                                </div>
-                            @enderror
-                        </div>
-                    </div>
-
-                    <div class="col-md-4">
+                    <div class="col-md-6">
                         <div class="form-group mb-0">
                             <label for="unit">
                                 Unit <span class="text-danger">*</span>
@@ -187,7 +169,7 @@
                         </div>
                     </div>
 
-                    <div class="col-md-4">
+                    <div class="col-md-6">
                         <div class="form-group mb-0">
                             <label for="weight">
                                 Weight

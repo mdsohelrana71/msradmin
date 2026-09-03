@@ -21,8 +21,6 @@ return new class extends Migration
             $table->decimal('price', 12, 2)->nullable();
             $table->decimal('discount_price', 12, 2)->nullable();
 
-            $table->integer('stock')->default(0);
-
             $table->string('image')->nullable();
 
             $table->boolean('status')->default(true);

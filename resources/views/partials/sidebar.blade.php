@@ -192,6 +192,46 @@
                     </li>
                 @endcanany
 
+                @canany(['product-inventory.view', 'product-inventory.create'])
+                    <li class="nav-item {{ request()->routeIs('admin.product-inventory.*') ? 'active' : '' }}">
+                        <a
+                            data-bs-toggle="collapse"
+                            href="#productInventory"
+                            class="{{ request()->routeIs('admin.product-inventory.*') ? '' : 'collapsed' }}"
+                            aria-expanded="{{ request()->routeIs('admin.product-inventory.*') ? 'true' : 'false' }}">
+                            <i class="fas fa-boxes"></i>
+                            <p>Product Inventory</p>
+                            <span class="caret"></span>
+                        </a>
+
+                        <div
+                            class="collapse {{ request()->routeIs('admin.product-inventory.*') ? 'show' : '' }}"
+                            id="productInventory">
+                            <ul class="nav nav-collapse">
+                                @can('product-inventory.view')
+                                    <li class="{{ request()->routeIs('admin.product-inventory.index') ? 'active' : '' }}">
+                                        <a href="{{ route('admin.product-inventory.index') }}">
+                                            <span class="sub-item">
+                                                All Inventory
+                                            </span>
+                                        </a>
+                                    </li>
+                                @endcan
+
+                                @can('product-inventory.create')
+                                    <li class="{{ request()->routeIs('admin.product-inventory.create') ? 'active' : '' }}">
+                                        <a href="{{ route('admin.product-inventory.create') }}">
+                                            <span class="sub-item">
+                                                Add Inventory
+                                            </span>
+                                        </a>
+                                    </li>
+                                @endcan
+                            </ul>
+                        </div>
+                    </li>
+                @endcanany
+
                 @canany(['product-faqs.view', 'product-faqs.create'])
                     <li class="nav-item {{ request()->routeIs('admin.product-faqs.*') ? 'active' : '' }}">
                         <a

@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
@@ -14,7 +15,6 @@ class ProductVariant extends Model
         'barcode',
         'price',
         'discount_price',
-        'stock',
         'image',
         'status',
         'sort_order',
@@ -23,7 +23,6 @@ class ProductVariant extends Model
     protected $casts = [
         'price' => 'decimal:2',
         'discount_price' => 'decimal:2',
-        'stock' => 'integer',
         'status' => 'boolean',
         'sort_order' => 'integer',
     ];
@@ -45,4 +44,8 @@ class ProductVariant extends Model
         );
     }
 
+    public function inventory(): HasOne
+    {
+        return $this->hasOne(ProductInventory::class);
+    }
 }

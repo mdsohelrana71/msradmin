@@ -62,6 +62,12 @@ return [
         'permission' => 'product-attributes.view',
     ],
     [
+        'title' => 'Product Inventory',
+        'route' => 'admin.product-inventory.index',
+        'icon' => 'fa fa-boxes',
+        'permission' => 'product-inventory.view',
+    ],
+    [
         'title' => 'Product FAQs',
         'route' => 'admin.product-faqs.index',
         'icon' => 'fas fa-question-circle',

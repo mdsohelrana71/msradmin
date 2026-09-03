@@ -15,6 +15,7 @@ use App\Http\Controllers\Admin\StoreSettingController;
 use App\Http\Controllers\Admin\BlogCategoryController;
 use App\Http\Controllers\Admin\ProductCategoryController;
 use App\Http\Controllers\Admin\ProductAttributeController;
+use App\Http\Controllers\Admin\ProductInventoryController;
 use App\Http\Controllers\Admin\ProductAttributeValueController;
 
 Route::get('/', function () {
@@ -44,7 +45,7 @@ Route::middleware('auth')->prefix('admin')->name('admin.')->group(function () {
         'product-attributes' => 'product_attribute',
     ]);
     Route::resource('product-attributes.values', ProductAttributeValueController::class);
-
+    Route::resource('product-inventory', ProductInventoryController::class)->only(['index', 'show', 'edit', 'update']);
     Route::resource('brands', BrandController::class);
     Route::resource('blogs', BlogController::class);
     Route::resource('blog-categories', BlogCategoryController::class)

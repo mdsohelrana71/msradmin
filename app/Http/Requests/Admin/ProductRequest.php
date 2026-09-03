@@ -138,12 +138,6 @@ class ProductRequest extends FormRequest
                 'lte:selling_price',
             ],
 
-            'stock' => [
-                'required',
-                'integer',
-                'min:0',
-            ],
-
             'weight' => [
                 'nullable',
                 'numeric',
@@ -238,12 +232,6 @@ class ProductRequest extends FormRequest
                 'numeric',
                 'min:0',
                 'lte:variants.*.price',
-            ],
-
-            'variants.*.stock' => [
-                'required',
-                'integer',
-                'min:0',
             ],
 
             'variants.*.image' => [

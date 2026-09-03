@@ -8,7 +8,6 @@
                 <th>Category</th>
                 <th>Brand</th>
                 <th>Price</th>
-                <th>Stock</th>
                 <th>Status</th>
                 <th width="170">Action</th>
             </tr>
@@ -85,19 +84,6 @@
                                 Discount:
                                 {{ number_format($product->discount_price, 2) }}
                             </small>
-                        @endif
-                    </td>
-
-                    <td>
-                        @if ($product->stock > 0)
-                            <span class="badge bg-success">
-                                {{ $product->stock }}
-                                {{ $product->unit }}
-                            </span>
-                        @else
-                            <span class="badge bg-danger">
-                                Out of Stock
-                            </span>
                         @endif
                     </td>
 

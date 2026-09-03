@@ -13,21 +13,19 @@ return new class extends Migration
     {
         Schema::create('product_inventory', function (Blueprint $table) {
             $table->id();
-
             $table->foreignId('product_id')
                 ->constrained('products')
                 ->cascadeOnDelete();
-
-            $table->foreignId('product_variant_value_id')
+            $table->foreignId('product_variant_id')
                 ->nullable()
-                ->constrained('product_variant_values')
+                ->constrained('product_variants')
                 ->cascadeOnDelete();
-
             $table->integer('stock')->default(0);
             $table->integer('reserved_stock')->default(0);
             $table->integer('low_stock_alert')->default(5);
-
             $table->timestamps();
+
+            $table->unique(['product_id', 'product_variant_id']);
         });
     }
 

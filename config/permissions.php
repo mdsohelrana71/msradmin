@@ -41,6 +41,14 @@ return [
         ],
     ],
 
+    'product-inventory' => [
+        'label' => 'Product Inventory',
+        'permissions' => [
+            'product-inventory.view' => 'View product inventory',
+            'product-inventory.edit' => 'Edit product inventory',
+        ],
+    ],
+
     'product-faqs' => [
         'label' => 'Product FAQs',
         'permissions' => [

@@ -8,6 +8,7 @@ use App\Models\Product;
 use App\Models\Category;
 use Illuminate\Support\Str;
 use App\Models\ProductAttribute;
+use App\Models\ProductInventory;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Database\Eloquent\Collection;
@@ -42,8 +43,6 @@ class ProductService
                     'oldest' => $query->oldest('created_at'),
                     'price_low' => $query->orderBy('selling_price'),
                     'price_high' => $query->orderByDesc('selling_price'),
-                    'stock_low' => $query->orderBy('stock'),
-                    'stock_high' => $query->orderByDesc('stock'),
                     'featured' => $query
                         ->where('is_featured', true)
                         ->orderBy('name'),
@@ -150,12 +149,14 @@ class ProductService
             $attributes = $data['attributes'] ?? [];
             $variants = $data['variants'] ?? [];
             $images = $data['images'] ?? [];
+
             $seo = [
                 'meta_title' => $data['meta_title'] ?? null,
                 'meta_description' => $data['meta_description'] ?? null,
                 'meta_keywords' => $data['meta_keywords'] ?? null,
                 'canonical_url' => $data['canonical_url'] ?? null,
             ];
+
             unset(
                 $data['tags'],
                 $data['attributes'],
@@ -170,15 +171,19 @@ class ProductService
             $data['slug'] = $this->generateUniqueSlug(
                 $data['name']
             );
+
             $data['is_featured'] = $data['is_featured'] ?? false;
             $data['status'] = $data['status'] ?? false;
+
             if (!empty($data['thumbnail'])) {
                 $data['thumbnail'] = $data['thumbnail']
                     ->store('products', 'public');
             }
 
             $product = Product::create($data);
+
             $product->seo()->create($seo);
+
             $product->tags()->sync(
                 $this->prepareTags($tags)
             );
@@ -197,6 +202,8 @@ class ProductService
                 $product,
                 $images
             );
+
+            $this->syncInventory($product);
 
             return $product->load([
                 'category',
@@ -225,13 +232,19 @@ class ProductService
             $removedImageIds = $data['removed_image_ids'] ?? [];
             $imageOrder = $data['image_order'] ?? [];
             $existingImages = $data['existing_images'] ?? [];
-            $removedVariantIds = $data['removed_variant_ids'] ?? [];
+
             $seo = [
                 'meta_title' => $data['meta_title'] ?? null,
                 'meta_description' => $data['meta_description'] ?? null,
                 'meta_keywords' => $data['meta_keywords'] ?? null,
                 'canonical_url' => $data['canonical_url'] ?? null,
             ];
+
+            $structureChanged = $this->hasAttributeStructureChanged(
+                $product,
+                $attributes
+            );
+
             unset(
                 $data['tags'],
                 $data['attributes'],
@@ -251,8 +264,10 @@ class ProductService
                 $data['name'],
                 $product->id
             );
+
             $data['is_featured'] = $data['is_featured'] ?? false;
             $data['status'] = $data['status'] ?? false;
+
             if (!empty($data['thumbnail'])) {
                 if ($product->thumbnail) {
                     Storage::disk('public')->delete(
@@ -267,36 +282,33 @@ class ProductService
             }
 
             $product->update($data);
+
             $product->seo()->updateOrCreate(
                 ['product_id' => $product->id],
                 $seo
             );
+
             $product->tags()->sync(
                 $this->prepareTags($tags)
             );
 
-            $this->syncAttributes(
-                $product,
-                $attributes
-            );
+            if ($structureChanged) {
+                $this->rebuildVariants(
+                    $product,
+                    $attributes,
+                    $variants
+                );
+            } else {
+                $this->syncAttributes(
+                    $product,
+                    $attributes
+                );
 
-            if (!empty($removedVariantIds)) {
-                $product->variants()
-                    ->whereIn('id', $removedVariantIds)
-                    ->each(function ($variant) {
-                        if ($variant->image) {
-                            Storage::disk('public')
-                                ->delete($variant->image);
-                        }
-
-                        $variant->delete();
-                    });
+                $this->syncVariants(
+                    $product,
+                    $variants
+                );
             }
-
-            $this->syncVariants(
-                $product,
-                $variants
-            );
 
             $this->syncProductImages(
                 $product,
@@ -305,6 +317,9 @@ class ProductService
                 $imageOrder,
                 $existingImages
             );
+
+            $this->syncInventory($product);
+
             return $product->refresh()->load([
                 'category',
                 'brand',
@@ -352,6 +367,131 @@ class ProductService
         });
     }
 
+    protected function hasAttributeStructureChanged(
+        Product $product,
+        array $attributes
+    ): bool {
+        $oldAttributes = $product->attributeAssignments()
+            ->pluck('attribute_id')
+            ->map(fn ($id) => (int) $id)
+            ->sort()
+            ->values()
+            ->all();
+
+        $newAttributes = collect($attributes)
+            ->map(fn ($id) => (int) $id)
+            ->filter()
+            ->unique()
+            ->sort()
+            ->values()
+            ->all();
+
+        return $oldAttributes !== $newAttributes;
+    }
+
+    protected function rebuildVariants(
+        Product $product,
+        array $attributes,
+        array $variants
+    ): void {
+        $product->inventory()->delete();
+
+        $product->variants()
+            ->with('inventory')
+            ->each(function ($variant) {
+                if ($variant->image) {
+                    Storage::disk('public')
+                        ->delete($variant->image);
+                }
+
+                $variant->delete();
+            });
+
+        $this->syncAttributes(
+            $product,
+            $attributes
+        );
+
+        $this->createVariants(
+            $product,
+            $variants
+        );
+    }
+
+    protected function createVariants(
+        Product $product,
+        array $variants
+    ): void {
+        foreach ($variants as $index => $variantData) {
+            $variantAttributes = $variantData['values'] ?? [];
+            $image = $variantData['image'] ?? null;
+
+            $variantData = collect($variantData)
+                ->except([
+                    'id',
+                    'values',
+                    'image',
+                    'remove_image',
+                ])
+                ->toArray();
+
+            $variantData['status'] =
+                $variantData['status'] ?? true;
+
+            $variantData['sort_order'] =
+                $variantData['sort_order'] ?? $index;
+
+            if ($image) {
+                $variantData['image'] = $image
+                    ->store(
+                        'products/variants',
+                        'public'
+                    );
+            }
+
+            $variant = $product->variants()
+                ->create($variantData);
+
+            $this->syncVariantValues(
+                $variant,
+                $variantAttributes
+            );
+        }
+    }
+
+    protected function syncInventory(Product $product): void
+    {
+        $variants = $product->variants()
+            ->get();
+
+        if ($variants->isEmpty()) {
+            $product->inventory()->firstOrCreate(
+                [],
+                [
+                    'stock' => 0,
+                    'reserved_stock' => 0,
+                    'low_stock_alert' => 5,
+                ]
+            );
+
+            return;
+        }
+
+        $product->inventory()->delete();
+
+        foreach ($variants as $variant) {
+            $variant->inventory()->firstOrCreate(
+                [],
+                [
+                    'product_id' => $product->id,
+                    'stock' => 0,
+                    'reserved_stock' => 0,
+                    'low_stock_alert' => 5,
+                ]
+            );
+        }
+    }
+
     protected function syncAttributes(
         Product $product,
         array $attributes
@@ -371,8 +511,10 @@ class ProductService
         }
     }
 
-    protected function syncVariants(Product $product, array $variants): void
-    {
+    protected function syncVariants(
+        Product $product,
+        array $variants
+    ): void {
         $existingVariantIds = $product->variants()
             ->pluck('id')
             ->all();
@@ -383,8 +525,10 @@ class ProductService
             $variantId = $variantData['id'] ?? null;
             $variantAttributes = $variantData['values'] ?? [];
             $image = $variantData['image'] ?? null;
-            $removeImage = !empty($variantData['remove_image'])
-                && $variantData['remove_image'] == 1;
+
+            $removeImage = !empty(
+                $variantData['remove_image']
+            ) && $variantData['remove_image'] == 1;
 
             $variantData = collect($variantData)
                 ->except([
@@ -401,9 +545,6 @@ class ProductService
             $variantData['sort_order'] =
                 $variantData['sort_order'] ?? $index;
 
-            /*
-            * Existing variant
-            */
             if ($variantId) {
                 $variant = $product->variants()
                     ->whereKey($variantId)
@@ -413,9 +554,6 @@ class ProductService
                     continue;
                 }
 
-                /*
-                * Remove existing image
-                */
                 if ($removeImage && $variant->image) {
                     Storage::disk('public')
                         ->delete($variant->image);
@@ -423,12 +561,6 @@ class ProductService
                     $variantData['image'] = null;
                 }
 
-                /*
-                * Upload new image
-                *
-                * If a new image is uploaded,
-                * old image will be deleted first.
-                */
                 if ($image) {
                     if ($variant->image) {
                         Storage::disk('public')
@@ -436,19 +568,20 @@ class ProductService
                     }
 
                     $variantData['image'] = $image
-                        ->store('products/variants', 'public');
+                        ->store(
+                            'products/variants',
+                            'public'
+                        );
                 }
 
                 $variant->update($variantData);
-            }
-
-            /*
-            * New variant
-            */
-            else {
+            } else {
                 if ($image) {
                     $variantData['image'] = $image
-                        ->store('products/variants', 'public');
+                        ->store(
+                            'products/variants',
+                            'public'
+                        );
                 }
 
                 $variant = $product->variants()
@@ -463,10 +596,6 @@ class ProductService
             );
         }
 
-        /*
-        * Delete removed variants
-        * and their images
-        */
         $variantsToDelete = array_diff(
             $existingVariantIds,
             $submittedVariantIds
@@ -514,12 +643,6 @@ class ProductService
         array $imageOrder = [],
         array $existingImages = []
     ): void {
-        /*
-        |--------------------------------------------------------------------------
-        | Delete Removed Gallery Images
-        |--------------------------------------------------------------------------
-        */
-
         if (!empty($removedImageIds)) {
             $product->images()
                 ->whereIn('id', $removedImageIds)
@@ -533,11 +656,6 @@ class ProductService
                 });
         }
 
-        /*
-        |--------------------------------------------------------------------------
-        | Update Existing Images (Alt Text)
-        |--------------------------------------------------------------------------
-        */
         if (!empty($existingImages)) {
             foreach ($existingImages as $imageId => $imageData) {
                 $product->images()
@@ -547,11 +665,6 @@ class ProductService
                     ]);
             }
         }
-                /*
-        |--------------------------------------------------------------------------
-        | Upload New Gallery Images
-        |--------------------------------------------------------------------------
-        */
 
         foreach ($images as $index => $imageData) {
             if (empty($imageData['image'])) {
@@ -559,7 +672,10 @@ class ProductService
             }
 
             $imagePath = $imageData['image']
-                ->store('products/gallery', 'public');
+                ->store(
+                    'products/gallery',
+                    'public'
+                );
 
             $product->images()->create([
                 'image' => $imagePath,
@@ -567,12 +683,6 @@ class ProductService
                 'sort_order' => $index,
             ]);
         }
-
-        /*
-        |--------------------------------------------------------------------------
-        | Update Existing Image Order
-        |--------------------------------------------------------------------------
-        */
 
         if (!empty($imageOrder)) {
             foreach ($imageOrder as $sortOrder => $imageId) {
