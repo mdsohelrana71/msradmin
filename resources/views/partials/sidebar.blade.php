@@ -380,6 +380,48 @@
                     </li>
                 @endcanany
 
+                @canany(['orders.view'])
+                    <li class="nav-section">
+                        <span class="sidebar-mini-icon">
+                            <i class="fa fa-ellipsis-h"></i>
+                        </span>
+
+                        <h4 class="text-section">E-commerce</h4>
+                    </li>
+                @endcanany
+
+                @canany(['orders.view', 'orders.edit'])
+                    <li class="nav-item {{ request()->routeIs('admin.orders.*') ? 'active' : '' }}">
+                        <a
+                            data-bs-toggle="collapse"
+                            href="#orders"
+                            class="{{ request()->routeIs('admin.orders.*') ? '' : 'collapsed' }}"
+                            aria-expanded="{{ request()->routeIs('admin.orders.*') ? 'true' : 'false' }}"
+                        >
+                            <i class="fas fa-shopping-cart"></i>
+                            <p>Orders</p>
+                            <span class="caret"></span>
+                        </a>
+
+                        <div
+                            class="collapse {{ request()->routeIs('admin.orders.*') ? 'show' : '' }}"
+                            id="orders"
+                        >
+                            <ul class="nav nav-collapse">
+                                @can('orders.view')
+                                    <li class="{{ request()->routeIs('admin.orders.index') ? 'active' : '' }}">
+                                        <a href="{{ route('admin.orders.index') }}">
+                                            <span class="sub-item">
+                                                All Orders
+                                            </span>
+                                        </a>
+                                    </li>
+                                @endcan
+                            </ul>
+                        </div>
+                    </li>
+                @endcanany
+
                 @canany(['blogs.view', 'blogs.create', 'blog_categories.view', 'blog_categories.create'])
                     <li class="nav-section">
                         <span class="sidebar-mini-icon">

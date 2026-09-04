@@ -92,6 +92,12 @@ return [
         'permission' => 'product-compares.view',
     ],
     [
+        'title' => 'Orders',
+        'route' => 'admin.orders.index',
+        'icon' => 'fa fa-shopping-cart',
+        'permission' => 'orders.view',
+    ],
+    [
         'title' => 'Blog Categories',
         'route' => 'admin.blog-categories.index',
         'icon' => 'fa fa-folder',

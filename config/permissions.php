@@ -84,6 +84,14 @@ return [
         ],
     ],
 
+    'orders' => [
+        'label' => 'Orders',
+        'permissions' => [
+            'orders.view' => 'View orders',
+            'orders.edit' => 'Edit orders',
+        ],
+    ],
+
     'blogs' => [
         'label' => 'Blogs',
         'permissions' => [

@@ -6,6 +6,7 @@ use App\Http\Controllers\Admin\BlogController;
 use App\Http\Controllers\Admin\RoleController;
 use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\Admin\BrandController;
+use App\Http\Controllers\Admin\OrderController;
 use App\Http\Controllers\Admin\ProductController;
 use App\Http\Controllers\Admin\AccountController;
 use App\Http\Controllers\Admin\SettingsController;
@@ -53,6 +54,10 @@ Route::middleware('auth')->prefix('admin')->name('admin.')->group(function () {
     Route::resource('product-wishlists', ProductWishlistController::class)->only(['index', 'show', 'destroy']);
     Route::resource('product-compares', ProductCompareController::class)->only(['index', 'show', 'destroy']);
     Route::resource('brands', BrandController::class);
+    
+    Route::resource('orders', OrderController::class)->only(['index', 'show']);
+    Route::patch('orders/{order}/status', [OrderController::class, 'updateStatus'])->name('orders.update-status');
+
     Route::resource('blogs', BlogController::class);
     Route::resource('blog-categories', BlogCategoryController::class)
         ->parameters([
