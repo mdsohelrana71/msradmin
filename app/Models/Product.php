@@ -111,4 +111,9 @@ class Product extends Model
     {
         return $this->hasMany(ProductReview::class);
     }
+
+    public function wishlists(): HasMany
+    {
+        return $this->hasMany(ProductWishlist::class);
+    }
 }

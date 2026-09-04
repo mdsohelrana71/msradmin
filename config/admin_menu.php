@@ -68,6 +68,12 @@ return [
         'permission' => 'product-inventory.view',
     ],
     [
+        'title' => 'Product Wishlists',
+        'route' => 'admin.product-wishlists.index',
+        'icon' => 'fa fa-heart',
+        'permission' => 'product-wishlists.view',
+    ],
+    [
         'title' => 'Product FAQs',
         'route' => 'admin.product-faqs.index',
         'icon' => 'fas fa-question-circle',

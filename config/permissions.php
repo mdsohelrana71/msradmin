@@ -68,6 +68,14 @@ return [
         ],
     ],
 
+    'product-wishlists' => [
+        'label' => 'Product Wishlists',
+        'permissions' => [
+            'product-wishlists.view' => 'View product wishlists',
+            'product-wishlists.delete' => 'Delete product wishlists',
+        ],
+    ],
+
     'blogs' => [
         'label' => 'Blogs',
         'permissions' => [

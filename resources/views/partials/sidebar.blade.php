@@ -274,6 +274,38 @@
                     </li>
                 @endcanany
                 
+                @canany(['product-wishlists.view', 'product-wishlists.delete'])
+                    <li class="nav-item {{ request()->routeIs('admin.product-wishlists.*') ? 'active' : '' }}">
+                        <a
+                            data-bs-toggle="collapse"
+                            href="#productWishlists"
+                            class="{{ request()->routeIs('admin.product-wishlists.*') ? '' : 'collapsed' }}"
+                            aria-expanded="{{ request()->routeIs('admin.product-wishlists.*') ? 'true' : 'false' }}"
+                        >
+                            <i class="fas fa-heart"></i>
+                            <p>Product Wishlists</p>
+                            <span class="caret"></span>
+                        </a>
+
+                        <div
+                            class="collapse {{ request()->routeIs('admin.product-wishlists.*') ? 'show' : '' }}"
+                            id="productWishlists"
+                        >
+                            <ul class="nav nav-collapse">
+                                @can('product-wishlists.view')
+                                    <li class="{{ request()->routeIs('admin.product-wishlists.index') ? 'active' : '' }}">
+                                        <a href="{{ route('admin.product-wishlists.index') }}">
+                                            <span class="sub-item">
+                                                All Wishlists
+                                            </span>
+                                        </a>
+                                    </li>
+                                @endcan
+                            </ul>
+                        </div>
+                    </li>
+                @endcanany
+
                 @canany(['product-reviews.view', 'product-reviews.edit'])
                     <li class="nav-item {{ request()->routeIs('admin.product-reviews.*') ? 'active' : '' }}">
                         <a
