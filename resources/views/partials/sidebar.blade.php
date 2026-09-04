@@ -26,7 +26,17 @@
                         <p>Dashboard</p>
                     </a>
                 </li>
-                @canany(['products.view', 'products.create', 'product_categories.view', 'product_categories.create','brands.view','brands.create'])
+                @canany([
+                    'products.view', 'products.create',
+                    'product_categories.view', 'product_categories.create',
+                    'brands.view', 'brands.create',
+                    'product-attributes.view', 'product-attributes.create',
+                    'product-inventory.view', 'product-inventory.create',
+                    'product-faqs.view', 'product-faqs.create',
+                    'product-wishlists.view', 'product-wishlists.delete',
+                    'product-reviews.view', 'product-reviews.edit',
+                    'product-compares.view', 'product-compares.delete',
+                ])
                     <li class="nav-section">
                         <span class="sidebar-mini-icon">
                             <i class="fa fa-ellipsis-h"></i>
@@ -333,6 +343,38 @@
                                     </li>
                                 @endcan
 
+                            </ul>
+                        </div>
+                    </li>
+                @endcanany
+
+                @canany(['product-compares.view', 'product-compares.delete'])
+                    <li class="nav-item {{ request()->routeIs('admin.product-compares.*') ? 'active' : '' }}">
+                        <a
+                            data-bs-toggle="collapse"
+                            href="#productCompares"
+                            class="{{ request()->routeIs('admin.product-compares.*') ? '' : 'collapsed' }}"
+                            aria-expanded="{{ request()->routeIs('admin.product-compares.*') ? 'true' : 'false' }}"
+                        >
+                            <i class="fas fa-exchange-alt"></i>
+                            <p>Product Compares</p>
+                            <span class="caret"></span>
+                        </a>
+
+                        <div
+                            class="collapse {{ request()->routeIs('admin.product-compares.*') ? 'show' : '' }}"
+                            id="productCompares"
+                        >
+                            <ul class="nav nav-collapse">
+                                @can('product-compares.view')
+                                    <li class="{{ request()->routeIs('admin.product-compares.index') ? 'active' : '' }}">
+                                        <a href="{{ route('admin.product-compares.index') }}">
+                                            <span class="sub-item">
+                                                All Compares
+                                            </span>
+                                        </a>
+                                    </li>
+                                @endcan
                             </ul>
                         </div>
                     </li>

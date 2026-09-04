@@ -116,4 +116,9 @@ class Product extends Model
     {
         return $this->hasMany(ProductWishlist::class);
     }
+
+    public function compares(): HasMany
+    {
+        return $this->hasMany(ProductCompare::class);
+    }
 }

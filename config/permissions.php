@@ -76,6 +76,14 @@ return [
         ],
     ],
 
+    'product-compares' => [
+        'label' => 'Product Compares',
+        'permissions' => [
+            'product-compares.view' => 'View product compares',
+            'product-compares.delete' => 'Delete product compares',
+        ],
+    ],
+
     'blogs' => [
         'label' => 'Blogs',
         'permissions' => [

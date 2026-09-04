@@ -86,6 +86,12 @@ return [
         'permission' => 'product-reviews.view',
     ],
     [
+        'title' => 'Product Compares',
+        'route' => 'admin.product-compares.index',
+        'icon' => 'fa fa-exchange-alt',
+        'permission' => 'product-compares.view',
+    ],
+    [
         'title' => 'Blog Categories',
         'route' => 'admin.blog-categories.index',
         'icon' => 'fa fa-folder',
