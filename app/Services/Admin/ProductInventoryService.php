@@ -15,7 +15,7 @@ class ProductInventoryService
         return [
             'inventories' => ProductInventory::query()
                 ->with([
-                    'product:id,name,sku',
+                    'product:id,name,sku,thumbnail',
                     'variant:id,product_id',
                     'variant.values.attribute:id,name',
                     'variant.values.attributeValue:id,value',

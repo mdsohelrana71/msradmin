@@ -21,15 +21,36 @@
                     </td>
 
                     <td>
-                        <div class="fw-semibold">
-                            {{ $inventory->product?->name ?? '—' }}
-                        </div>
+                        <div class="d-flex align-items-center">
+                            @if ($inventory->product?->thumbnail)
+                                <img
+                                    src="{{ asset('storage/' . $inventory->product->thumbnail) }}"
+                                    alt="{{ $inventory->product->name }}"
+                                    class="rounded me-2"
+                                    style="width:45px;height:45px;object-fit:cover;"
+                                >
+                            @else
+                                <div
+                                    class="rounded bg-light d-flex align-items-center justify-content-center me-2"
+                                    style="width:45px;height:45px;"
+                                >
+                                    <i class="fas fa-image text-muted"></i>
+                                </div>
+                            @endif
 
-                        @if ($inventory->product?->sku)
-                            <small class="text-muted">
-                                {{ $inventory->product->sku }}
-                            </small>
-                        @endif
+                            <div>
+                                <div class="fw-semibold">
+                                    {{ $inventory->product?->name ?? '—' }}
+                                </div>
+
+                                @if ($inventory->product?->sku)
+                                    <small class="text-muted">
+                                        SKU:
+                                    </small>
+                                        {{ $inventory->product->sku }}
+                                @endif
+                            </div>
+                        </div>
                     </td>
 
                     <td>
