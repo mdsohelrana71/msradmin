@@ -39,22 +39,15 @@
 
                     <div class="card-body">
                         <form
-                            action="{{ route(
-                                'admin.product-reviews.update',
-                                $review
-                            ) }}"
+                            action="{{ route('admin.product-reviews.update', $review) }}"
                             method="POST"
-                            enctype="multipart/form-data"
                         >
                             @csrf
                             @method('PUT')
 
-                            @include(
-                                'admin.Product-reviews.partials.form',
-                                [
-                                    'review' => $review,
-                                ]
-                            )
+                            @include('admin.Product-reviews.partials.form', [
+                                'review' => $review,
+                            ])
 
                             <x-admin.form-actions
                                 submitText="Update Review"

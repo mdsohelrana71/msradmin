@@ -36,10 +36,7 @@
                             <div class="ms-auto d-flex gap-2">
                                 @can('product-reviews.edit')
                                     <a
-                                        href="{{ route(
-                                            'admin.product-reviews.edit',
-                                            $review
-                                        ) }}"
+                                        href="{{ route('admin.product-reviews.edit', $review) }}"
                                         class="btn btn-primary btn-round"
                                     >
                                         <i class="fa fa-edit me-1"></i>
@@ -63,7 +60,6 @@
                                 <label class="form-label text-muted small">
                                     Product
                                 </label>
-
                                 <div class="d-flex align-items-center">
                                     @if ($review->product?->thumbnail)
                                         <img
@@ -80,12 +76,10 @@
                                             <i class="fas fa-image text-muted"></i>
                                         </div>
                                     @endif
-
                                     <div>
                                         <div class="fw-semibold">
                                             {{ $review->product?->name ?? '—' }}
                                         </div>
-
                                         @if ($review->product?->sku)
                                             <small class="text-muted">
                                                 SKU: {{ $review->product->sku }}
@@ -99,11 +93,9 @@
                                 <label class="form-label text-muted small">
                                     Customer
                                 </label>
-
                                 <div class="fw-medium">
                                     {{ $review->user?->name ?? '—' }}
                                 </div>
-
                                 @if ($review->user?->email)
                                     <small class="text-muted">
                                         {{ $review->user->email }}
@@ -115,13 +107,11 @@
                                 <label class="form-label text-muted small">
                                     Rating
                                 </label>
-
                                 <div class="text-warning fs-5">
                                     @for ($i = 1; $i <= 5; $i++)
                                         <i class="fa fa-star{{ $i <= $review->rating ? '' : '-o' }}"></i>
                                     @endfor
                                 </div>
-
                                 <small class="text-muted">
                                     {{ $review->rating }}/5
                                 </small>
@@ -131,7 +121,6 @@
                                 <label class="form-label text-muted small">
                                     Verification
                                 </label>
-
                                 <div>
                                     @if ($review->is_verified)
                                         <span class="badge bg-success">
@@ -149,7 +138,6 @@
                                 <label class="form-label text-muted small">
                                     Status
                                 </label>
-
                                 <div>
                                     @if ($review->status)
                                         <span class="badge bg-success">
@@ -167,7 +155,6 @@
                                 <label class="form-label text-muted small">
                                     Review Title
                                 </label>
-
                                 <div class="fw-semibold">
                                     {{ $review->title ?: '—' }}
                                 </div>
@@ -177,7 +164,6 @@
                                 <label class="form-label text-muted small">
                                     Review
                                 </label>
-
                                 <div class="border rounded p-3">
                                     {!! nl2br(e($review->review ?: 'No review text provided.')) !!}
                                 </div>
@@ -186,15 +172,14 @@
                             @if ($review->images->isNotEmpty())
                                 <div class="col-md-12">
                                     <label class="form-label text-muted small">
-                                        Review Images
+                                        Customer Review Images
                                     </label>
-
                                     <div class="d-flex flex-wrap gap-3">
                                         @foreach ($review->images as $image)
                                             <div>
                                                 <img
                                                     src="{{ asset('storage/' . $image->image) }}"
-                                                    alt="Review image"
+                                                    alt="Customer review image"
                                                     class="rounded border"
                                                     style="width:120px;height:120px;object-fit:cover;"
                                                 >
