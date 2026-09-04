@@ -159,6 +159,148 @@
                         @endif
                     </div>
                 </div>
+
+                {{-- Product Inventory --}}
+                <div class="card mb-4">
+                    <div class="card-header">
+                        <div>
+                            <h4 class="card-title mb-1">
+                                Inventory
+                            </h4>
+                            <p class="text-muted mb-0">
+                                Current stock information
+                            </p>
+                        </div>
+                    </div>
+
+                    <div class="card-body">
+                        @if ($product->variants->isEmpty())
+                            @php
+                                $inventory = $product->inventories
+                                    ->firstWhere('product_variant_id', null);
+                            @endphp
+
+                            <div class="row">
+                                <div class="col-md-3 mb-4">
+                                    <label class="form-label text-muted small">
+                                        On Hand
+                                    </label>
+                                    <div class="fw-semibold">
+                                        {{ $inventory?->stock ?? 0 }}
+                                    </div>
+                                </div>
+
+                                <div class="col-md-3 mb-4">
+                                    <label class="form-label text-muted small">
+                                        Reserved
+                                    </label>
+                                    <div class="fw-semibold">
+                                        {{ $inventory?->reserved_stock ?? 0 }}
+                                    </div>
+                                </div>
+
+                                <div class="col-md-3 mb-4">
+                                    <label class="form-label text-muted small">
+                                        Available
+                                    </label>
+                                    <div class="fw-semibold">
+                                        {{ $inventory?->available_stock ?? 0 }}
+                                    </div>
+                                </div>
+
+                                <div class="col-md-3 mb-4">
+                                    <label class="form-label text-muted small">
+                                        Status
+                                    </label>
+
+                                    @if (!$inventory || $inventory->stock_status === 'out_of_stock')
+                                        <span class="badge bg-danger">
+                                            Out of Stock
+                                        </span>
+                                    @elseif ($inventory->stock_status === 'low_stock')
+                                        <span class="badge bg-warning text-dark">
+                                            Low Stock
+                                        </span>
+                                    @else
+                                        <span class="badge bg-success">
+                                            In Stock
+                                        </span>
+                                    @endif
+                                </div>
+                            </div>
+                        @else
+                            <div class="table-responsive">
+                                <table class="table table-hover align-middle mb-0">
+                                    <thead>
+                                        <tr>
+                                            <th>Variant</th>
+                                            <th width="120">On Hand</th>
+                                            <th width="120">Reserved</th>
+                                            <th width="120">Available</th>
+                                            <th width="130">Status</th>
+                                        </tr>
+                                    </thead>
+
+                                    <tbody>
+                                        @foreach ($product->variants as $variant)
+                                            @php
+                                                $inventory = $product->inventories
+                                                    ->firstWhere('product_variant_id', $variant->id);
+                                            @endphp
+
+                                            <tr>
+                                                <td>
+                                                    @forelse ($variant->values as $value)
+                                                        <span class="d-block">
+                                                            <small class="text-muted">
+                                                                {{ $value->attribute?->name }}:
+                                                            </small>
+                                                            {{ $value->attributeValue?->value }}
+                                                        </span>
+                                                    @empty
+                                                        <span class="text-muted">
+                                                            Variant
+                                                        </span>
+                                                    @endforelse
+                                                </td>
+
+                                                <td>
+                                                    {{ $inventory?->stock ?? 0 }}
+                                                </td>
+
+                                                <td>
+                                                    {{ $inventory?->reserved_stock ?? 0 }}
+                                                </td>
+
+                                                <td>
+                                                    <span class="fw-semibold">
+                                                        {{ $inventory?->available_stock ?? 0 }}
+                                                    </span>
+                                                </td>
+
+                                                <td>
+                                                    @if (!$inventory || $inventory->stock_status === 'out_of_stock')
+                                                        <span class="badge bg-danger">
+                                                            Out of Stock
+                                                        </span>
+                                                    @elseif ($inventory->stock_status === 'low_stock')
+                                                        <span class="badge bg-warning text-dark">
+                                                            Low Stock
+                                                        </span>
+                                                    @else
+                                                        <span class="badge bg-success">
+                                                            In Stock
+                                                        </span>
+                                                    @endif
+                                                </td>
+                                            </tr>
+                                        @endforeach
+                                    </tbody>
+                                </table>
+                            </div>
+                        @endif
+                    </div>
+                </div>
             </div>
 
             {{-- ==================== RIGHT COLUMN ==================== --}}

@@ -1,3 +1,4 @@
+```blade
 <div class="table-responsive">
     <table class="table table-hover align-middle">
         <thead>
@@ -8,6 +9,7 @@
                 <th>Category</th>
                 <th>Brand</th>
                 <th>Price</th>
+                <th>Stock</th>
                 <th>Status</th>
                 <th width="170">Action</th>
             </tr>
@@ -15,6 +17,16 @@
 
         <tbody>
             @forelse ($products as $product)
+                @php
+                    $totalStock = $product->inventories->sum('stock');
+                    $totalReserved = $product->inventories->sum('reserved_stock');
+                    $totalAvailable = max(0, $totalStock - $totalReserved);
+
+                    $productStockStatus = $totalAvailable > 0
+                        ? 'in_stock'
+                        : 'out_of_stock';
+                @endphp
+
                 <tr>
                     <td>{{ $products->firstItem() + $loop->index }}</td>
 
@@ -88,18 +100,44 @@
                     </td>
 
                     <td>
+                        <div class="fw-semibold">
+                            {{ $totalStock }}
+                        </div>
+
+                        <small class="text-muted">
+                            Available: {{ $totalAvailable }}
+                        </small>
+
+                        @if ($totalReserved > 0)
+                            <small class="d-block text-muted">
+                                Reserved: {{ $totalReserved }}
+                            </small>
+                        @endif
+                    </td>
+
+                    <td>
+                        @if ($productStockStatus === 'out_of_stock')
+                            <span class="badge bg-danger">
+                                Out of Stock
+                            </span>
+                        @else
+                            <span class="badge bg-success">
+                                In Stock
+                            </span>
+                        @endif
+
                         @if ($product->is_featured)
-                            <span class="badge bg-warning mb-1">
+                            <span class="badge bg-warning d-block mt-1">
                                 Featured
                             </span>
                         @endif
 
                         @if ($product->status)
-                            <span class="badge bg-success">
+                            <span class="badge bg-success d-block mt-1">
                                 Active
                             </span>
                         @else
-                            <span class="badge bg-warning">
+                            <span class="badge bg-warning d-block mt-1">
                                 Inactive
                             </span>
                         @endif

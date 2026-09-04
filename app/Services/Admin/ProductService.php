@@ -26,6 +26,7 @@ class ProductService
                 'category:id,name',
                 'brand:id,name',
                 'tags:id,name',
+                'inventories:id,product_id,product_variant_id,stock,reserved_stock,low_stock_alert',
             ])
             ->when($search, function ($query) use ($search) {
                 $query->where(function ($query) use ($search) {
@@ -43,6 +44,14 @@ class ProductService
                     'oldest' => $query->oldest('created_at'),
                     'price_low' => $query->orderBy('selling_price'),
                     'price_high' => $query->orderByDesc('selling_price'),
+                    'stock_high' => $query
+                        ->withSum('inventories as total_stock', 'stock')
+                        ->withSum('inventories as total_reserved', 'reserved_stock')
+                        ->orderByRaw('(total_stock - total_reserved) DESC'),
+                    'stock_low' => $query
+                        ->withSum('inventories as total_stock', 'stock')
+                        ->withSum('inventories as total_reserved', 'reserved_stock')
+                        ->orderByRaw('(total_stock - total_reserved) ASC'),
                     'featured' => $query
                         ->where('is_featured', true)
                         ->orderBy('name'),
@@ -129,6 +138,7 @@ class ProductService
             'tags',
             'seo',
             'images',
+            'inventories',
             'attributeAssignments.attribute',
             'variants.values.attribute',
             'variants.values.attributeValue',
@@ -326,6 +336,7 @@ class ProductService
                 'tags',
                 'seo',
                 'images',
+                'inventories',
                 'attributeAssignments.attribute',
                 'variants.values.attribute',
                 'variants.values.attributeValue',
