@@ -13,6 +13,7 @@ use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\ProductFaqController;
 use App\Http\Controllers\Admin\StoreSettingController;
 use App\Http\Controllers\Admin\BlogCategoryController;
+use App\Http\Controllers\Admin\ProductReviewController;
 use App\Http\Controllers\Admin\ProductCategoryController;
 use App\Http\Controllers\Admin\ProductAttributeController;
 use App\Http\Controllers\Admin\ProductInventoryController;
@@ -46,6 +47,7 @@ Route::middleware('auth')->prefix('admin')->name('admin.')->group(function () {
     ]);
     Route::resource('product-attributes.values', ProductAttributeValueController::class);
     Route::resource('product-inventory', ProductInventoryController::class)->only(['index', 'show', 'edit', 'update']);
+    Route::resource('product-reviews', ProductReviewController::class)->only(['index', 'show', 'edit', 'update', 'destroy']);
     Route::resource('brands', BrandController::class);
     Route::resource('blogs', BlogController::class);
     Route::resource('blog-categories', BlogCategoryController::class)

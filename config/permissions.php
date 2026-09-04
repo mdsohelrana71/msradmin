@@ -59,6 +59,15 @@ return [
         ],
     ],
 
+    'product-reviews' => [
+        'label' => 'Product Reviews',
+        'permissions' => [
+            'product-reviews.view' => 'View product reviews',
+            'product-reviews.edit' => 'Edit product reviews',
+            'product-reviews.delete' => 'Delete product reviews',
+        ],
+    ],
+
     'blogs' => [
         'label' => 'Blogs',
         'permissions' => [

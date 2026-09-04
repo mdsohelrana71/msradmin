@@ -107,4 +107,8 @@ class Product extends Model
             ->whereNull('product_variant_id');
     }
 
+    public function reviews(): HasMany
+    {
+        return $this->hasMany(ProductReview::class);
+    }
 }

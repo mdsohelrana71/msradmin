@@ -273,6 +273,38 @@
                         </div>
                     </li>
                 @endcanany
+                
+                @canany(['product-reviews.view', 'product-reviews.edit'])
+                    <li class="nav-item {{ request()->routeIs('admin.product-reviews.*') ? 'active' : '' }}">
+                        <a
+                            data-bs-toggle="collapse"
+                            href="#productReviews"
+                            class="{{ request()->routeIs('admin.product-reviews.*') ? '' : 'collapsed' }}"
+                            aria-expanded="{{ request()->routeIs('admin.product-reviews.*') ? 'true' : 'false' }}">
+                            <i class="fas fa-star"></i>
+                            <p>Product Reviews</p>
+                            <span class="caret"></span>
+                        </a>
+
+                        <div
+                            class="collapse {{ request()->routeIs('admin.product-reviews.*') ? 'show' : '' }}"
+                            id="productReviews">
+                            <ul class="nav nav-collapse">
+
+                                @can('product-reviews.view')
+                                    <li class="{{ request()->routeIs('admin.product-reviews.index') ? 'active' : '' }}">
+                                        <a href="{{ route('admin.product-reviews.index') }}">
+                                            <span class="sub-item">
+                                                All Reviews
+                                            </span>
+                                        </a>
+                                    </li>
+                                @endcan
+
+                            </ul>
+                        </div>
+                    </li>
+                @endcanany
 
                 @canany(['blogs.view', 'blogs.create', 'blog_categories.view', 'blog_categories.create'])
                     <li class="nav-section">

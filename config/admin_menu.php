@@ -74,6 +74,12 @@ return [
         'permission' => 'product-faqs.view',
     ],
     [
+        'title' => 'Product Reviews',
+        'route' => 'admin.product-reviews.index',
+        'icon' => 'fa fa-star',
+        'permission' => 'product-reviews.view',
+    ],
+    [
         'title' => 'Blog Categories',
         'route' => 'admin.blog-categories.index',
         'icon' => 'fa fa-folder',
