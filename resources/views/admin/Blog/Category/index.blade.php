@@ -14,7 +14,7 @@
                 'label' => 'Add Category',
                 'url' => route('admin.blog-categories.create'),
                 'icon' => 'fa fa-plus',
-                'permission' => 'blog_categories.create',
+                'permission' => 'blog-categories.create',
             ]"
         />
         <x-admin.alert />

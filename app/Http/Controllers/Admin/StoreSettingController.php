@@ -26,12 +26,12 @@ class StoreSettingController extends Controller implements HasMiddleware
     {
         return [
             new Middleware(
-                'permission:store_settings.view',
+                'permission:store-settings.view',
                 only: ['index']
             ),
 
             new Middleware(
-                'permission:store_settings.edit',
+                'permission:store-settings.edit',
                 only: ['update']
             ),
         ];

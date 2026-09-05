@@ -362,7 +362,7 @@
                 @endcanany
 
                 {{-- ==================== BLOG MANAGEMENT ==================== --}}
-                @canany(['blogs.view', 'blogs.create', 'blog_categories.view', 'blog_categories.create'])
+                @canany(['blogs.view', 'blogs.create', 'blog-categories.view', 'blog-categories.create'])
                     <li class="nav-section">
                         <span class="sidebar-mini-icon">
                             <i class="fa fa-ellipsis-h"></i>
@@ -403,7 +403,7 @@
                     </li>
                 @endcanany
 
-                @canany(['blog_categories.view', 'blog_categories.create'])
+                @canany(['blog-categories.view', 'blog-categories.create'])
                     <li class="nav-item {{ request()->routeIs('admin.blog-categories.*') ? 'active' : '' }}">
                         <a
                             data-bs-toggle="collapse"
@@ -416,14 +416,14 @@
                         </a>
                         <div class="collapse {{ request()->routeIs('admin.blog-categories.*') ? 'show' : '' }}" id="blog-category">
                             <ul class="nav nav-collapse">
-                                @can('blog_categories.view')
+                                @can('blog-categories.view')
                                     <li class="{{ request()->routeIs('admin.blog-categories.index') ? 'active' : '' }}">
                                         <a href="{{ route('admin.blog-categories.index') }}">
                                             <span class="sub-item">Blog Categories</span>
                                         </a>
                                     </li>
                                 @endcan
-                                @can('blog_categories.create')
+                                @can('blog-categories.create')
                                     <li class="{{ request()->routeIs('admin.blog-categories.create') ? 'active' : '' }}">
                                         <a href="{{ route('admin.blog-categories.create') }}">
                                             <span class="sub-item">Create Category</span>
@@ -473,6 +473,38 @@
                     </li>
                 @endcanany
 
+                @canany(['customers.view', 'customers.edit'])
+                    <li class="nav-item {{ request()->routeIs('admin.customers.*') ? 'active' : '' }}">
+                        <a
+                            data-bs-toggle="collapse"
+                            href="#customers"
+                            class="{{ request()->routeIs('admin.customers.*') ? '' : 'collapsed' }}"
+                            aria-expanded="{{ request()->routeIs('admin.customers.*') ? 'true' : 'false' }}"
+                        >
+                            <i class="fas fa-users"></i>
+                            <p>Customers</p>
+                            <span class="caret"></span>
+                        </a>
+
+                        <div
+                            class="collapse {{ request()->routeIs('admin.customers.*') ? 'show' : '' }}"
+                            id="customers"
+                        >
+                            <ul class="nav nav-collapse">
+                                @can('customers.view')
+                                    <li class="{{ request()->routeIs('admin.customers.index') ? 'active' : '' }}">
+                                        <a href="{{ route('admin.customers.index') }}">
+                                            <span class="sub-item">
+                                                All Customers
+                                            </span>
+                                        </a>
+                                    </li>
+                                @endcan
+                            </ul>
+                        </div>
+                    </li>
+                @endcanany
+
                 @canany(['roles.view', 'roles.create'])
                     <li class="nav-item {{ request()->routeIs('admin.roles.*') ? 'active' : '' }}">
                         <a data-bs-toggle="collapse" href="#roles" class="{{ request()->routeIs('admin.roles.*') ? '' : 'collapsed' }}" aria-expanded="{{ request()->routeIs('admin.roles.*') ? 'true' : 'false' }}">
@@ -502,7 +534,7 @@
                 @endcanany
 
                 {{-- ==================== SETTINGS ==================== --}}
-                @can(['settings.view', 'store_settings.view'])
+                @can(['settings.view', 'store-settings.view'])
                     <li class="nav-section">
                         <span class="sidebar-mini-icon">
                             <i class="fa fa-ellipsis-h"></i>

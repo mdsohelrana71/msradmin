@@ -106,10 +106,10 @@ return [
     'blog_categories' => [
         'label' => 'Blog Categories',
         'permissions' => [
-            'blog_categories.view' => 'View blog categories',
-            'blog_categories.create' => 'Create blog categories',
-            'blog_categories.edit' => 'Edit blog categories',
-            'blog_categories.delete' => 'Delete blog categories',
+            'blog-categories.view' => 'View blog categories',
+            'blog-categories.create' => 'Create blog categories',
+            'blog-categories.edit' => 'Edit blog categories',
+            'blog-categories.delete' => 'Delete blog categories',
         ],
     ],
 
@@ -120,6 +120,14 @@ return [
             'users.create' => 'Create users',
             'users.edit' => 'Edit users',
             'users.delete' => 'Delete users',
+        ],
+    ],
+
+    'customers' => [
+        'label' => 'Customers',
+        'permissions' => [
+            'customers.view' => 'View customers',
+            'customers.edit' => 'Edit customers',
         ],
     ],
 
@@ -144,8 +152,8 @@ return [
     'store_settings' => [
         'label' => 'Store Settings',
         'permissions' => [
-            'store_settings.view' => 'View store settings',
-            'store_settings.edit' => 'Edit store settings',
+            'store-settings.view' => 'View store settings',
+            'store-settings.edit' => 'Edit store settings',
         ],
     ],
 ];

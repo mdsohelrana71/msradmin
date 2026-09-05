@@ -9,6 +9,7 @@ use App\Http\Controllers\Admin\BrandController;
 use App\Http\Controllers\Admin\OrderController;
 use App\Http\Controllers\Admin\ProductController;
 use App\Http\Controllers\Admin\AccountController;
+use App\Http\Controllers\Admin\CustomerController;
 use App\Http\Controllers\Admin\SettingsController;
 use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\ProductFaqController;
@@ -63,6 +64,8 @@ Route::middleware('auth')->prefix('admin')->name('admin.')->group(function () {
         ->parameters([
             'blog-categories' => 'category',
         ]);
+
+    Route::resource('customers', CustomerController::class)->only(['index', 'show', 'update']);
 
     Route::post('/cache/clear', function () {
         Artisan::call('optimize:clear');

@@ -26,6 +26,12 @@ return [
         'permission' => 'users.view',
     ],
     [
+        'title' => 'Customers',
+        'route' => 'admin.customers.index',
+        'icon' => 'fa fa-users',
+        'permission' => 'customers.view',
+    ],
+    [
         'title' => 'Roles & Permission',
         'route' => 'admin.roles.index',
         'icon' => 'fa fa-user-shield',
@@ -101,7 +107,7 @@ return [
         'title' => 'Blog Categories',
         'route' => 'admin.blog-categories.index',
         'icon' => 'fa fa-folder',
-        'permission' => 'blog_categories.view',
+        'permission' => 'blog-categories.view',
     ],
     [
         'title' => 'Blogs',

@@ -10,7 +10,7 @@ class UserService
 {
     public function paginate(array $filters = [])
     {
-        $query = User::query();
+        $query = User::query()->whereNotNull('role_id');
 
         if (!empty($filters['search'])) {
             $search = $filters['search'];

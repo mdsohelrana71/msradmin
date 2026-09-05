@@ -28,7 +28,7 @@
             </div>
 
             <div class="category-actions">
-                @can('blog_categories.edit')
+                @can('blog-categories.edit')
                     <a
                         href="{{ route('admin.blog-categories.edit', $category) }}"
                         class="btn btn-sm btn-primary"
@@ -37,7 +37,7 @@
                     </a>
                 @endcan
 
-                @can('blog_categories.delete')
+                @can('blog-categories.delete')
                     <form
                         id="deleteCategoryForm{{ $category->id }}"
                         action="{{ route('admin.blog-categories.destroy', $category) }}"
