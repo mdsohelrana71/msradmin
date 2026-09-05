@@ -412,10 +412,9 @@
                                         </select>
                                     </div>
 
-                                    <button type="submit" class="btn btn-primary">
-                                        <i class="fas fa-save me-1"></i>
-                                        Update Status
-                                    </button>
+                                    <x-admin.form-actions
+                                        submitText="Update Status"
+                                    />
                                 </form>
                             @else
                                 <span class="badge bg-secondary">

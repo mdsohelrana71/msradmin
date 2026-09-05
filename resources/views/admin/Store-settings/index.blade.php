@@ -216,12 +216,9 @@
             </div>
 
             {{-- ===================== Save Button ===================== --}}
-            <div class="d-flex justify-content-end mb-4">
-                <button type="submit" class="btn btn-primary btn-round px-4">
-                    <i class="fa fa-save me-1"></i>
-                    Save Settings
-                </button>
-            </div>
+            <x-admin.form-actions
+                submitText="Save Settings"
+            />
 
         </form>
     </div>
