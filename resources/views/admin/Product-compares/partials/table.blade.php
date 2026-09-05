@@ -57,7 +57,7 @@
 
                                         @if ($product->sku)
                                             <small class="text-muted">
-                                                {{ $product->sku }}
+                                                SKU: {{ $product->sku }}
                                             </small>
                                         @endif
                                     </div>

@@ -42,7 +42,7 @@
 
                                 @if ($wishlist->product?->sku)
                                     <small class="text-muted">
-                                        {{ $wishlist->product->sku }}
+                                        SKU: {{ $wishlist->product->sku }}
                                     </small>
                                 @endif
                             </div>

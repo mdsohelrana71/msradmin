@@ -45,7 +45,7 @@
 
                                 @if ($review->product?->sku)
                                     <small class="text-muted">
-                                        {{ $review->product->sku }}
+                                        SKU: {{ $review->product->sku }}
                                     </small>
                                 @endif
                             </div>
