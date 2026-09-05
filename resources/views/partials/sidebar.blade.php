@@ -26,26 +26,24 @@
                         <p>Dashboard</p>
                     </a>
                 </li>
+
+                {{-- ==================== PRODUCT MANAGEMENT ==================== --}}
                 @canany([
                     'products.view', 'products.create',
                     'product_categories.view', 'product_categories.create',
                     'brands.view', 'brands.create',
                     'product-attributes.view', 'product-attributes.create',
-                    'product-inventory.view', 'product-inventory.create',
                     'product-faqs.view', 'product-faqs.create',
-                    'product-wishlists.view', 'product-wishlists.delete',
-                    'product-reviews.view', 'product-reviews.edit',
-                    'product-compares.view', 'product-compares.delete',
                 ])
                     <li class="nav-section">
                         <span class="sidebar-mini-icon">
                             <i class="fa fa-ellipsis-h"></i>
                         </span>
-
                         <h4 class="text-section">Product Management</h4>
                     </li>
                 @endcanany
 
+                {{-- Products --}}
                 @canany(['products.view', 'products.create'])
                     <li class="nav-item {{ request()->routeIs('admin.products.*') ? 'active' : '' }}">
                         <a
@@ -57,25 +55,19 @@
                             <p>Product</p>
                             <span class="caret"></span>
                         </a>
-
                         <div class="collapse {{ request()->routeIs('admin.products.*') ? 'show' : '' }}" id="products">
                             <ul class="nav nav-collapse">
                                 @can('products.view')
                                     <li class="{{ request()->routeIs('admin.products.index') ? 'active' : '' }}">
                                         <a href="{{ route('admin.products.index') }}">
-                                            <span class="sub-item">
-                                                All Products
-                                            </span>
+                                            <span class="sub-item">All Products</span>
                                         </a>
                                     </li>
                                 @endcan
-
                                 @can('products.create')
                                     <li class="{{ request()->routeIs('admin.products.create') ? 'active' : '' }}">
                                         <a href="{{ route('admin.products.create') }}">
-                                            <span class="sub-item">
-                                                Create Product
-                                            </span>
+                                            <span class="sub-item">Create Product</span>
                                         </a>
                                     </li>
                                 @endcan
@@ -84,6 +76,7 @@
                     </li>
                 @endcanany
 
+                {{-- Categories --}}
                 @canany(['product_categories.view', 'product_categories.create'])
                     <li class="nav-item {{ request()->routeIs('admin.product-categories.*') ? 'active' : '' }}">
                         <a
@@ -95,27 +88,19 @@
                             <p>Product Category</p>
                             <span class="caret"></span>
                         </a>
-
-                        <div
-                            class="collapse {{ request()->routeIs('admin.product-categories.*') ? 'show' : '' }}"
-                            id="product-category">
+                        <div class="collapse {{ request()->routeIs('admin.product-categories.*') ? 'show' : '' }}" id="product-category">
                             <ul class="nav nav-collapse">
                                 @can('product_categories.view')
                                     <li class="{{ request()->routeIs('admin.product-categories.index') ? 'active' : '' }}">
                                         <a href="{{ route('admin.product-categories.index') }}">
-                                            <span class="sub-item">
-                                                Product Categories
-                                            </span>
+                                            <span class="sub-item">Product Categories</span>
                                         </a>
                                     </li>
                                 @endcan
-
                                 @can('product_categories.create')
                                     <li class="{{ request()->routeIs('admin.product-categories.create') ? 'active' : '' }}">
                                         <a href="{{ route('admin.product-categories.create') }}">
-                                            <span class="sub-item">
-                                                Create Category
-                                            </span>
+                                            <span class="sub-item">Create Category</span>
                                         </a>
                                     </li>
                                 @endcan
@@ -124,6 +109,7 @@
                     </li>
                 @endcanany
 
+                {{-- Brands --}}
                 @canany(['brands.view', 'brands.create'])
                     <li class="nav-item {{ request()->routeIs('admin.brands.*') ? 'active' : '' }}">
                         <a
@@ -135,25 +121,19 @@
                             <p>Product Brand</p>
                             <span class="caret"></span>
                         </a>
-
                         <div class="collapse {{ request()->routeIs('admin.brands.*') ? 'show' : '' }}" id="brands">
                             <ul class="nav nav-collapse">
                                 @can('brands.view')
                                     <li class="{{ request()->routeIs('admin.brands.index') ? 'active' : '' }}">
                                         <a href="{{ route('admin.brands.index') }}">
-                                            <span class="sub-item">
-                                                All Brands
-                                            </span>
+                                            <span class="sub-item">All Brands</span>
                                         </a>
                                     </li>
                                 @endcan
-
                                 @can('brands.create')
                                     <li class="{{ request()->routeIs('admin.brands.create') ? 'active' : '' }}">
                                         <a href="{{ route('admin.brands.create') }}">
-                                            <span class="sub-item">
-                                                Create Brand
-                                            </span>
+                                            <span class="sub-item">Create Brand</span>
                                         </a>
                                     </li>
                                 @endcan
@@ -162,6 +142,7 @@
                     </li>
                 @endcanany
 
+                {{-- Attributes --}}
                 @canany(['product-attributes.view', 'product-attributes.create'])
                     <li class="nav-item {{ request()->routeIs('admin.product-attributes.*') ? 'active' : '' }}">
                         <a
@@ -173,27 +154,19 @@
                             <p>Product Attributes</p>
                             <span class="caret"></span>
                         </a>
-
-                        <div
-                            class="collapse {{ request()->routeIs('admin.product-attributes.*') ? 'show' : '' }}"
-                            id="productAttributes">
+                        <div class="collapse {{ request()->routeIs('admin.product-attributes.*') ? 'show' : '' }}" id="productAttributes">
                             <ul class="nav nav-collapse">
                                 @can('product-attributes.view')
                                     <li class="{{ request()->routeIs('admin.product-attributes.index') ? 'active' : '' }}">
                                         <a href="{{ route('admin.product-attributes.index') }}">
-                                            <span class="sub-item">
-                                                All Attributes
-                                            </span>
+                                            <span class="sub-item">All Attributes</span>
                                         </a>
                                     </li>
                                 @endcan
-
                                 @can('product-attributes.create')
                                     <li class="{{ request()->routeIs('admin.product-attributes.create') ? 'active' : '' }}">
                                         <a href="{{ route('admin.product-attributes.create') }}">
-                                            <span class="sub-item">
-                                                Create Attribute
-                                            </span>
+                                            <span class="sub-item">Create Attribute</span>
                                         </a>
                                     </li>
                                 @endcan
@@ -202,46 +175,7 @@
                     </li>
                 @endcanany
 
-                @canany(['product-inventory.view', 'product-inventory.create'])
-                    <li class="nav-item {{ request()->routeIs('admin.product-inventory.*') ? 'active' : '' }}">
-                        <a
-                            data-bs-toggle="collapse"
-                            href="#productInventory"
-                            class="{{ request()->routeIs('admin.product-inventory.*') ? '' : 'collapsed' }}"
-                            aria-expanded="{{ request()->routeIs('admin.product-inventory.*') ? 'true' : 'false' }}">
-                            <i class="fas fa-boxes"></i>
-                            <p>Product Inventory</p>
-                            <span class="caret"></span>
-                        </a>
-
-                        <div
-                            class="collapse {{ request()->routeIs('admin.product-inventory.*') ? 'show' : '' }}"
-                            id="productInventory">
-                            <ul class="nav nav-collapse">
-                                @can('product-inventory.view')
-                                    <li class="{{ request()->routeIs('admin.product-inventory.index') ? 'active' : '' }}">
-                                        <a href="{{ route('admin.product-inventory.index') }}">
-                                            <span class="sub-item">
-                                                All Inventory
-                                            </span>
-                                        </a>
-                                    </li>
-                                @endcan
-
-                                @can('product-inventory.create')
-                                    <li class="{{ request()->routeIs('admin.product-inventory.create') ? 'active' : '' }}">
-                                        <a href="{{ route('admin.product-inventory.create') }}">
-                                            <span class="sub-item">
-                                                Add Inventory
-                                            </span>
-                                        </a>
-                                    </li>
-                                @endcan
-                            </ul>
-                        </div>
-                    </li>
-                @endcanany
-
+                {{-- Product FAQs --}}
                 @canany(['product-faqs.view', 'product-faqs.create'])
                     <li class="nav-item {{ request()->routeIs('admin.product-faqs.*') ? 'active' : '' }}">
                         <a
@@ -253,61 +187,61 @@
                             <p>Product FAQs</p>
                             <span class="caret"></span>
                         </a>
-
-                        <div
-                            class="collapse {{ request()->routeIs('admin.product-faqs.*') ? 'show' : '' }}"
-                            id="productFaqs">
+                        <div class="collapse {{ request()->routeIs('admin.product-faqs.*') ? 'show' : '' }}" id="productFaqs">
                             <ul class="nav nav-collapse">
-
                                 @can('product-faqs.view')
                                     <li class="{{ request()->routeIs('admin.product-faqs.index') ? 'active' : '' }}">
                                         <a href="{{ route('admin.product-faqs.index') }}">
-                                            <span class="sub-item">
-                                                All FAQs
-                                            </span>
+                                            <span class="sub-item">All FAQs</span>
                                         </a>
                                     </li>
                                 @endcan
-
                                 @can('product-faqs.create')
                                     <li class="{{ request()->routeIs('admin.product-faqs.create') ? 'active' : '' }}">
                                         <a href="{{ route('admin.product-faqs.create') }}">
-                                            <span class="sub-item">
-                                                Create FAQ
-                                            </span>
+                                            <span class="sub-item">Create FAQ</span>
                                         </a>
                                     </li>
                                 @endcan
-
                             </ul>
                         </div>
                     </li>
                 @endcanany
-                
-                @canany(['product-wishlists.view', 'product-wishlists.delete'])
-                    <li class="nav-item {{ request()->routeIs('admin.product-wishlists.*') ? 'active' : '' }}">
+
+                {{-- ==================== E-COMMERCE ==================== --}}
+                @canany([
+                    'orders.view', 'orders.edit',
+                    'product-inventory.view', 'product-inventory.create',
+                    'product-reviews.view', 'product-reviews.edit',
+                    'product-wishlists.view', 'product-wishlists.delete',
+                    'product-compares.view', 'product-compares.delete',
+                ])
+                    <li class="nav-section">
+                        <span class="sidebar-mini-icon">
+                            <i class="fa fa-ellipsis-h"></i>
+                        </span>
+                        <h4 class="text-section">E-commerce</h4>
+                    </li>
+                @endcanany
+
+                {{-- Orders --}}
+                @canany(['orders.view', 'orders.edit'])
+                    <li class="nav-item {{ request()->routeIs('admin.orders.*') ? 'active' : '' }}">
                         <a
                             data-bs-toggle="collapse"
-                            href="#productWishlists"
-                            class="{{ request()->routeIs('admin.product-wishlists.*') ? '' : 'collapsed' }}"
-                            aria-expanded="{{ request()->routeIs('admin.product-wishlists.*') ? 'true' : 'false' }}"
-                        >
-                            <i class="fas fa-heart"></i>
-                            <p>Product Wishlists</p>
+                            href="#orders"
+                            class="{{ request()->routeIs('admin.orders.*') ? '' : 'collapsed' }}"
+                            aria-expanded="{{ request()->routeIs('admin.orders.*') ? 'true' : 'false' }}">
+                            <i class="fas fa-shopping-cart"></i>
+                            <p>Orders</p>
                             <span class="caret"></span>
                         </a>
-
-                        <div
-                            class="collapse {{ request()->routeIs('admin.product-wishlists.*') ? 'show' : '' }}"
-                            id="productWishlists"
-                        >
+                        <div class="collapse {{ request()->routeIs('admin.orders.*') ? 'show' : '' }}" id="orders">
                             <ul class="nav nav-collapse">
-                                @can('product-wishlists.view')
-                                    <li class="{{ request()->routeIs('admin.product-wishlists.index') ? 'active' : '' }}">
-                                        <a href="{{ route('admin.product-wishlists.index') }}">
-                                            <span class="sub-item">
-                                                All Wishlists
-                                            </span>
+                                @can('orders.view')
+                                    <li class="{{ request()->routeIs('admin.orders.index') ? 'active' : '' }}">
+                                        <a href="{{ route('admin.orders.index') }}">
+                                            <span class="sub-item">All Orders</span>
                                         </a>
                                     </li>
                                 @endcan
@@ -316,6 +250,40 @@
                     </li>
                 @endcanany
 
+                {{-- Product Inventory --}}
+                @canany(['product-inventory.view', 'product-inventory.create'])
+                    <li class="nav-item {{ request()->routeIs('admin.product-inventory.*') ? 'active' : '' }}">
+                        <a
+                            data-bs-toggle="collapse"
+                            href="#productInventory"
+                            class="{{ request()->routeIs('admin.product-inventory.*') ? '' : 'collapsed' }}"
+                            aria-expanded="{{ request()->routeIs('admin.product-inventory.*') ? 'true' : 'false' }}">
+                            <i class="fas fa-boxes"></i>
+                            <p>Product Inventory</p>
+                            <span class="caret"></span>
+                        </a>
+                        <div class="collapse {{ request()->routeIs('admin.product-inventory.*') ? 'show' : '' }}" id="productInventory">
+                            <ul class="nav nav-collapse">
+                                @can('product-inventory.view')
+                                    <li class="{{ request()->routeIs('admin.product-inventory.index') ? 'active' : '' }}">
+                                        <a href="{{ route('admin.product-inventory.index') }}">
+                                            <span class="sub-item">All Inventory</span>
+                                        </a>
+                                    </li>
+                                @endcan
+                                @can('product-inventory.create')
+                                    <li class="{{ request()->routeIs('admin.product-inventory.create') ? 'active' : '' }}">
+                                        <a href="{{ route('admin.product-inventory.create') }}">
+                                            <span class="sub-item">Add Inventory</span>
+                                        </a>
+                                    </li>
+                                @endcan
+                            </ul>
+                        </div>
+                    </li>
+                @endcanany
+
+                {{-- Product Reviews --}}
                 @canany(['product-reviews.view', 'product-reviews.edit'])
                     <li class="nav-item {{ request()->routeIs('admin.product-reviews.*') ? 'active' : '' }}">
                         <a
@@ -327,51 +295,64 @@
                             <p>Product Reviews</p>
                             <span class="caret"></span>
                         </a>
-
-                        <div
-                            class="collapse {{ request()->routeIs('admin.product-reviews.*') ? 'show' : '' }}"
-                            id="productReviews">
+                        <div class="collapse {{ request()->routeIs('admin.product-reviews.*') ? 'show' : '' }}" id="productReviews">
                             <ul class="nav nav-collapse">
-
                                 @can('product-reviews.view')
                                     <li class="{{ request()->routeIs('admin.product-reviews.index') ? 'active' : '' }}">
                                         <a href="{{ route('admin.product-reviews.index') }}">
-                                            <span class="sub-item">
-                                                All Reviews
-                                            </span>
+                                            <span class="sub-item">All Reviews</span>
                                         </a>
                                     </li>
                                 @endcan
-
                             </ul>
                         </div>
                     </li>
                 @endcanany
 
+                {{-- Product Wishlists --}}
+                @canany(['product-wishlists.view', 'product-wishlists.delete'])
+                    <li class="nav-item {{ request()->routeIs('admin.product-wishlists.*') ? 'active' : '' }}">
+                        <a
+                            data-bs-toggle="collapse"
+                            href="#productWishlists"
+                            class="{{ request()->routeIs('admin.product-wishlists.*') ? '' : 'collapsed' }}"
+                            aria-expanded="{{ request()->routeIs('admin.product-wishlists.*') ? 'true' : 'false' }}">
+                            <i class="fas fa-heart"></i>
+                            <p>Product Wishlists</p>
+                            <span class="caret"></span>
+                        </a>
+                        <div class="collapse {{ request()->routeIs('admin.product-wishlists.*') ? 'show' : '' }}" id="productWishlists">
+                            <ul class="nav nav-collapse">
+                                @can('product-wishlists.view')
+                                    <li class="{{ request()->routeIs('admin.product-wishlists.index') ? 'active' : '' }}">
+                                        <a href="{{ route('admin.product-wishlists.index') }}">
+                                            <span class="sub-item">All Wishlists</span>
+                                        </a>
+                                    </li>
+                                @endcan
+                            </ul>
+                        </div>
+                    </li>
+                @endcanany
+
+                {{-- Product Compares --}}
                 @canany(['product-compares.view', 'product-compares.delete'])
                     <li class="nav-item {{ request()->routeIs('admin.product-compares.*') ? 'active' : '' }}">
                         <a
                             data-bs-toggle="collapse"
                             href="#productCompares"
                             class="{{ request()->routeIs('admin.product-compares.*') ? '' : 'collapsed' }}"
-                            aria-expanded="{{ request()->routeIs('admin.product-compares.*') ? 'true' : 'false' }}"
-                        >
+                            aria-expanded="{{ request()->routeIs('admin.product-compares.*') ? 'true' : 'false' }}">
                             <i class="fas fa-exchange-alt"></i>
                             <p>Product Compares</p>
                             <span class="caret"></span>
                         </a>
-
-                        <div
-                            class="collapse {{ request()->routeIs('admin.product-compares.*') ? 'show' : '' }}"
-                            id="productCompares"
-                        >
+                        <div class="collapse {{ request()->routeIs('admin.product-compares.*') ? 'show' : '' }}" id="productCompares">
                             <ul class="nav nav-collapse">
                                 @can('product-compares.view')
                                     <li class="{{ request()->routeIs('admin.product-compares.index') ? 'active' : '' }}">
                                         <a href="{{ route('admin.product-compares.index') }}">
-                                            <span class="sub-item">
-                                                All Compares
-                                            </span>
+                                            <span class="sub-item">All Compares</span>
                                         </a>
                                     </li>
                                 @endcan
@@ -380,54 +361,12 @@
                     </li>
                 @endcanany
 
-                @canany(['orders.view'])
-                    <li class="nav-section">
-                        <span class="sidebar-mini-icon">
-                            <i class="fa fa-ellipsis-h"></i>
-                        </span>
-
-                        <h4 class="text-section">E-commerce</h4>
-                    </li>
-                @endcanany
-
-                @canany(['orders.view', 'orders.edit'])
-                    <li class="nav-item {{ request()->routeIs('admin.orders.*') ? 'active' : '' }}">
-                        <a
-                            data-bs-toggle="collapse"
-                            href="#orders"
-                            class="{{ request()->routeIs('admin.orders.*') ? '' : 'collapsed' }}"
-                            aria-expanded="{{ request()->routeIs('admin.orders.*') ? 'true' : 'false' }}"
-                        >
-                            <i class="fas fa-shopping-cart"></i>
-                            <p>Orders</p>
-                            <span class="caret"></span>
-                        </a>
-
-                        <div
-                            class="collapse {{ request()->routeIs('admin.orders.*') ? 'show' : '' }}"
-                            id="orders"
-                        >
-                            <ul class="nav nav-collapse">
-                                @can('orders.view')
-                                    <li class="{{ request()->routeIs('admin.orders.index') ? 'active' : '' }}">
-                                        <a href="{{ route('admin.orders.index') }}">
-                                            <span class="sub-item">
-                                                All Orders
-                                            </span>
-                                        </a>
-                                    </li>
-                                @endcan
-                            </ul>
-                        </div>
-                    </li>
-                @endcanany
-
+                {{-- ==================== BLOG MANAGEMENT ==================== --}}
                 @canany(['blogs.view', 'blogs.create', 'blog_categories.view', 'blog_categories.create'])
                     <li class="nav-section">
                         <span class="sidebar-mini-icon">
                             <i class="fa fa-ellipsis-h"></i>
                         </span>
-
                         <h4 class="text-section">Blog Management</h4>
                     </li>
                 @endcanany
@@ -443,27 +382,21 @@
                             <p>Blog</p>
                             <span class="caret"></span>
                         </a>
-
                         <div class="collapse {{ request()->routeIs('admin.blogs.*') ? 'show' : '' }}" id="blogs">
                             <ul class="nav nav-collapse">
                                 @can('blogs.view')
-                                <li class="{{ request()->routeIs('admin.blogs.index') ? 'active' : '' }}">
-                                    <a href="{{ route('admin.blogs.index') }}">
-                                        <span class="sub-item">
-                                            All Blogs
-                                        </span>
-                                    </a>
-                                </li>
+                                    <li class="{{ request()->routeIs('admin.blogs.index') ? 'active' : '' }}">
+                                        <a href="{{ route('admin.blogs.index') }}">
+                                            <span class="sub-item">All Blogs</span>
+                                        </a>
+                                    </li>
                                 @endcan
-
                                 @can('blogs.create')
-                                <li class="{{ request()->routeIs('admin.blogs.create') ? 'active' : '' }}">
-                                    <a href="{{ route('admin.blogs.create') }}">
-                                        <span class="sub-item">
-                                            Create Blog
-                                        </span>
-                                    </a>
-                                </li>
+                                    <li class="{{ request()->routeIs('admin.blogs.create') ? 'active' : '' }}">
+                                        <a href="{{ route('admin.blogs.create') }}">
+                                            <span class="sub-item">Create Blog</span>
+                                        </a>
+                                    </li>
                                 @endcan
                             </ul>
                         </div>
@@ -472,7 +405,6 @@
 
                 @canany(['blog_categories.view', 'blog_categories.create'])
                     <li class="nav-item {{ request()->routeIs('admin.blog-categories.*') ? 'active' : '' }}">
-
                         <a
                             data-bs-toggle="collapse"
                             href="#blog-category"
@@ -482,35 +414,28 @@
                             <p>Blog Category</p>
                             <span class="caret"></span>
                         </a>
-
-                        <div
-                            class="collapse {{ request()->routeIs('admin.blog-categories.*') ? 'show' : '' }}"
-                            id="blog-category">
+                        <div class="collapse {{ request()->routeIs('admin.blog-categories.*') ? 'show' : '' }}" id="blog-category">
                             <ul class="nav nav-collapse">
                                 @can('blog_categories.view')
-                                <li class="{{ request()->routeIs('admin.blog-categories.index') ? 'active' : '' }}">
-                                    <a href="{{ route('admin.blog-categories.index') }}">
-                                        <span class="sub-item">
-                                            Blog Categories
-                                        </span>
-                                    </a>
-                                </li>
+                                    <li class="{{ request()->routeIs('admin.blog-categories.index') ? 'active' : '' }}">
+                                        <a href="{{ route('admin.blog-categories.index') }}">
+                                            <span class="sub-item">Blog Categories</span>
+                                        </a>
+                                    </li>
                                 @endcan
-
                                 @can('blog_categories.create')
-                                <li class="{{ request()->routeIs('admin.blog-categories.create') ? 'active' : '' }}">
-                                    <a href="{{ route('admin.blog-categories.create') }}">
-                                        <span class="sub-item">
-                                            Create Category
-                                        </span>
-                                    </a>
-                                </li>
+                                    <li class="{{ request()->routeIs('admin.blog-categories.create') ? 'active' : '' }}">
+                                        <a href="{{ route('admin.blog-categories.create') }}">
+                                            <span class="sub-item">Create Category</span>
+                                        </a>
+                                    </li>
                                 @endcan
                             </ul>
                         </div>
                     </li>
                 @endcanany
 
+                {{-- ==================== USER MANAGEMENT ==================== --}}
                 @canany(['users.view', 'users.create', 'roles.view', 'roles.create'])
                     <li class="nav-section">
                         <span class="sidebar-mini-icon">
@@ -530,18 +455,18 @@
                         <div class="collapse {{ request()->routeIs('admin.users.*') ? 'show' : '' }}" id="users">
                             <ul class="nav nav-collapse">
                                 @can('users.view')
-                                <li class="{{ request()->routeIs('admin.users.index') ? 'active' : '' }}">
-                                    <a href="{{ route('admin.users.index') }}">
-                                        <span class="sub-item">All User</span>
-                                    </a>
-                                </li>
+                                    <li class="{{ request()->routeIs('admin.users.index') ? 'active' : '' }}">
+                                        <a href="{{ route('admin.users.index') }}">
+                                            <span class="sub-item">All User</span>
+                                        </a>
+                                    </li>
                                 @endcan
                                 @can('users.create')
-                                <li class="{{ request()->routeIs('admin.users.create') ? 'active' : '' }}">
-                                    <a href="{{ route('admin.users.create') }}">
-                                        <span class="sub-item">Create User</span>
-                                    </a>
-                                </li>
+                                    <li class="{{ request()->routeIs('admin.users.create') ? 'active' : '' }}">
+                                        <a href="{{ route('admin.users.create') }}">
+                                            <span class="sub-item">Create User</span>
+                                        </a>
+                                    </li>
                                 @endcan
                             </ul>
                         </div>
@@ -558,24 +483,25 @@
                         <div class="collapse {{ request()->routeIs('admin.roles.*') ? 'show' : '' }}" id="roles">
                             <ul class="nav nav-collapse">
                                 @can('roles.view')
-                                <li class="{{ request()->routeIs('admin.roles.index') ? 'active' : '' }}">
-                                    <a href="{{ route('admin.roles.index') }}">
-                                        <span class="sub-item">All Roles</span>
-                                    </a>
-                                </li>
+                                    <li class="{{ request()->routeIs('admin.roles.index') ? 'active' : '' }}">
+                                        <a href="{{ route('admin.roles.index') }}">
+                                            <span class="sub-item">All Roles</span>
+                                        </a>
+                                    </li>
                                 @endcan
                                 @can('roles.create')
-                                <li class="{{ request()->routeIs('admin.roles.create') ? 'active' : '' }}">
-                                    <a href="{{ route('admin.roles.create') }}">
-                                        <span class="sub-item">Create Role</span>
-                                    </a>
-                                </li>
+                                    <li class="{{ request()->routeIs('admin.roles.create') ? 'active' : '' }}">
+                                        <a href="{{ route('admin.roles.create') }}">
+                                            <span class="sub-item">Create Role</span>
+                                        </a>
+                                    </li>
                                 @endcan
                             </ul>
                         </div>
                     </li>
                 @endcanany
 
+                {{-- ==================== SETTINGS ==================== --}}
                 @can(['settings.view', 'store_settings.view'])
                     <li class="nav-section">
                         <span class="sidebar-mini-icon">
@@ -591,10 +517,7 @@
                         </a>
                     </li>
                     <li class="nav-item {{ request()->routeIs('admin.store-settings.*') ? 'active' : '' }}">
-                        <a
-                            href="{{ route('admin.store-settings.index') }}"
-                            class="{{ request()->routeIs('admin.store-settings.*') ? '' : 'collapsed' }}"
-                        >
+                        <a href="{{ route('admin.store-settings.index') }}" class="{{ request()->routeIs('admin.store-settings.*') ? '' : 'collapsed' }}">
                             <i class="fas fa-store"></i>
                             <p>Store Settings</p>
                         </a>
