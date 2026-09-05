@@ -2,12 +2,20 @@
 
 namespace App\Services\Admin;
 
+use App\Models\Blog;
+use App\Models\Order;
+use App\Models\Product;
 use App\Models\User;
-use Illuminate\Http\UploadedFile;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Storage;
 
 class DashboardService
 {
-
+    public function getStats(): array
+    {
+        return [
+            'products' => Product::count(),
+            'blogs' => Blog::count(),
+            'customers' => User::whereNull('role_id')->count(),
+            'orders' => Order::count(),
+        ];
+    }
 }

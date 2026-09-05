@@ -7,16 +7,17 @@ use App\Services\Admin\DashboardService;
 
 class DashboardController extends Controller
 {
-    protected DashboardService $service;
-
-    public function __construct(DashboardService $service)
-    {
-        $this->service = $service;
-    }
+    public function __construct(
+        protected DashboardService $service
+    ) {}
 
     public function index()
     {
-       return view('admin.dashboard');
-    }
+        $stats = $this->service->getStats();
 
+        return view(
+            'admin.dashboard',
+            compact('stats')
+        );
+    }
 }
