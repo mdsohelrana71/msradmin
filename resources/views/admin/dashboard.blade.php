@@ -11,7 +11,7 @@
       </div>
       <div class="ms-md-auto py-2 py-md-0">
           <a href="{{ route('admin.products.index') }}" class="btn btn-label-info btn-round me-2">Manage</a>
-          <a href="{{ route('admin.customers.index') }}" class="btn btn-primary btn-round">Add Customer</a>
+          <a href="{{ route('admin.products.create') }}" class="btn btn-primary btn-round">Add Product</a>
       </div>
   </div>
 
