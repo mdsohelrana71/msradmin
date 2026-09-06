@@ -1,6 +1,6 @@
 @extends('layouts.admin')
 
-@section('title', 'Edit Store Design')
+@section('title', $isTemplate ? 'Edit Store Template' : 'Edit Store Design')
 
 @section('content')
 
@@ -26,7 +26,6 @@
                     <div class="card-header">
                         <div class="d-flex align-items-center">
                             <h4 class="card-title">{{ $sectionData['label'] }}</h4>
-
                             <a
                                 href="{{ route('admin.store-designs.index') }}"
                                 class="btn btn-secondary btn-round ms-auto"
@@ -45,8 +44,10 @@
                             @method('PUT')
 
                             @include('admin.StoreDesign.partials.form', [
-                                'designs' => $designs,
+                                'templates' => $templates,
                                 'selectedDesign' => $selectedDesign,
+                                'isTemplate' => $isTemplate,
+                                'activeTemplate' => $isTemplate ? $selectedDesign : app(\App\Services\Admin\StoreDesignService::class)->getActiveTemplate(),
                             ])
 
                             <x-admin.form-actions

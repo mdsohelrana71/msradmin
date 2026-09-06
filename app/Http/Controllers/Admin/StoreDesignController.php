@@ -30,29 +30,57 @@ class StoreDesignController extends Controller implements HasMiddleware
 
     public function index()
     {
+        $templates = $this->service->getTemplates();
         $sections = $this->service->getSections();
+        $activeTemplate = $this->service->getActiveTemplate();
         $selectedDesigns = $this->service->getSelectedDesigns();
 
-        return view('admin.StoreDesign.index', compact('sections', 'selectedDesigns'));
+        return view('admin.StoreDesign.index', compact(
+            'templates',
+            'sections',
+            'activeTemplate',
+            'selectedDesigns'
+        ));
     }
 
     public function edit(string $section)
     {
+        if ($section === 'template') {
+            $templates = $this->service->getTemplates();
+            $selectedDesign = $this->service->getActiveTemplate();
+
+            return view('admin.StoreDesign.edit', [
+                'section' => $section,
+                'sectionData' => [
+                    'label' => 'Store Template',
+                ],
+                'templates' => $templates,
+                'selectedDesign' => $selectedDesign,
+                'isTemplate' => true,
+            ]);
+        }
+
         $sectionData = $this->service->getSection($section);
-        $designs = $this->service->getDesigns($section);
-        $selectedDesign = $this->service->getSelectedDesign($section);
+        $templates = $this->service->getTemplates();
+        $selectedDesign = $this->service->getSectionOverride($section);
 
         return view('admin.StoreDesign.edit', compact(
             'section',
             'sectionData',
-            'designs',
+            'templates',
             'selectedDesign'
-        ));
+        ) + ['isTemplate' => false]);
     }
 
     public function update(StoreDesignRequest $request, string $section)
     {
-        $this->service->updateDesign($section, $request->validated()['design']);
+        $design = $request->validated()['design'] ?? null;
+
+        if ($section === 'template') {
+            $this->service->updateTemplate($design);
+        } else {
+            $this->service->updateSectionOverride($section, $design);
+        }
 
         return redirect()
             ->route('admin.store-designs.edit', $section)

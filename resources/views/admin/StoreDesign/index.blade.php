@@ -23,17 +23,38 @@
                         <div class="d-flex align-items-center">
                             <div>
                                 <h4 class="card-title mb-1">Store Design</h4>
-                                <p class="text-muted mb-0">Manage the design of your storefront sections.</p>
+                                <p class="text-muted mb-0">Manage your storefront template and section overrides.</p>
                             </div>
                         </div>
                     </div>
 
                     <div class="card-body">
+                        <div class="card border shadow-sm mb-4">
+                            <div class="card-body">
+                                <div class="d-flex align-items-center justify-content-between">
+                                    <div>
+                                        <small class="text-muted d-block mb-1">Active Template</small>
+                                        <h5 class="mb-1">{{ $templates[$activeTemplate]['label'] ?? 'Not Selected' }}</h5>
+                                        <small class="text-muted">{{ $activeTemplate }}</small>
+                                    </div>
+
+                                    <a
+                                        href="{{ route('admin.store-designs.edit', 'template') }}"
+                                        class="btn btn-primary"
+                                    >
+                                        <i class="fa fa-paint-brush me-1"></i>
+                                        Change Template
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+
                         <div class="row">
                             @foreach ($sections as $key => $section)
                                 @php
-                                    $selectedKey = $selectedDesigns[$key] ?? null;
-                                    $selectedLabel = $section['designs'][$selectedKey] ?? 'Not Selected';
+                                    $selectedKey = $selectedDesigns[$key] ?? $activeTemplate;
+                                    $isOverride = $selectedKey !== $activeTemplate;
+                                    $selectedLabel = $templates[$selectedKey]['label'] ?? $selectedKey;
                                 @endphp
 
                                 <div class="col-md-6 col-xl-4 mb-4">
@@ -43,7 +64,7 @@
                                                 <div class="d-flex align-items-center">
                                                     <div
                                                         class="d-flex align-items-center justify-content-center rounded"
-                                                        style="width: 46px;height: 46px;background: rgba(13, 110, 253, 0.1);"
+                                                        style="width:46px;height:46px;background:rgba(13,110,253,0.1);"
                                                     >
                                                         <i class="fa fa-paint-brush text-primary"></i>
                                                     </div>
@@ -51,7 +72,7 @@
                                                     <div class="ms-3">
                                                         <h5 class="mb-1">{{ $section['label'] }}</h5>
                                                         <small class="text-muted">
-                                                            {{ count($section['designs']) }} designs available
+                                                            Section Design
                                                         </small>
                                                     </div>
                                                 </div>
@@ -68,8 +89,8 @@
                                                         </span>
                                                     </div>
 
-                                                    <span class="badge bg-success">
-                                                        Active
+                                                    <span class="badge {{ $isOverride ? 'bg-warning text-dark' : 'bg-success' }}">
+                                                        {{ $isOverride ? 'Override' : 'Template Default' }}
                                                     </span>
                                                 </div>
                                             </div>

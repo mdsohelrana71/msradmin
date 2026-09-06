@@ -1,78 +1,72 @@
 <?php
 
 return [
+    'templates' => [
+        'design-1' => [
+            'label' => 'Template Design 1',
+            'sections' => [
+                'home' => 'frontend.templates.design-1.home',
+                'header' => 'frontend.components.header.design-1',
+                'footer' => 'frontend.components.footer.design-1',
+                'product_card' => 'frontend.components.product.card.design-1',
+                'product_listing' => 'frontend.components.product.listing.design-1',
+                'product_details' => 'frontend.components.product.details.design-1',
+                'blog_card' => 'frontend.components.blog.card.design-1',
+                'blog_listing' => 'frontend.components.blog.listing.design-1',
+                'blog_details' => 'frontend.components.blog.details.design-1',
+            ],
+        ],
+        'design-2' => [
+            'label' => 'Template Design 2',
+            'sections' => [
+                'home' => 'frontend.templates.design-2.home',
+                'header' => 'frontend.components.header.design-2',
+                'footer' => 'frontend.components.footer.design-2',
+                'product_card' => 'frontend.components.product.card.design-2',
+                'product_listing' => 'frontend.components.product.listing.design-2',
+                'product_details' => 'frontend.components.product.details.design-2',
+                'blog_card' => 'frontend.components.blog.card.design-2',
+                'blog_listing' => 'frontend.components.blog.listing.design-2',
+                'blog_details' => 'frontend.components.blog.details.design-2',
+            ],
+        ],
+    ],
     'sections' => [
         'home' => [
             'label' => 'Home Page',
             'option_name' => 'store_design.home',
-            'designs' => [
-                'design-1' => 'Home Design 1',
-                'design-2' => 'Home Design 2',
-            ],
         ],
         'header' => [
             'label' => 'Header',
             'option_name' => 'store_design.header',
-            'designs' => [
-                'design-1' => 'Header Design 1',
-                'design-2' => 'Header Design 2',
-            ],
         ],
         'footer' => [
             'label' => 'Footer',
             'option_name' => 'store_design.footer',
-            'designs' => [
-                'design-1' => 'Footer Design 1',
-                'design-2' => 'Footer Design 2',
-            ],
         ],
         'product_card' => [
             'label' => 'Product Card',
             'option_name' => 'store_design.product_card',
-            'designs' => [
-                'design-1' => 'Product Card Design 1',
-                'design-2' => 'Product Card Design 2',
-            ],
         ],
         'product_listing' => [
             'label' => 'Product Listing',
             'option_name' => 'store_design.product_listing',
-            'designs' => [
-                'design-1' => 'Product Listing Design 1',
-                'design-2' => 'Product Listing Design 2',
-            ],
         ],
         'product_details' => [
             'label' => 'Product Details',
             'option_name' => 'store_design.product_details',
-            'designs' => [
-                'design-1' => 'Product Details Design 1',
-                'design-2' => 'Product Details Design 2',
-            ],
         ],
         'blog_card' => [
             'label' => 'Blog Card',
             'option_name' => 'store_design.blog_card',
-            'designs' => [
-                'design-1' => 'Blog Card Design 1',
-                'design-2' => 'Blog Card Design 2',
-            ],
         ],
         'blog_listing' => [
             'label' => 'Blog Listing',
             'option_name' => 'store_design.blog_listing',
-            'designs' => [
-                'design-1' => 'Blog Listing Design 1',
-                'design-2' => 'Blog Listing Design 2',
-            ],
         ],
         'blog_details' => [
             'label' => 'Blog Details',
             'option_name' => 'store_design.blog_details',
-            'designs' => [
-                'design-1' => 'Blog Details Design 1',
-                'design-2' => 'Blog Details Design 2',
-            ],
         ],
     ],
 ];

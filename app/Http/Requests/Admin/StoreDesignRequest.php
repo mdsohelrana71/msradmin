@@ -14,7 +14,7 @@ class StoreDesignRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'design' => ['required', 'string'],
+            'design' => ['nullable', 'string'],
         ];
     }
 }
