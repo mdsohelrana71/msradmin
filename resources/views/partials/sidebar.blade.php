@@ -361,7 +361,7 @@
                     </li>
                 @endcanany
 
-                {{-- ==================== BLOG MANAGEMENT ==================== --}}
+                {{-- ==================== Marketing ==================== --}}
                 @canany(['discounts.view'])
                     <li class="nav-section">
                         <span class="sidebar-mini-icon">
@@ -403,7 +403,40 @@
                         </div>
                     </li>
                 @endcanany
-
+                
+                @canany(['coupons.view', 'coupons.create'])
+                    <li class="nav-item {{ request()->routeIs('admin.coupons.*') ? 'active' : '' }}">
+                        <a
+                            data-bs-toggle="collapse"
+                            href="#couponsMenu"
+                            class="{{ request()->routeIs('admin.coupons.*') ? '' : 'collapsed' }}"
+                            aria-expanded="{{ request()->routeIs('admin.coupons.*') ? 'true' : 'false' }}"
+                        >
+                            <i class="fa fa-ticket-alt"></i>
+                            <p>Coupons</p>
+                            <span class="caret"></span>
+                        </a>
+                        <div class="collapse {{ request()->routeIs('admin.coupons.*') ? 'show' : '' }}" id="couponsMenu">
+                            <ul class="nav nav-collapse">
+                                @can('coupons.view')
+                                    <li class="{{ request()->routeIs('admin.coupons.index') || request()->routeIs('admin.coupons.show') ? 'active' : '' }}">
+                                        <a href="{{ route('admin.coupons.index') }}">
+                                            <span class="sub-item">All Coupons</span>
+                                        </a>
+                                    </li>
+                                @endcan
+                                @can('coupons.create')
+                                    <li class="{{ request()->routeIs('admin.coupons.create') ? 'active' : '' }}">
+                                        <a href="{{ route('admin.coupons.create') }}">
+                                            <span class="sub-item">Create Coupon</span>
+                                        </a>
+                                    </li>
+                                @endcan
+                            </ul>
+                        </div>
+                    </li>
+                @endcanany
+                
                 {{-- ==================== BLOG MANAGEMENT ==================== --}}
                 @canany(['blogs.view', 'blogs.create', 'blog-categories.view', 'blog-categories.create'])
                     <li class="nav-section">
