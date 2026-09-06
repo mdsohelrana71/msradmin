@@ -121,4 +121,9 @@ class Product extends Model
     {
         return $this->hasMany(ProductCompare::class);
     }
+
+    public function discounts(): BelongsToMany
+    {
+        return $this->belongsToMany(Discount::class, 'discount_products');
+    }
 }

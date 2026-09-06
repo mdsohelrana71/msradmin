@@ -47,7 +47,7 @@ return [
         'title' => 'Product Categories',
         'route' => 'admin.product-categories.index',
         'icon' => 'fa fa-folder',
-        'permission' => 'product_categories.view',
+        'permission' => 'product-categories.view',
     ],
     [
         'title' => 'Products',
@@ -102,6 +102,18 @@ return [
         'route' => 'admin.orders.index',
         'icon' => 'fa fa-shopping-cart',
         'permission' => 'orders.view',
+    ],
+    [
+        'title' => 'Discounts',
+        'route' => 'admin.discounts.index',
+        'icon' => 'fa fa-percent',
+        'permission' => 'discounts.view',
+    ],
+    [
+        'title' => 'Coupons',
+        'route' => 'admin.coupons.index',
+        'icon' => 'fa fa-ticket-alt',
+        'permission' => 'coupons.view',
     ],
     [
         'title' => 'Blog Categories',

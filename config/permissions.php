@@ -14,10 +14,20 @@ return [
     'product_categories' => [
         'label' => 'Product Categories',
         'permissions' => [
-            'product_categories.view' => 'View product categories',
-            'product_categories.create' => 'Create products categories',
-            'product_categories.edit' => 'Edit product categories',
-            'product_categories.delete' => 'Delete product categories',
+            'product-categories.view' => 'View product categories',
+            'product-categories.create' => 'Create products categories',
+            'product-categories.edit' => 'Edit product categories',
+            'product-categories.delete' => 'Delete product categories',
+        ],
+    ],
+
+    'coupons' => [
+        'label' => 'Coupons',
+        'permissions' => [
+            'coupons.view' => 'View coupons',
+            'coupons.create' => 'Create coupons',
+            'coupons.edit' => 'Edit coupons',
+            'coupons.delete' => 'Delete coupons',
         ],
     ],
 
@@ -89,6 +99,16 @@ return [
         'permissions' => [
             'orders.view' => 'View orders',
             'orders.edit' => 'Edit orders',
+        ],
+    ],
+
+    'discounts' => [
+        'label' => 'Discounts',
+        'permissions' => [
+            'discounts.view' => 'View discounts',
+            'discounts.create' => 'Create discounts',
+            'discounts.edit' => 'Edit discounts',
+            'discounts.delete' => 'Delete discounts',
         ],
     ],
 

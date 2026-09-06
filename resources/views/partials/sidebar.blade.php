@@ -30,7 +30,7 @@
                 {{-- ==================== PRODUCT MANAGEMENT ==================== --}}
                 @canany([
                     'products.view', 'products.create',
-                    'product_categories.view', 'product_categories.create',
+                    'product-categories.view', 'product-categories.create',
                     'brands.view', 'brands.create',
                     'product-attributes.view', 'product-attributes.create',
                     'product-faqs.view', 'product-faqs.create',
@@ -77,7 +77,7 @@
                 @endcanany
 
                 {{-- Categories --}}
-                @canany(['product_categories.view', 'product_categories.create'])
+                @canany(['product-categories.view', 'product-categories.create'])
                     <li class="nav-item {{ request()->routeIs('admin.product-categories.*') ? 'active' : '' }}">
                         <a
                             data-bs-toggle="collapse"
@@ -90,14 +90,14 @@
                         </a>
                         <div class="collapse {{ request()->routeIs('admin.product-categories.*') ? 'show' : '' }}" id="product-category">
                             <ul class="nav nav-collapse">
-                                @can('product_categories.view')
+                                @can('product-categories.view')
                                     <li class="{{ request()->routeIs('admin.product-categories.index') ? 'active' : '' }}">
                                         <a href="{{ route('admin.product-categories.index') }}">
                                             <span class="sub-item">Product Categories</span>
                                         </a>
                                     </li>
                                 @endcan
-                                @can('product_categories.create')
+                                @can('product-categories.create')
                                     <li class="{{ request()->routeIs('admin.product-categories.create') ? 'active' : '' }}">
                                         <a href="{{ route('admin.product-categories.create') }}">
                                             <span class="sub-item">Create Category</span>
@@ -353,6 +353,49 @@
                                     <li class="{{ request()->routeIs('admin.product-compares.index') ? 'active' : '' }}">
                                         <a href="{{ route('admin.product-compares.index') }}">
                                             <span class="sub-item">All Compares</span>
+                                        </a>
+                                    </li>
+                                @endcan
+                            </ul>
+                        </div>
+                    </li>
+                @endcanany
+
+                {{-- ==================== BLOG MANAGEMENT ==================== --}}
+                @canany(['discounts.view'])
+                    <li class="nav-section">
+                        <span class="sidebar-mini-icon">
+                            <i class="fa fa-ellipsis-h"></i>
+                        </span>
+                        <h4 class="text-section">Marketing</h4>
+                    </li>
+                @endcanany
+                
+                @canany(['discounts.view', 'discounts.create'])
+                    <li class="nav-item {{ request()->routeIs('admin.discounts.*') ? 'active' : '' }}">
+                        <a
+                            data-bs-toggle="collapse"
+                            href="#discountsMenu"
+                            class="{{ request()->routeIs('admin.discounts.*') ? '' : 'collapsed' }}"
+                            aria-expanded="{{ request()->routeIs('admin.discounts.*') ? 'true' : 'false' }}"
+                        >
+                            <i class="fa fa-percent"></i>
+                            <p>Discounts</p>
+                            <span class="caret"></span>
+                        </a>
+                        <div class="collapse {{ request()->routeIs('admin.discounts.*') ? 'show' : '' }}" id="discountsMenu">
+                            <ul class="nav nav-collapse">
+                                @can('discounts.view')
+                                    <li class="{{ request()->routeIs('admin.discounts.index') || request()->routeIs('admin.discounts.show') ? 'active' : '' }}">
+                                        <a href="{{ route('admin.discounts.index') }}">
+                                            <span class="sub-item">All Discounts</span>
+                                        </a>
+                                    </li>
+                                @endcan
+                                @can('discounts.create')
+                                    <li class="{{ request()->routeIs('admin.discounts.create') ? 'active' : '' }}">
+                                        <a href="{{ route('admin.discounts.create') }}">
+                                            <span class="sub-item">Create Discount</span>
                                         </a>
                                     </li>
                                 @endcan

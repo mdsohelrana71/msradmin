@@ -10,6 +10,7 @@ use App\Http\Controllers\Admin\OrderController;
 use App\Http\Controllers\Admin\ProductController;
 use App\Http\Controllers\Admin\AccountController;
 use App\Http\Controllers\Admin\CustomerController;
+use App\Http\Controllers\Admin\DiscountController;
 use App\Http\Controllers\Admin\SettingsController;
 use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\ProductFaqController;
@@ -55,7 +56,9 @@ Route::middleware('auth')->prefix('admin')->name('admin.')->group(function () {
     Route::resource('product-wishlists', ProductWishlistController::class)->only(['index', 'show', 'destroy']);
     Route::resource('product-compares', ProductCompareController::class)->only(['index', 'show', 'destroy']);
     Route::resource('brands', BrandController::class);
-    
+
+    Route::resource('discounts', DiscountController::class);
+    Route::patch('discounts/{discount}/toggle-status', [DiscountController::class, 'toggleStatus'])->name('discounts.toggle-status');
     Route::resource('orders', OrderController::class)->only(['index', 'show']);
     Route::patch('orders/{order}/status', [OrderController::class, 'updateStatus'])->name('orders.update-status');
 
