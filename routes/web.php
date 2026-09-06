@@ -15,6 +15,7 @@ use App\Http\Controllers\Admin\DiscountController;
 use App\Http\Controllers\Admin\SettingsController;
 use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\ProductFaqController;
+use App\Http\Controllers\Admin\StoreDesignController;
 use App\Http\Controllers\Admin\StoreSettingController;
 use App\Http\Controllers\Admin\BlogCategoryController;
 use App\Http\Controllers\Admin\ProductReviewController;
@@ -73,6 +74,8 @@ Route::middleware('auth')->prefix('admin')->name('admin.')->group(function () {
 
     Route::resource('customers', CustomerController::class)->only(['index', 'show', 'update']);
 
+    Route::resource('store-designs', StoreDesignController::class)->only(['index', 'edit', 'update']);
+    
     Route::post('/cache/clear', function () {
         Artisan::call('optimize:clear');
         return back()->with('success', 'All cache cleared successfully.');

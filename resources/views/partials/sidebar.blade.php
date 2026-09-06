@@ -610,13 +610,22 @@
                 @endcanany
 
                 {{-- ==================== SETTINGS ==================== --}}
-                @can(['settings.view', 'store-settings.view'])
+                @can(['settings.view', 'store-settings.view','store-designs.view'])
                     <li class="nav-section">
                         <span class="sidebar-mini-icon">
                             <i class="fa fa-ellipsis-h"></i>
                         </span>
                         <h4 class="text-section">Settings Management</h4>
                     </li>
+
+                    @can('store-designs.view')
+                        <li class="nav-item {{ request()->routeIs('admin.store-designs.*') ? 'active' : '' }}">
+                            <a href="{{ route('admin.store-designs.index') }}">
+                                <i class="fa fa-paint-brush"></i>
+                                <p>Store Design</p>
+                            </a>
+                        </li>
+                    @endcan
 
                     <li class="nav-item {{ request()->routeIs('admin.settings.index') ? 'active' : '' }}">
                         <a href="{{ route('admin.settings.index') }}" class="{{ request()->routeIs('admin.settings.index') ? '' : 'collapsed' }}">

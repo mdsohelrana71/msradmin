@@ -139,4 +139,10 @@ return [
         'icon' => 'fa fa-cog',
         'permission' => 'store-settings.view',
     ],
+    [
+        'title' => 'Store Design',
+        'route' => 'admin.store-designs.index',
+        'icon' => 'fa fa-paint-brush',
+        'permission' => 'store-designs.view',
+    ],
 ];

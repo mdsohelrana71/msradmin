@@ -176,4 +176,12 @@ return [
             'store-settings.edit' => 'Edit store settings',
         ],
     ],
+
+    'store-designs' => [
+        'label' => 'Store Design',
+        'permissions' => [
+            'store-designs.view' => 'View store designs',
+            'store-designs.edit' => 'Edit store designs',
+        ],
+    ],
 ];
