@@ -71,9 +71,7 @@
 
                                                     <div class="ms-3">
                                                         <h5 class="mb-1">{{ $section['label'] }}</h5>
-                                                        <small class="text-muted">
-                                                            Section Design
-                                                        </small>
+                                                        <small class="text-muted">Section Design</small>
                                                     </div>
                                                 </div>
                                             </div>
@@ -81,12 +79,8 @@
                                             <div class="p-3 rounded bg-light mb-4">
                                                 <div class="d-flex align-items-center justify-content-between">
                                                     <div>
-                                                        <small class="text-muted d-block mb-1">
-                                                            Active Design
-                                                        </small>
-                                                        <span class="fw-semibold">
-                                                            {{ $selectedLabel }}
-                                                        </span>
+                                                        <small class="text-muted d-block mb-1">Active Design</small>
+                                                        <span class="fw-semibold">{{ $selectedLabel }}</span>
                                                     </div>
 
                                                     <span class="badge {{ $isOverride ? 'bg-warning text-dark' : 'bg-success' }}">

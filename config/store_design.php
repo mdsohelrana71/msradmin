@@ -1,11 +1,21 @@
 <?php
 
 return [
+    'template' => [
+        'option_name' => 'store_design.template',
+        'default' => 'design-1',
+    ],
     'templates' => [
         'design-1' => [
             'label' => 'Template Design 1',
-            'sections' => [
+            'pages' => [
                 'home' => 'frontend.templates.design-1.home',
+                'product_listing' => 'frontend.templates.design-1.product-listing',
+                'product_details' => 'frontend.templates.design-1.product-details',
+                'blog_listing' => 'frontend.templates.design-1.blog-listing',
+                'blog_details' => 'frontend.templates.design-1.blog-details',
+            ],
+            'sections' => [
                 'header' => 'frontend.components.header.design-1',
                 'footer' => 'frontend.components.footer.design-1',
                 'product_card' => 'frontend.components.product.card.design-1',
@@ -18,8 +28,14 @@ return [
         ],
         'design-2' => [
             'label' => 'Template Design 2',
-            'sections' => [
+            'pages' => [
                 'home' => 'frontend.templates.design-2.home',
+                'product_listing' => 'frontend.templates.design-2.product-listing',
+                'product_details' => 'frontend.templates.design-2.product-details',
+                'blog_listing' => 'frontend.templates.design-2.blog-listing',
+                'blog_details' => 'frontend.templates.design-2.blog-details',
+            ],
+            'sections' => [
                 'header' => 'frontend.components.header.design-2',
                 'footer' => 'frontend.components.footer.design-2',
                 'product_card' => 'frontend.components.product.card.design-2',
@@ -32,10 +48,6 @@ return [
         ],
     ],
     'sections' => [
-        'home' => [
-            'label' => 'Home Page',
-            'option_name' => 'store_design.home',
-        ],
         'header' => [
             'label' => 'Header',
             'option_name' => 'store_design.header',

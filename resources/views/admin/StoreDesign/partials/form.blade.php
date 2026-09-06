@@ -28,7 +28,11 @@
             {{ $selectedDesign === $key ? 'checked' : '' }}
         >
         <label class="form-check-label" for="design_{{ $key }}">
-            {{ $template['label'] }}
+            <span class="fw-semibold">{{ $template['label'] }}</span>
+
+            @if (!$isTemplate && $key === $activeTemplate)
+                <span class="badge bg-success ms-2">Active Template</span>
+            @endif
         </label>
     </div>
 @endforeach

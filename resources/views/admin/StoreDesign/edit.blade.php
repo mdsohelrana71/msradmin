@@ -26,6 +26,7 @@
                     <div class="card-header">
                         <div class="d-flex align-items-center">
                             <h4 class="card-title">{{ $sectionData['label'] }}</h4>
+
                             <a
                                 href="{{ route('admin.store-designs.index') }}"
                                 class="btn btn-secondary btn-round ms-auto"
@@ -46,8 +47,8 @@
                             @include('admin.StoreDesign.partials.form', [
                                 'templates' => $templates,
                                 'selectedDesign' => $selectedDesign,
+                                'activeTemplate' => $activeTemplate,
                                 'isTemplate' => $isTemplate,
-                                'activeTemplate' => $isTemplate ? $selectedDesign : app(\App\Services\Admin\StoreDesignService::class)->getActiveTemplate(),
                             ])
 
                             <x-admin.form-actions

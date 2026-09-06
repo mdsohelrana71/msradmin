@@ -13,8 +13,15 @@ class StoreDesignRequest extends FormRequest
 
     public function rules(): array
     {
+        $templates = config('store_design.templates', []);
+        $required = $this->route('storeDesign') === 'template';
+
         return [
-            'design' => ['nullable', 'string'],
+            'design' => [
+                $required ? 'required' : 'nullable',
+                'string',
+                'in:' . implode(',', array_keys($templates)),
+            ],
         ];
     }
 }

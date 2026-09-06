@@ -101,18 +101,6 @@ class StoreDesignService
         return $selectedDesigns;
     }
 
-    public function getSectionView(string $section): string
-    {
-        $design = $this->getResolvedDesign($section);
-        $template = $this->getTemplate($design);
-
-        if (!isset($template['sections'][$section])) {
-            throw new InvalidArgumentException('Store design view not found.');
-        }
-
-        return $template['sections'][$section];
-    }
-
     protected function saveOption(string $optionName, ?string $value): bool
     {
         return DB::transaction(function () use ($optionName, $value) {

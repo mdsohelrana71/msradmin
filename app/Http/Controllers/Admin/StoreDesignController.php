@@ -43,47 +43,44 @@ class StoreDesignController extends Controller implements HasMiddleware
         ));
     }
 
-    public function edit(string $section)
+    public function edit(string $storeDesign)
     {
-        if ($section === 'template') {
-            $templates = $this->service->getTemplates();
-            $selectedDesign = $this->service->getActiveTemplate();
-
+        if ($storeDesign === 'template') {
             return view('admin.StoreDesign.edit', [
-                'section' => $section,
-                'sectionData' => [
-                    'label' => 'Store Template',
-                ],
-                'templates' => $templates,
-                'selectedDesign' => $selectedDesign,
+                'section' => 'template',
+                'sectionData' => ['label' => 'Store Template'],
+                'templates' => $this->service->getTemplates(),
+                'selectedDesign' => $this->service->getActiveTemplate(),
+                'activeTemplate' => $this->service->getActiveTemplate(),
                 'isTemplate' => true,
             ]);
         }
 
-        $sectionData = $this->service->getSection($section);
-        $templates = $this->service->getTemplates();
-        $selectedDesign = $this->service->getSectionOverride($section);
+        $sectionData = $this->service->getSection($storeDesign);
+        $activeTemplate = $this->service->getActiveTemplate();
 
-        return view('admin.StoreDesign.edit', compact(
-            'section',
-            'sectionData',
-            'templates',
-            'selectedDesign'
-        ) + ['isTemplate' => false]);
+        return view('admin.StoreDesign.edit', [
+            'section' => $storeDesign,
+            'sectionData' => $sectionData,
+            'templates' => $this->service->getTemplates(),
+            'selectedDesign' => $this->service->getSectionOverride($storeDesign),
+            'activeTemplate' => $activeTemplate,
+            'isTemplate' => false,
+        ]);
     }
 
-    public function update(StoreDesignRequest $request, string $section)
+    public function update(StoreDesignRequest $request, string $storeDesign)
     {
         $design = $request->validated()['design'] ?? null;
 
-        if ($section === 'template') {
+        if ($storeDesign === 'template') {
             $this->service->updateTemplate($design);
         } else {
-            $this->service->updateSectionOverride($section, $design);
+            $this->service->updateSectionOverride($storeDesign, $design);
         }
 
         return redirect()
-            ->route('admin.store-designs.edit', $section)
+            ->route('admin.store-designs.edit', $storeDesign)
             ->with('success', 'Store design updated successfully.');
     }
 }
