@@ -23,54 +23,6 @@
             @method('PUT')
 
             <div class="row">
-
-                {{-- ===================== Discount Settings ===================== --}}
-                <div class="col-lg-4 mb-4">
-                    <div class="card border-0 shadow-sm h-100">
-                        <div class="card-body p-4">
-                            <div class="d-flex align-items-center mb-4">
-                                <div class="rounded-circle bg-primary text-white d-flex align-items-center justify-content-center me-3"
-                                     style="width: 42px; height: 42px;">
-                                    <i class="fa fa-percent"></i>
-                                </div>
-                                <div>
-                                    <h5 class="fw-bold mb-0">Discount Settings</h5>
-                                    <small class="text-muted">Configure default discount type and value</small>
-                                </div>
-                            </div>
-
-                            <div class="mb-3">
-                                <label for="discount_type" class="form-label">Discount Type</label>
-                                <select name="discount_type" id="discount_type"
-                                        class="form-select @error('discount_type') is-invalid @enderror">
-                                    <option value="percentage"
-                                        @selected(old('discount_type', $storeSettings['discount_type']) === 'percentage')>
-                                        Percentage (%)
-                                    </option>
-                                    <option value="fixed"
-                                        @selected(old('discount_type', $storeSettings['discount_type']) === 'fixed')>
-                                        Fixed Amount
-                                    </option>
-                                </select>
-                                @error('discount_type')
-                                    <div class="invalid-feedback">{{ $message }}</div>
-                                @enderror
-                            </div>
-
-                            <div>
-                                <label for="discount_value" class="form-label">Default Discount Value</label>
-                                <input type="number" name="discount_value" id="discount_value"
-                                       min="0" step="0.01"
-                                       class="form-control @error('discount_value') is-invalid @enderror"
-                                       value="{{ old('discount_value', $storeSettings['discount_value']) }}">
-                                @error('discount_value')
-                                    <div class="invalid-feedback">{{ $message }}</div>
-                                @enderror
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
                 {{-- ===================== Delivery Settings ===================== --}}
                 <div class="col-lg-4 mb-4">
                     <div class="card border-0 shadow-sm h-100">
