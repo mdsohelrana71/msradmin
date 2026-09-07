@@ -26,9 +26,7 @@ use App\Http\Controllers\Admin\ProductAttributeController;
 use App\Http\Controllers\Admin\ProductInventoryController;
 use App\Http\Controllers\Admin\ProductAttributeValueController;
 
-Route::get('/', function () {
-    return view('welcome');
-});
+require __DIR__.'/frontend.php';
 
 Route::middleware('auth')->prefix('admin')->name('admin.')->group(function () {
 
@@ -75,7 +73,7 @@ Route::middleware('auth')->prefix('admin')->name('admin.')->group(function () {
     Route::resource('customers', CustomerController::class)->only(['index', 'show', 'update']);
 
     Route::resource('store-designs', StoreDesignController::class)->only(['index', 'edit', 'update']);
-    
+
     Route::post('/cache/clear', function () {
         Artisan::call('optimize:clear');
         return back()->with('success', 'All cache cleared successfully.');

@@ -1,0 +1,482 @@
+@extends('frontend.layouts.app')
+
+@section('title', config('app.name'))
+
+@section('content')
+    {{-- Hero Slider --}}
+    <section class="hero-slider">
+        <div class="slider-item" style="background-image: url('{{ asset('frontend/images/slider-1.jpg') }}');">
+            <div class="slider-overlay"></div>
+            <div class="slider-content">
+                <h1 class="slider-title">Discover Your Style</h1>
+                <p class="slider-subtitle">Explore our latest collection and find something perfect for you.</p>
+                <a href="{{ route('products.index') }}" class="slider-btn">Shop Now</a>
+            </div>
+        </div>
+        <div class="slider-item" style="background-image: url('{{ asset('frontend/images/slider-2.jpg') }}');">
+            <div class="slider-overlay"></div>
+            <div class="slider-content">
+                <h1 class="slider-title">New Season Collection</h1>
+                <p class="slider-subtitle">Fresh styles, premium quality and amazing prices.</p>
+                <a href="{{ route('products.index') }}" class="slider-btn">Explore Now</a>
+            </div>
+        </div>
+        <div class="slider-item" style="background-image: url('{{ asset('frontend/images/slider-3.jpg') }}');">
+            <div class="slider-overlay"></div>
+            <div class="slider-content">
+                <h1 class="slider-title">Style That Speaks</h1>
+                <p class="slider-subtitle">Upgrade your wardrobe with our latest products.</p>
+                <a href="{{ route('products.index') }}" class="slider-btn">Shop Collection</a>
+            </div>
+        </div>
+    </section>
+
+    {{-- Trust Features --}}
+    <section class="py-4 border-bottom">
+        <div class="container">
+            <div class="row text-center g-4">
+                <div class="col-6 col-lg-3">
+                    <i class="fas fa-shield-alt fa-2x mb-2"></i>
+                    <h6 class="mb-1">Secure Payment</h6>
+                    <small class="text-muted">100% secure payment</small>
+                </div>
+                <div class="col-6 col-lg-3">
+                    <i class="fas fa-truck fa-2x mb-2"></i>
+                    <h6 class="mb-1">Free Shipping</h6>
+                    <small class="text-muted">On selected orders</small>
+                </div>
+                <div class="col-6 col-lg-3">
+                    <i class="fas fa-award fa-2x mb-2"></i>
+                    <h6 class="mb-1">Premium Quality</h6>
+                    <small class="text-muted">Quality products</small>
+                </div>
+                <div class="col-6 col-lg-3">
+                    <i class="fas fa-headset fa-2x mb-2"></i>
+                    <h6 class="mb-1">24/7 Support</h6>
+                    <small class="text-muted">We're here to help</small>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    {{-- Top 10 Products --}}
+    @if ($topTenProducts->isNotEmpty())
+        <section class="products-section">
+            <div class="container">
+                <h2 class="products-section-title">Top 10 Products</h2>
+                <div class="top-ten-products">
+                    @foreach ($topTenProducts as $index => $product)
+                        @php
+                            $hasDiscount =
+                                $product->discount_price !== null && $product->discount_price < $product->selling_price;
+                            $discountPercentage = $hasDiscount
+                                ? round(
+                                    (($product->selling_price - $product->discount_price) / $product->selling_price) *
+                                        100,
+                                )
+                                : 0;
+                            $currentPrice = $hasDiscount ? $product->discount_price : $product->selling_price;
+                        @endphp
+
+                        <div class="product-card">
+                            <div class="product-badge product-badge-rank">
+                                {{ $index + 1 }}
+                                @if ($product->is_featured)
+                                    <span class="product-badge-rank-star">★</span>
+                                @endif
+                            </div>
+
+                            @if ($hasDiscount)
+                                <div class="product-badge product-badge-sale">
+                                    -{{ $discountPercentage }}%
+                                </div>
+                            @endif
+
+                            <a href="{{ route('products.show', $product->slug) }}" class="product-image-link">
+                                <div class="product-image">
+                                    @if ($product->thumbnail)
+                                        <img src="{{ asset('storage/' . ltrim($product->thumbnail, '/')) }}"
+                                            alt="{{ $product->name }}">
+                                    @else
+                                        <img src="{{ asset('frontend/images/p-1.jpg') }}" alt="{{ $product->name }}">
+                                    @endif
+                                </div>
+                            </a>
+
+                            <div class="product-info">
+                                <p class="product-category">{{ $product->category?->name ?? '—' }}</p>
+
+                                <a href="{{ route('products.show', $product->slug) }}" class="product-name-link">
+                                    <h3 class="product-name">{{ $product->name }}</h3>
+                                </a>
+
+                                <div class="product-price">
+                                    @if ($hasDiscount)
+                                        <span
+                                            class="product-price-old">${{ number_format($product->selling_price, 2) }}</span>
+                                    @endif
+                                    <span class="product-price-current">${{ number_format($currentPrice, 2) }}</span>
+                                </div>
+
+                                <div class="product-actions">
+                                    <a href="#" class="product-action-btn">
+                                        <i class="fas fa-heart"></i>
+                                    </a>
+                                    <a href="#" class="product-action-btn">
+                                        <i class="fas fa-shopping-cart"></i>
+                                    </a>
+                                    <a href="#" class="product-action-btn">
+                                        <i class="fas fa-search"></i>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    @endforeach
+                </div>
+            </div>
+        </section>
+    @endif
+
+    <!-- Trending Looks Section -->
+    @if ($trendingProducts->isNotEmpty())
+        @php
+            $featuredProduct = $trendingProducts->first();
+            $topPicks = $trendingProducts->slice(1);
+            $featuredHasDiscount =
+                $featuredProduct->discount_price !== null &&
+                $featuredProduct->discount_price < $featuredProduct->selling_price;
+            $featuredPrice = $featuredHasDiscount ? $featuredProduct->discount_price : $featuredProduct->selling_price;
+        @endphp
+
+        <section class="trending-section py-5">
+            <div class="container">
+                <div class="text-center mb-5">
+                    <p class="trending-badge mb-2">🔥 Super Sale</p>
+                    <h2 class="trending-heading">TRENDING LOOKS</h2>
+                    <p class="trending-subheading">
+                        Starting from only
+                        <span class="trending-price-highlight">${{ number_format($featuredPrice, 2) }}</span>
+                    </p>
+                </div>
+
+                <div class="row g-4">
+                    <!-- Featured -->
+                    <div class="col-12 col-lg-5">
+                        <div class="trending-featured h-100">
+                            <div class="trending-featured-image position-relative overflow-hidden">
+                                <a href="{{ route('products.show', $featuredProduct->slug) }}">
+                                    @if ($featuredProduct->thumbnail)
+                                        <img src="{{ asset('storage/' . ltrim($featuredProduct->thumbnail, '/')) }}"
+                                            alt="{{ $featuredProduct->name }}" class="img-fluid w-100 rounded">
+                                    @else
+                                        <img src="{{ asset('frontend/images/p-1.jpg') }}"
+                                            alt="{{ $featuredProduct->name }}" class="img-fluid w-100 rounded">
+                                    @endif
+                                </a>
+
+                                <div class="position-absolute top-0 start-0 p-3">
+                                    <span class="badge bg-dark px-3 py-2">NEW ARRIVAL</span>
+                                </div>
+                            </div>
+
+                            <div class="trending-featured-info p-4 bg-white shadow-sm rounded-bottom">
+                                <h3 class="h4 mb-2">{{ $featuredProduct->name }}</h3>
+                                <p class="text-muted mb-3">
+                                    {{ $featuredProduct->category?->name ?? 'Trending product collection' }}</p>
+
+                                <a href="{{ route('products.show', $featuredProduct->slug) }}"
+                                    class="btn trending-shop-btn">
+                                    Shop This Look
+                                    <i class="fas fa-arrow-right ms-2"></i>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Product List -->
+                    <div class="col-12 col-lg-7">
+                        <div class="bg-white shadow-sm rounded p-4 h-100">
+                            <div class="d-flex justify-content-between align-items-center mb-4">
+                                <h3 class="h5 mb-0">Top Picks for You</h3>
+
+                                <a href="{{ route('products.index') }}" class="text-decoration-none view-all-link">
+                                    View All <i class="fas fa-chevron-right ms-1"></i>
+                                </a>
+                            </div>
+
+                            <ul class="list-unstyled mb-0 trending-product-list">
+                                @foreach ($topPicks as $product)
+                                    @php
+                                        $hasDiscount =
+                                            $product->discount_price !== null &&
+                                            $product->discount_price < $product->selling_price;
+                                        $currentPrice = $hasDiscount
+                                            ? $product->discount_price
+                                            : $product->selling_price;
+                                    @endphp
+
+                                    <li
+                                        class="d-flex justify-content-between align-items-center py-3 {{ !$loop->last ? 'border-bottom' : '' }}">
+                                        <div class="d-flex align-items-center gap-3">
+                                            <a href="{{ route('products.show', $product->slug) }}">
+                                                @if ($product->thumbnail)
+                                                    <img src="{{ asset('storage/' . ltrim($product->thumbnail, '/')) }}"
+                                                        class="product-icon" alt="{{ $product->name }}">
+                                                @else
+                                                    <img src="{{ asset('frontend/images/p-1.jpg') }}"
+                                                        class="product-icon" alt="{{ $product->name }}">
+                                                @endif
+                                            </a>
+
+                                            <div class="product-name">
+                                                <a
+                                                    href="{{ route('products.show', $product->slug) }}">{{ $product->name }}</a>
+
+                                                @if ($hasDiscount)
+                                                    <small
+                                                        class="d-block text-decoration-line-through text-muted">${{ number_format($product->selling_price, 2) }}</small>
+                                                @endif
+                                            </div>
+                                        </div>
+
+                                        <div class="d-flex align-items-center gap-3">
+                                            <strong>${{ number_format($currentPrice, 2) }}</strong>
+
+                                            <a href="#" class="btn trending-add-cart-btn">
+                                                <i class="fas fa-shopping-cart"></i>
+                                            </a>
+                                        </div>
+                                    </li>
+                                @endforeach
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    @endif
+
+    {{-- Sale Products Section --}}
+    @if ($saleProducts->isNotEmpty())
+        <section class="products-section">
+            <div class="container">
+                <h2 class="products-section-title">Sale Products</h2>
+                <div class="sale-products">
+                    @foreach ($saleProducts as $product)
+                        @php
+                            $discountPercentage =
+                                $product->selling_price > 0
+                                    ? round(
+                                        (($product->selling_price - $product->discount_price) /
+                                            $product->selling_price) *
+                                            100,
+                                    )
+                                    : 0;
+                        @endphp
+
+                        <div class="product-card">
+                            @if ($discountPercentage > 0)
+                                <div class="product-badge product-badge-sale">-{{ $discountPercentage }}%</div>
+                            @endif
+
+                            <a href="{{ route('products.show', $product->slug) }}" class="product-image-link">
+                                <div class="product-image">
+                                    @if ($product->thumbnail)
+                                        <img src="{{ asset('storage/' . ltrim($product->thumbnail, '/')) }}"
+                                            alt="{{ $product->name }}">
+                                    @else
+                                        <span><i class="fas fa-image"></i></span>
+                                    @endif
+                                </div>
+                            </a>
+
+                            <div class="product-info">
+                                <p class="product-category">{{ $product->category?->name ?? '—' }}</p>
+
+                                <a href="{{ route('products.show', $product->slug) }}" class="product-name-link">
+                                    <h3 class="product-name">{{ $product->name }}</h3>
+                                </a>
+
+                                <div class="product-price">
+                                    @if ($product->selling_price > $product->discount_price)
+                                        <span
+                                            class="product-price-old">${{ number_format($product->selling_price, 2) }}</span>
+                                    @endif
+                                    <span
+                                        class="product-price-current">${{ number_format($product->discount_price, 2) }}</span>
+                                </div>
+
+                                <div class="product-actions">
+                                    <a href="#" class="product-action-btn"><i class="fas fa-heart"></i></a>
+                                    <a href="#" class="product-action-btn"><i class="fas fa-shopping-cart"></i></a>
+                                    <a href="{{ route('products.show', $product->slug) }}" class="product-action-btn"><i
+                                            class="fas fa-search"></i></a>
+                                </div>
+                            </div>
+                        </div>
+                    @endforeach
+                </div>
+            </div>
+        </section>
+    @endif
+
+    {{-- Big Sale Banner --}}
+    <section class="big-sale-banner-section">
+        <div class="container">
+            <div class="big-sale-banner">
+                <div class="banner-content">
+                    <div class="banner-text">
+                        <span class="big-sale-badge">BIG SALE</span>
+                        <div>
+                            <div class="banner-main-text">Up to <span class="highlight">50% OFF</span></div>
+                            <div class="banner-subtitle">Don't miss our biggest deals of the season.</div>
+                        </div>
+                    </div>
+                    <a href="{{ route('products.index') }}" class="view-sale-btn">View Sale</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    {{-- New Arrivals Section --}}
+    @if ($newArrivalsProducts->isNotEmpty())
+        <section class="products-section">
+            <div class="container">
+                <h2 class="products-section-title">New Arrivals</h2>
+                <div class="new-arrivals-products">
+                    @foreach ($newArrivalsProducts as $product)
+                        @php
+                            $hasDiscount =
+                                $product->discount_price !== null && $product->discount_price < $product->selling_price;
+                            $currentPrice = $hasDiscount ? $product->discount_price : $product->selling_price;
+                            $discountPercentage =
+                                $hasDiscount && $product->selling_price > 0
+                                    ? round(
+                                        (($product->selling_price - $product->discount_price) /
+                                            $product->selling_price) *
+                                            100,
+                                    )
+                                    : 0;
+                        @endphp
+
+                        <div class="product-card">
+                            @if ($hasDiscount)
+                                <div class="product-badge product-badge-sale">-{{ $discountPercentage }}%</div>
+                            @endif
+
+                            <a href="{{ route('products.show', $product->slug) }}" class="product-image-link">
+                                <div class="product-image">
+                                    @if ($product->thumbnail)
+                                        <img src="{{ asset('storage/' . ltrim($product->thumbnail, '/')) }}"
+                                            alt="{{ $product->name }}">
+                                    @else
+                                        <span><i class="fas fa-image"></i></span>
+                                    @endif
+                                </div>
+                            </a>
+
+                            <div class="product-info">
+                                <p class="product-category">{{ $product->category?->name ?? '—' }}</p>
+
+                                <a href="{{ route('products.show', $product->slug) }}" class="product-name-link">
+                                    <h3 class="product-name">{{ $product->name }}</h3>
+                                </a>
+
+                                <div class="product-price">
+                                    @if ($hasDiscount)
+                                        <span
+                                            class="product-price-old">${{ number_format($product->selling_price, 2) }}</span>
+                                    @endif
+                                    <span class="product-price-current">${{ number_format($currentPrice, 2) }}</span>
+                                </div>
+
+                                <div class="product-actions">
+                                    <a href="#" class="product-action-btn"><i class="fas fa-heart"></i></a>
+                                    <a href="#" class="product-action-btn"><i class="fas fa-shopping-cart"></i></a>
+                                    <a href="{{ route('products.show', $product->slug) }}" class="product-action-btn"><i
+                                            class="fas fa-search"></i></a>
+                                </div>
+                            </div>
+                        </div>
+                    @endforeach
+                </div>
+            </div>
+        </section>
+    @endif
+
+    <button id="backToTop" class="back-to-top" type="button">
+        <i class="fas fa-arrow-up"></i>
+    </button>
+@endsection
+
+@push('scripts')
+    <script>
+        $(document).ready(function() {
+            $('.top-ten-products').slick({
+                dots: false,
+                arrows: true,
+                infinite: true,
+                speed: 400,
+                slidesToShow: 4,
+                slidesToScroll: 4,
+                autoplay: false,
+                prevArrow: '<button type="button" class="slick-prev"><i class="fas fa-chevron-left"></i></button>',
+                nextArrow: '<button type="button" class="slick-next"><i class="fas fa-chevron-right"></i></button>',
+                responsive: [{
+                        breakpoint: 1200,
+                        settings: {
+                            slidesToShow: 4,
+                            slidesToScroll: 4
+                        }
+                    },
+                    {
+                        breakpoint: 1024,
+                        settings: {
+                            slidesToShow: 3,
+                            slidesToScroll: 3
+                        }
+                    },
+                    {
+                        breakpoint: 768,
+                        settings: {
+                            slidesToShow: 2,
+                            slidesToScroll: 2
+                        }
+                    }
+                ]
+            });
+
+            $('.hero-slider').slick({
+                dots: true,
+                arrows: true,
+                infinite: true,
+                speed: 600,
+                autoplay: true,
+                autoplaySpeed: 4000,
+                fade: true,
+                cssEase: 'linear',
+                prevArrow: '<button type="button" class="slick-prev"><i class="fas fa-chevron-left"></i></button>',
+                nextArrow: '<button type="button" class="slick-next"><i class="fas fa-chevron-right"></i></button>'
+            });
+        });
+
+        const backToTop = document.getElementById("backToTop");
+
+        if (backToTop) {
+            window.addEventListener("scroll", () => {
+                if (window.scrollY > 300) {
+                    backToTop.classList.add("show");
+                } else {
+                    backToTop.classList.remove("show");
+                }
+            });
+
+            backToTop.addEventListener("click", () => {
+                window.scrollTo({
+                    top: 0,
+                    behavior: "smooth"
+                });
+            });
+        }
+    </script>
+@endpush
