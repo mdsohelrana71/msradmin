@@ -7,6 +7,7 @@ use App\Http\Controllers\Admin\RoleController;
 use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\Admin\BrandController;
 use App\Http\Controllers\Admin\OrderController;
+use App\Http\Controllers\Admin\SliderController;
 use App\Http\Controllers\Admin\CouponController;
 use App\Http\Controllers\Admin\ProductController;
 use App\Http\Controllers\Admin\AccountController;
@@ -71,7 +72,7 @@ Route::middleware('auth')->prefix('admin')->name('admin.')->group(function () {
         ]);
 
     Route::resource('customers', CustomerController::class)->only(['index', 'show', 'update']);
-
+    Route::resource('sliders', SliderController::class);
     Route::resource('store-designs', StoreDesignController::class)->only(['index', 'edit', 'update']);
 
     Route::post('/cache/clear', function () {

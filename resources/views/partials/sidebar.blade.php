@@ -610,13 +610,46 @@
                 @endcanany
 
                 {{-- ==================== SETTINGS ==================== --}}
-                @can(['settings.view', 'store-settings.view','store-designs.view'])
+                @can(['settings.view', 'store-settings.view','store-designs.view', 'sliders.view'])
                     <li class="nav-section">
                         <span class="sidebar-mini-icon">
                             <i class="fa fa-ellipsis-h"></i>
                         </span>
                         <h4 class="text-section">Settings Management</h4>
                     </li>
+
+                    {{-- Sliders --}}
+                    @canany(['sliders.view', 'sliders.create', 'sliders.edit', 'sliders.delete'])
+                        <li class="nav-item {{ request()->routeIs('admin.sliders.*') ? 'active' : '' }}">
+                            <a
+                                data-bs-toggle="collapse"
+                                href="#sliders"
+                                class="{{ request()->routeIs('admin.sliders.*') ? '' : 'collapsed' }}"
+                                aria-expanded="{{ request()->routeIs('admin.sliders.*') ? 'true' : 'false' }}">
+                                <i class="fas fa-images"></i>
+                                <p>Sliders</p>
+                                <span class="caret"></span>
+                            </a>
+                            <div class="collapse {{ request()->routeIs('admin.sliders.*') ? 'show' : '' }}" id="sliders">
+                                <ul class="nav nav-collapse">
+                                    @can('sliders.view')
+                                        <li class="{{ request()->routeIs('admin.sliders.index') ? 'active' : '' }}">
+                                            <a href="{{ route('admin.sliders.index') }}">
+                                                <span class="sub-item">All Sliders</span>
+                                            </a>
+                                        </li>
+                                    @endcan
+                                    @can('sliders.create')
+                                        <li class="{{ request()->routeIs('admin.sliders.create') ? 'active' : '' }}">
+                                            <a href="{{ route('admin.sliders.create') }}">
+                                                <span class="sub-item">Create Slider</span>
+                                            </a>
+                                        </li>
+                                    @endcan
+                                </ul>
+                            </div>
+                        </li>
+                    @endcanany
 
                     @can('store-designs.view')
                         <li class="nav-item {{ request()->routeIs('admin.store-designs.*') ? 'active' : '' }}">
