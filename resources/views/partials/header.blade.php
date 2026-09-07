@@ -235,6 +235,11 @@
                         </div>
                     </div>
                 </li>
+                <li class="nav-item topbar-icon dropdown hidden-caret">
+                    <a class="nav-link" href="{{ route('home') }}" target="_blank" aria-expanded="false" title="Visit Store">
+                        <i class="fas fa-store"></i>
+                    </a>
+                </li>
                 <li class="nav-item topbar-user dropdown hidden-caret">
                     <a class="dropdown-toggle profile-pic" data-bs-toggle="dropdown" href="#" aria-expanded="false">
                         <div class="avatar-sm">

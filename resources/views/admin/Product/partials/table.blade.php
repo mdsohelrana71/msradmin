@@ -91,10 +91,12 @@
                             {{ number_format($product->selling_price, 2) }}
                         </div>
 
-                        @if ($product->discount_price)
+                        @if($product->discount_price && $product->discount_price < $product->selling_price)
+                            @php
+                                $discountAmount = $product->selling_price - $product->discount_price;
+                            @endphp
                             <small class="text-success">
-                                Discount:
-                                {{ number_format($product->discount_price, 2) }}
+                                Discount: ${{ number_format($discountAmount, 2) }}
                             </small>
                         @endif
                     </td>
