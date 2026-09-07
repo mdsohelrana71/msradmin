@@ -27,25 +27,40 @@ class AppServiceProvider extends ServiceProvider
     {
         Route::aliasMiddleware('permission', EnsurePermission::class);
 
-        $names = ['site_name', 'site_email', 'site_phone', 'site_logo', 'site_favicon', 'logo_header_color', 'topbar_color', 'sidebar_color'];
+        $names = [
+            'site_name',
+            'site_email',
+            'site_phone',
+            'site_logo',
+            'site_favicon',
+            'logo_header_color',
+            'topbar_color',
+            'sidebar_color',
+            'facebook_url',
+            'twitter_url',
+            'instagram_url',
+        ];
+
         $defaults = [
             'site_name' => config('app.name'),
             'site_email' => '',
             'site_phone' => '',
             'site_logo' => '',
             'site_favicon' => '',
-
             'logo_header_color' => 'dark',
-            'topbar_color'      => 'white',
-            'sidebar_color'     => 'dark',
+            'topbar_color' => 'white',
+            'sidebar_color' => 'dark',
+            'facebook_url' => '',
+            'twitter_url' => '',
+            'instagram_url' => '',
         ];
 
         try {
             $settings = Schema::hasTable('options')
                 ? Option::getSettings($names, $defaults)
-                : $defaults;
+                : (object) $defaults;
         } catch (QueryException) {
-            $settings = $defaults;
+            $settings = (object) $defaults;
         }
 
         View::share('settings', $settings);

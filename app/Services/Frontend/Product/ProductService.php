@@ -19,7 +19,7 @@ class ProductService
         $this->designOneProductService = $designOneProductService;
     }
 
-    public function getProducts()
+    public function getProducts(): array
     {
         return match ($this->designManager->getActiveTemplate()) {
             'design-1' => $this->designOneProductService->getProducts(),

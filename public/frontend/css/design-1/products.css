@@ -316,6 +316,44 @@
     margin-bottom: 0;
 }
 
+.filter-content {
+    display: none;
+}
+
+.filter-content.show {
+    display: block;
+}
+
+.section-header {
+    cursor: pointer;
+}
+
+.custom-offcanvas .offcanvas-body {
+    padding-bottom: 85px;
+}
+
+.custom-offcanvas .filter-actions {
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    margin-top: 0 !important;
+    padding: 15px;
+    background: #fff;
+    border-top: 1px solid #eee;
+    z-index: 10;
+}
+
+.filter-actions {
+    display: flex;
+    gap: 8px;
+}
+
+.filter-actions .btn {
+    flex: 1;
+    width: 50%;
+}
+
 /* Mobile */
 @media (max-width: 767px) {
     .container-fluid{

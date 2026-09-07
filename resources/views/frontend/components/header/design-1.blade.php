@@ -38,9 +38,21 @@
                 </div>
             </div>
             <div class="mobile-top-icons">
-                <a href="#" class="facebook"><i class="fab fa-facebook-f"></i></a>
-                <a href="#" class="x"><i class="fa-brands fa-x-twitter"></i></a>
-                <a href="#" class="instagram"><i class="fab fa-instagram"></i></a>
+                @if (!empty($settings->facebook_url))
+                    <a href="{{ $settings->facebook_url }}" class="facebook" target="_blank" rel="noopener">
+                        <i class="fab fa-facebook-f"></i>
+                    </a>
+                @endif
+                @if (!empty($settings->twitter_url))
+                    <a href="{{ $settings->twitter_url }}" class="x" target="_blank" rel="noopener">
+                        <i class="fa-brands fa-x-twitter"></i>
+                    </a>
+                @endif
+                @if (!empty($settings->instagram_url))
+                    <a href="{{ $settings->instagram_url }}" class="instagram" target="_blank" rel="noopener">
+                        <i class="fab fa-instagram"></i>
+                    </a>
+                @endif
             </div>
         </div>
     </div>
@@ -55,17 +67,6 @@
                 <span>FREE Express Shipping On Orders $99+</span>
             </div>
             <div class="right-section">
-                <div class="hover-dropdown">
-                    <button type="button" class="hover-dropdown-trigger">
-                        <span class="dropdown-value">USD</span>
-                        <i class="fas fa-chevron-down"></i>
-                    </button>
-                    <ul class="hover-dropdown-menu">
-                        <li><a href="#" data-value="USD">USD</a></li>
-                        <li><a href="#" data-value="EUR">EUR</a></li>
-                        <li><a href="#" data-value="GBP">GBP</a></li>
-                    </ul>
-                </div>
                 <div class="hover-dropdown lang-dropdown">
                     <span class="flag-icon us-flag desktop-flag"></span>
                     <button type="button" class="hover-dropdown-trigger">
@@ -74,19 +75,30 @@
                     </button>
                     <ul class="hover-dropdown-menu">
                         <li><a href="#" data-value="Eng">Eng</a></li>
-                        <li><a href="#" data-value="Esp">Esp</a></li>
-                        <li><a href="#" data-value="Fra">Fra</a></li>
+                        <li><a href="#" data-value="Esp">বাংলা</a></li>
                     </ul>
                 </div>
                 <div class="info-links">
                     <a href="#">Contact Us</a>
                     <a href="#">Cart</a>
-                    <a href="#">Log In</a>
+                    <a href="{{ route('login') }}">Log In</a>
                 </div>
                 <div class="social-icons">
-                    <a href="#" class="facebook"><i class="fab fa-facebook-f"></i></a>
-                    <a href="#" class="x"><i class="fa-brands fa-x-twitter"></i></a>
-                    <a href="#" class="instagram"><i class="fab fa-instagram"></i></a>
+                    @if (!empty($settings->facebook_url))
+                        <a href="{{ $settings->facebook_url }}" class="facebook" target="_blank" rel="noopener">
+                            <i class="fab fa-facebook-f"></i>
+                        </a>
+                    @endif
+                    @if (!empty($settings->twitter_url))
+                        <a href="{{ $settings->twitter_url }}" class="x" target="_blank" rel="noopener">
+                            <i class="fa-brands fa-x-twitter"></i>
+                        </a>
+                    @endif
+                    @if (!empty($settings->instagram_url))
+                        <a href="{{ $settings->instagram_url }}" class="instagram" target="_blank" rel="noopener">
+                            <i class="fab fa-instagram"></i>
+                        </a>
+                    @endif
                 </div>
             </div>
         </div>

@@ -28,6 +28,7 @@ class DesignOneHomeService
             ->whereNull('parent_id')
             ->where('status', true)
             ->where('type', 'product')
+            ->orderBy('sort_order', 'asc')
             ->latest('id')
             ->get();
 

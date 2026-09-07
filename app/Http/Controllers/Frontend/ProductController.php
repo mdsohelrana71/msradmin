@@ -22,11 +22,11 @@ class ProductController extends Controller
 
     public function index()
     {
-        $products = $this->productService->getProducts();
+        $data = $this->productService->getProducts();
 
         return view(
             $this->designManager->getPageView('product_listing'),
-            compact('products')
+            $data
         );
     }
 
