@@ -184,4 +184,14 @@ return [
             'store-designs.edit' => 'Edit store designs',
         ],
     ],
+    
+    'sliders' => [
+        'label' => 'Sliders',
+        'permissions' => [
+            'sliders.view' => 'View sliders',
+            'sliders.create' => 'Create sliders',
+            'sliders.edit' => 'Edit sliders',
+            'sliders.delete' => 'Delete sliders',
+        ],
+    ],
 ];

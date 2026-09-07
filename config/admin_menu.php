@@ -145,4 +145,10 @@ return [
         'icon' => 'fa fa-paint-brush',
         'permission' => 'store-designs.view',
     ],
+    [
+        'title' => 'Sliders',
+        'route' => 'admin.sliders.index',
+        'icon' => 'ti ti-slideshow',
+        'permission' => 'sliders.view',
+    ],
 ];
