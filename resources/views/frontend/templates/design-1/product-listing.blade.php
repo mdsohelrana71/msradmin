@@ -101,9 +101,9 @@
                             @endif
 
                             <!-- Quick View Button -->
-                            <button type="button" class="quick-view-btn" onclick="event.preventDefault();">
+                            <a href="{{ route('products.show', $product->slug) }}" class="quick-view-btn text-decoration-none">
                                 <i class="fa-regular fa-eye"></i>Quick View
-                            </button>
+                            </a>
                         </a>
 
                         <div class="product-info">

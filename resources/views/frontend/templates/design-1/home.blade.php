@@ -3,36 +3,90 @@
 @section('title', config('app.name'))
 
 @section('content')
+    <!-- Categories Section -->
+    <div class="category-section">
+        <div class="categories-container container">
+            <a href="#" class="category-item">
+                <div class="hamburger-menu">
+                    <i class="fas fa-bars"></i>
+                </div>
+                <div class="category-name">Categories</div>
+            </a>
+
+            @foreach ($categories as $category)
+                <a href="{{ route('products.index', ['category' => $category->slug]) }}" class="category-item">
+                    <div class="category-circle">
+                        @if ($category->image)
+                            <img src="{{ asset('storage/' . $category->image) }}"
+                                alt="{{ $category->name }}">
+                        @endif
+                    </div>
+                    <div class="category-name">{{ $category->name }}</div>
+                </a>
+            @endforeach
+        </div>
+    </div>
+
+    <!-- Mobile Menu -->
+    <div class="mobile-menu" id="mobileMenu">
+        <div class="mobile-menu-content">
+            <a href="#" class="mobile-category-item category-bars">
+                <div class="mobile-category-icon mt-1">
+                    <i class="fas fa-bars"></i>
+                </div>
+                <span>Categories</span>
+            </a>
+
+            @foreach ($categories as $category)
+                <a href="{{ route('products.index', ['category' => $category->slug]) }}"
+                    class="mobile-category-item">
+                    <div class="mobile-category-icon">
+                        @if ($category->image)
+                            <img src="{{ asset('storage/' . $category->image) }}"
+                                alt="{{ $category->name }}">
+                        @endif
+                    </div>
+                    <span>{{ $category->name }}</span>
+                </a>
+            @endforeach
+        </div>
+    </div>
+
     {{-- Hero Slider --}}
     <section class="hero-slider">
-        <div class="slider-item" style="background-image: url('{{ asset('frontend/images/slider-1.jpg') }}');">
-            <div class="slider-overlay"></div>
-            <div class="slider-content">
-                <h1 class="slider-title">Discover Your Style</h1>
-                <p class="slider-subtitle">Explore our latest collection and find something perfect for you.</p>
-                <a href="{{ route('products.index') }}" class="slider-btn">Shop Now</a>
+        @forelse ($sliders as $slider)
+            <div class="slider-item" style="background-image: url('{{ asset('storage/' . $slider->image) }}');">
+                <div class="slider-overlay"></div>
+                <div class="slider-content">
+                    @if ($slider->title)
+                        <h1 class="slider-title">{{ $slider->title }}</h1>
+                    @endif
+
+                    @if ($slider->subtitle)
+                        <p class="slider-subtitle">{{ $slider->subtitle }}</p>
+                    @endif
+
+                    @if ($slider->button_text && $slider->button_url)
+                        <a href="{{ $slider->button_url }}" class="slider-btn">
+                            {{ $slider->button_text }}
+                        </a>
+                    @endif
+                </div>
             </div>
-        </div>
-        <div class="slider-item" style="background-image: url('{{ asset('frontend/images/slider-2.jpg') }}');">
-            <div class="slider-overlay"></div>
-            <div class="slider-content">
-                <h1 class="slider-title">New Season Collection</h1>
-                <p class="slider-subtitle">Fresh styles, premium quality and amazing prices.</p>
-                <a href="{{ route('products.index') }}" class="slider-btn">Explore Now</a>
+        @empty
+            <div class="slider-item" style="background-image: url('{{ asset('frontend/images/slider-1.jpg') }}');">
+                <div class="slider-overlay"></div>
+                <div class="slider-content">
+                    <h1 class="slider-title">Discover Your Style</h1>
+                    <p class="slider-subtitle">Explore our latest collection and find something perfect for you.</p>
+                    <a href="{{ route('products.index') }}" class="slider-btn">Shop Now</a>
+                </div>
             </div>
-        </div>
-        <div class="slider-item" style="background-image: url('{{ asset('frontend/images/slider-3.jpg') }}');">
-            <div class="slider-overlay"></div>
-            <div class="slider-content">
-                <h1 class="slider-title">Style That Speaks</h1>
-                <p class="slider-subtitle">Upgrade your wardrobe with our latest products.</p>
-                <a href="{{ route('products.index') }}" class="slider-btn">Shop Collection</a>
-            </div>
-        </div>
+        @endforelse
     </section>
 
     {{-- Trust Features --}}
-    <section class="py-4 border-bottom">
+    <section class="py-4">
         <div class="container">
             <div class="row text-center g-4">
                 <div class="col-6 col-lg-3">
@@ -104,8 +158,6 @@
                             </a>
 
                             <div class="product-info">
-                                <p class="product-category">{{ $product->category?->name ?? '—' }}</p>
-
                                 <a href="{{ route('products.show', $product->slug) }}" class="product-name-link">
                                     <h3 class="product-name">{{ $product->name }}</h3>
                                 </a>
@@ -291,8 +343,6 @@
                             </a>
 
                             <div class="product-info">
-                                <p class="product-category">{{ $product->category?->name ?? '—' }}</p>
-
                                 <a href="{{ route('products.show', $product->slug) }}" class="product-name-link">
                                     <h3 class="product-name">{{ $product->name }}</h3>
                                 </a>
@@ -376,8 +426,6 @@
                             </a>
 
                             <div class="product-info">
-                                <p class="product-category">{{ $product->category?->name ?? '—' }}</p>
-
                                 <a href="{{ route('products.show', $product->slug) }}" class="product-name-link">
                                     <h3 class="product-name">{{ $product->name }}</h3>
                                 </a>

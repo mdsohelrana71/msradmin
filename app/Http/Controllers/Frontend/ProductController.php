@@ -5,39 +5,38 @@ namespace App\Http\Controllers\Frontend;
 use App\Http\Controllers\Controller;
 use App\Models\Product;
 use App\Services\Frontend\DesignManager;
+use App\Services\Frontend\Product\ProductService;
 
 class ProductController extends Controller
 {
     protected DesignManager $designManager;
+    protected ProductService $productService;
 
-    public function __construct(DesignManager $designManager)
-    {
+    public function __construct(
+        DesignManager $designManager,
+        ProductService $productService
+    ) {
         $this->designManager = $designManager;
+        $this->productService = $productService;
     }
 
     public function index()
     {
-        $query = Product::query()
-            ->where('status', true)
-            ->with(['images']);
+        $products = $this->productService->getProducts();
 
-        $sort = request('sort', 'newest');
-
-        match ($sort) {
-            'priceLowHigh' => $query->orderBy('selling_price'),
-            'priceHighLow' => $query->orderByDesc('selling_price'),
-            default => $query->latest('created_at'),
-        };
-
-        $products = $query->paginate(12)->withQueryString();
-
-        return view($this->designManager->getPageView('product_listing'), compact('products'));
+        return view(
+            $this->designManager->getPageView('product_listing'),
+            compact('products')
+        );
     }
 
     public function show(Product $product)
     {
-        abort_unless($product->status, 404);
+        $product = $this->productService->getProduct($product);
 
-        return view($this->designManager->getPageView('product_details'), compact('product'));
+        return view(
+            $this->designManager->getPageView('product_details'),
+            compact('product')
+        );
     }
 }

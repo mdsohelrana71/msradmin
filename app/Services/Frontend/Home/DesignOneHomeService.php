@@ -2,15 +2,37 @@
 
 namespace App\Services\Frontend\Home;
 
+use App\Models\Category;
 use App\Models\Product;
+use App\Models\Slider;
 
 class DesignOneHomeService
 {
     public function getData(): array
     {
-        $baseQuery = Product::query()
+        $sliders = Slider::query()
             ->where('status', true)
-            ->with('category:id,name');
+            ->where(function ($query) {
+                $query->whereNull('start_at')
+                    ->orWhere('start_at', '<=', now());
+            })
+            ->where(function ($query) {
+                $query->whereNull('end_at')
+                    ->orWhere('end_at', '>=', now());
+            })
+            ->orderBy('sort_order')
+            ->latest('id')
+            ->get();
+        
+        $categories = Category::query()
+            ->whereNull('parent_id')
+            ->where('status', true)
+            ->where('type', 'product')
+            ->latest('id')
+            ->get();
+
+        $baseQuery = Product::query()
+            ->where('status', true);
 
         $topTenProducts = (clone $baseQuery)
             ->where('is_featured', true)
@@ -32,10 +54,12 @@ class DesignOneHomeService
 
         $newArrivalsProducts = (clone $baseQuery)
             ->latest('created_at')
-            ->take(6)
+            ->take(5)
             ->get();
 
         return [
+            'sliders' => $sliders,
+            'categories' => $categories,
             'topTenProducts' => $topTenProducts,
             'trendingProducts' => $trendingProducts,
             'saleProducts' => $saleProducts,

@@ -133,114 +133,6 @@
     </div>
 </div>
 
-<!-- Categories Section -->
-<div class="category-section">
-    <div class="categories-container container">
-        <a href="#" class="category-item">
-            <div class="hamburger-menu">
-                <i class="fas fa-bars"></i>
-            </div>
-            <div class="category-name">Categories</div>
-        </a>
-        <a href="#" class="category-item">
-            <div class="category-circle">
-                <img src="{{ asset('frontend/images/cat1.jpg') }}" alt="Women">
-            </div>
-            <div class="category-name">Women</div>
-        </a>
-        <a href="#" class="category-item">
-            <div class="category-circle">
-                <img src="{{ asset('frontend/images/cat2.jpg') }}" alt="Men">
-            </div>
-            <div class="category-name">Men</div>
-        </a>
-        <a href="#" class="category-item">
-            <div class="category-circle">
-                <img src="{{ asset('frontend/images/cat7.jpg') }}" alt="Teen">
-            </div>
-            <div class="category-name">Teen</div>
-        </a>
-        <a href="#" class="category-item">
-            <div class="category-circle">
-                <img src="{{ asset('frontend/images/cat3.jpg') }}" alt="Girls">
-            </div>
-            <div class="category-name">Girls</div>
-        </a>
-        <a href="#" class="category-item">
-            <div class="category-circle">
-                <img src="{{ asset('frontend/images/cat4.jpg') }}" alt="Boys">
-            </div>
-            <div class="category-name">Boys</div>
-        </a>
-        <a href="#" class="category-item">
-            <div class="category-circle">
-                <img src="{{ asset('frontend/images/cat5.jpg') }}" alt="Baby">
-            </div>
-            <div class="category-name">Baby</div>
-        </a>
-        <a href="#" class="category-item">
-            <div class="category-circle">
-                <img src="{{ asset('frontend/images/cat6.jpg') }}" alt="Accessories">
-            </div>
-            <div class="category-name">Accessories</div>
-        </a>
-    </div>
-</div>
-
-<!-- Mobile Menu -->
-<div class="mobile-menu" id="mobileMenu">
-    <div class="mobile-menu-content">
-        <a href="#" class="mobile-category-item category-bars">
-            <div class="mobile-category-icon mt-1">
-                <i class="fas fa-bars"></i>
-            </div>
-            <span>Categories</span>
-        </a>
-        <a href="#" class="mobile-category-item">
-            <div class="mobile-category-icon">
-                <img src="{{ asset('frontend/images/cat1.jpg') }}" alt="Women">
-            </div>
-            <span>Women</span>
-        </a>
-        <a href="#" class="mobile-category-item">
-            <div class="mobile-category-icon">
-                <img src="{{ asset('frontend/images/cat2.jpg') }}" alt="Men">
-            </div>
-            <span>Men</span>
-        </a>
-        <a href="#" class="mobile-category-item">
-            <div class="mobile-category-icon">
-                <img src="{{ asset('frontend/images/cat7.jpg') }}" alt="Teen">
-            </div>
-            <span>Teen</span>
-        </a>
-        <a href="#" class="mobile-category-item">
-            <div class="mobile-category-icon">
-                <img src="{{ asset('frontend/images/cat3.jpg') }}" alt="Girls">
-            </div>
-            <span>Girls</span>
-        </a>
-        <a href="#" class="mobile-category-item">
-            <div class="mobile-category-icon">
-                <img src="{{ asset('frontend/images/cat4.jpg') }}" alt="Boys">
-            </div>
-            <span>Boys</span>
-        </a>
-        <a href="#" class="mobile-category-item">
-            <div class="mobile-category-icon">
-                <img src="{{ asset('frontend/images/cat5.jpg') }}" alt="Baby">
-            </div>
-            <span>Baby</span>
-        </a>
-        <a href="#" class="mobile-category-item">
-            <div class="mobile-category-icon">
-                <img src="{{ asset('frontend/images/cat6.jpg') }}" alt="Accessories">
-            </div>
-            <span>Accessories</span>
-        </a>
-    </div>
-</div>
-
 <div class="mobile-menu-overlay" id="mobileMenuOverlay"></div>
 
 @push('scripts')
@@ -275,9 +167,6 @@ document.addEventListener('DOMContentLoaded', function() {
         if (mobileMenu) {
             mobileMenu.classList.remove('active');
         }
-        if (mobileMenuOverlay) {
-            mobileMenuOverlay.classList.remove('active');
-        }
         document.body.classList.remove('menu-open');
     }
 
@@ -289,9 +178,6 @@ document.addEventListener('DOMContentLoaded', function() {
         mobileMenuClose.addEventListener('click', closeMobileMenu);
     }
 
-    if (mobileMenuOverlay) {
-        mobileMenuOverlay.addEventListener('click', closeMobileMenu);
-    }
 });
 </script>
 @endpush

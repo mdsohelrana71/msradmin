@@ -422,7 +422,7 @@ body, html {
 /* New Arrivals Products Slider - Same style as top-ten-products */
 .new-arrivals-products {
     display: grid;
-    grid-template-columns: repeat(6, 1fr);
+    grid-template-columns: repeat(5, 1fr);
     gap: 20px;
 }
 

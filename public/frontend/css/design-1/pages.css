@@ -1,0 +1,200 @@
+
+:root {
+    --bg-light: #f8f9fa;
+    --white: #fff;
+    --border: #e9ecef;
+    --danger: #dc3545;
+    --shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+}
+
+/* Main Section */
+.main {
+    background: var(--bg-light);
+    padding: 1px 0;
+}
+
+/* Contact Card */
+.contact-card {
+    background: var(--white);
+    box-shadow: var(--shadow);
+    overflow: hidden;
+}
+
+/* Left Panel */
+.left-panel {
+    background: var(--bg-light);
+    padding: 40px 30px;
+    border-right: 1px solid #eee;
+}
+
+.sidebar-header{
+    font-weight: 700;
+}
+
+.contact-card i, .contact-email{
+    color: var(--primary);
+}
+
+
+/* Form Inputs */
+.form-control {
+    border: 2px solid var(--border);
+    padding: 12px 16px;
+    transition: all 0.3s ease;
+}
+
+.form-control:focus {
+    border-color: var(--primary);
+    box-shadow: 0 0 0 0.2rem rgba(13, 110, 253, 0.15);
+}
+
+/* Phone Prefix */
+.phone-prefix {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 12px;
+    background: var(--white);
+    border: 2px solid var(--border);
+    border-right: none;
+}
+
+/* Submit Button */
+.btn-send {
+    padding: 12px 40px;
+    background: var(--primary);
+    color: var(--white);
+    border: none;
+    font-weight: 500;
+    border-radius: 0%;
+    transition: all 0.3s ease;
+}
+
+.btn-send:hover {
+    background: var(--secondary);
+    color: var(--white);
+}
+
+/* Required Mark */
+.required {
+    color: var(--danger);
+}
+
+.sidebar {
+    background: white;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.06);
+    height: fit-content;
+}
+.nav-link {
+    color: #495057;
+    padding: 14px 20px;
+    border-radius: 8px;
+    margin: 4px 8px;
+    font-weight: 500;
+}
+.nav-link:hover, .nav-link:focus, .nav-link.active {
+    color: var(--primary);
+}
+
+.page-title {
+    font-size: 28px;
+    font-weight: 700;
+    margin-bottom: 25px;
+}
+
+.content-area {
+    background: white;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.06);
+    padding: 40px;
+}
+
+/* FAQ Section */
+
+.faq-question {
+    font-weight: 600;
+    font-size: 1.1rem;
+}
+
+.accordion-button:not(.collapsed){
+    background: var(--brand-light);
+    border: 1px solid var(--primary);
+}
+.accordion-button:focus{
+    border-color:var(--primary);
+    box-shadow: none;
+}
+
+/* Our Stores */
+
+.store-card {
+    border: 1px solid #e9ecef;
+    transition: all 0.3s;
+}
+
+.store-card:hover {
+    border: 1px solid var(--secondary);
+}
+
+.map-placeholder {
+    height: 200px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #6c757d;
+    font-size: 1.1rem;
+}
+
+.content-area i{
+    color: var(--primary);
+}
+
+.card-img-top.blog-img{
+    height: 250px;
+    object-fit: cover;
+}
+
+.blog-banner{
+    width: 100%;
+    height: 400px;
+    object-fit: cover;
+}
+
+.start-referring{
+    background: var(--brand-light);
+}
+
+
+@media (max-width: 992px) {
+    .sidebar {
+        margin-bottom: 30px;
+    }
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .left-panel {
+        padding: 30px 20px;
+        border-right: none;
+        border-bottom: 1px solid #eee;
+    }
+
+    .sidebar{
+        display: none;
+    }
+
+    .btn-send {
+        width: 100%;
+    }
+
+    .content-area {
+        padding: 20px;
+    }
+
+    .card-img-top.blog-img{
+        height: 200px;
+    }
+
+    .blog-banner{
+        height: 220px;
+    }
+}

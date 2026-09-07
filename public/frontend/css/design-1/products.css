@@ -88,7 +88,7 @@
 }
 
 .product-card:hover .quick-view-btn {
-    bottom: 20px;                     /* Slides up */
+    bottom: 25%;                     /* Slides up */
     opacity: 1;
     visibility: visible;
 }
