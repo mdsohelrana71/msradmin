@@ -11,6 +11,10 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.8.1/slick-theme.min.css">
     <link rel="stylesheet" href="{{ asset('frontend/css/design-1/common.css') }}">
     <link rel="stylesheet" href="{{ asset('frontend/css/design-1/home.css') }}">
+
+    <link rel="stylesheet" href="{{ asset('frontend/css/design-1/listing.css') }}">
+    <link rel="stylesheet" href="{{ asset('frontend/css/design-2/card.css') }}">
+
     @stack('styles')
 </head>
 <body>

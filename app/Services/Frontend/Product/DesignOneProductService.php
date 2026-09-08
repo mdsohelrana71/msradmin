@@ -1,12 +1,8 @@
 <?php
-
 namespace App\Services\Frontend\Product;
-
 use App\Models\Category;
 use App\Models\Product;
 use App\Models\ProductAttribute;
-use Illuminate\Pagination\LengthAwarePaginator;
-
 class DesignOneProductService
 {
     public function getProducts(): array
@@ -14,14 +10,11 @@ class DesignOneProductService
         $query = Product::query()
             ->where('status', true)
             ->with(['images', 'category']);
-
         $this->applyCategoryFilter($query);
         $this->applyPriceFilter($query);
         $this->applyAttributeFilters($query);
         $this->applySorting($query);
-
         $products = $query->paginate(12)->withQueryString();
-
         $categories = Category::query()
             ->active()
             ->ofType('product')
@@ -30,7 +23,6 @@ class DesignOneProductService
             ->orderBy('sort_order')
             ->latest('id')
             ->get();
-
         $attributes = ProductAttribute::query()
             ->where('status', true)
             ->with([
@@ -42,42 +34,29 @@ class DesignOneProductService
             ->orderBy('sort_order')
             ->latest('id')
             ->get();
-
         return [
             'products' => $products,
             'categories' => $categories,
             'attributes' => $attributes,
         ];
     }
-
     public function getProduct(Product $product): Product
     {
         abort_unless($product->status, 404);
-
         return $product;
     }
-
     private function applyCategoryFilter($query): void
     {
         $categories = array_filter((array) request('category', []));
-
-        if (!$categories) {
-            return;
-        }
-
+        if (!$categories) return;
         $query->whereHas('category', function ($query) use ($categories) {
             $query->whereIn('slug', $categories);
         });
     }
-
     private function applyPriceFilter($query): void
     {
         $prices = array_filter((array) request('price', []));
-
-        if (!$prices) {
-            return;
-        }
-
+        if (!$prices) return;
         $query->where(function ($query) use ($prices) {
             foreach ($prices as $price) {
                 match ($price) {
@@ -94,20 +73,14 @@ class DesignOneProductService
             }
         });
     }
-
     private function applyAttributeFilters($query): void
     {
         $attributes = ProductAttribute::query()
             ->where('status', true)
             ->get(['id', 'slug']);
-
         foreach ($attributes as $attribute) {
             $values = array_filter((array) request($attribute->slug, []));
-
-            if (!$values) {
-                continue;
-            }
-
+            if (!$values) continue;
             $query->whereHas('variants.values', function ($query) use ($attribute, $values) {
                 $query->where('attribute_id', $attribute->id)
                     ->whereHas('attributeValue', function ($query) use ($values) {
@@ -116,7 +89,6 @@ class DesignOneProductService
             });
         }
     }
-
     private function applySorting($query): void
     {
         match (request('sort', 'newest')) {

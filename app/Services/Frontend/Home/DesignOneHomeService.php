@@ -5,9 +5,16 @@ namespace App\Services\Frontend\Home;
 use App\Models\Category;
 use App\Models\Product;
 use App\Models\Slider;
+use App\Services\Frontend\DesignManager;
 
 class DesignOneHomeService
 {
+
+    protected DesignManager $designManager;
+    public function __construct(DesignManager $designManager)
+    {
+        $this->designManager = $designManager;
+    }
     public function getData(): array
     {
         $sliders = Slider::query()
@@ -65,6 +72,7 @@ class DesignOneHomeService
             'trendingProducts' => $trendingProducts,
             'saleProducts' => $saleProducts,
             'newArrivalsProducts' => $newArrivalsProducts,
+            'productCardView' => $this->designManager->getSectionView('product_card'),
         ];
     }
 }

@@ -113,14 +113,14 @@
         </div>
     </section>
 
-    {{-- Top 10 Products --}}
+   {{-- Top 10 Products --}}
     @if ($topTenProducts->isNotEmpty())
         <section class="products-section">
             <div class="container">
                 <h2 class="products-section-title">Top 10 Products</h2>
                 <div class="top-ten-products">
                     @foreach ($topTenProducts as $product)
-                        @include('frontend.components.product.card.design-1', ['product' => $product])
+                        @include($productCardView, ['product' => $product])
                     @endforeach
                 </div>
             </div>
@@ -253,7 +253,7 @@
                 <h2 class="products-section-title">Sale Products</h2>
                 <div class="sale-products">
                     @foreach ($saleProducts as $product)
-                        @include('frontend.components.product.card.design-1', ['product' => $product])
+                        @include($productCardView, ['product' => $product])
                     @endforeach
                 </div>
             </div>
@@ -285,7 +285,7 @@
                 <h2 class="products-section-title">New Arrivals</h2>
                 <div class="new-arrivals-products">
                     @foreach ($newArrivalsProducts as $product)
-                        @include('frontend.components.product.card.design-1', ['product' => $product])
+                        @include($productCardView, ['product' => $product])
                     @endforeach
                 </div>
             </div>

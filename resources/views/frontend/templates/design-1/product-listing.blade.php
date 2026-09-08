@@ -2,9 +2,7 @@
 
 @section('title', 'Products')
 
-@push('styles')
-    <link rel="stylesheet" href="{{ asset('frontend/css/design-1/products.css') }}">
-@endpush
+
 
 @section('content')
     <div class="container-fluid px-4 px-md-5 pb-5 py-4">
@@ -67,8 +65,8 @@
         </div>
 
         <!-- Products -->
-       <div id="products-container">
-            @include('frontend.components.product.listing.design-1', ['products' => $products])
+        <div id="products-container">
+            @include($productListingView, ['products' => $products, 'productCardView' => $productCardView])
         </div>
     </div>
 
