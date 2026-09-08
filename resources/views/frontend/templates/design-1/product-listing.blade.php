@@ -68,7 +68,7 @@
 
         <!-- Products -->
        <div id="products-container">
-            @include('frontend.components.product.grid.design-1', ['products' => $products])
+            @include('frontend.components.product.listing.design-1', ['products' => $products])
         </div>
     </div>
 
