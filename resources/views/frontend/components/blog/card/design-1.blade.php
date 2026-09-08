@@ -7,7 +7,7 @@
         {{-- Optional: date badge on image --}}
         <span class="badge bg-white text-dark position-absolute top-0 start-0 m-3 shadow-sm rounded-pill px-3 py-2">
             <i class="far fa-calendar-alt me-1"></i>
-            {{ $blog->published_at }}
+            {{ $blog->published_at->format('d M, Y') }}
         </span>
     </div>
 

@@ -10,19 +10,11 @@
         <div class="main">
             <div class="container">
                 <div class="text-center mb-5">
-                    <h1 class="display-5 fw-bold">Blogs</h1>
+                    <h1 class="display-6 fw-bold">Explore Our Blogs</h1>
                 </div>
                 <div class="row">
                     <div class="col-lg-12">
                         <div class="content-area">
-                            <div class="mb-5">
-                                <h2 class="fw-bold mb-3">Latest Blogs</h2>
-                                <p class="text-muted">
-                                    Discover fashion trends, shopping guides, product tips, and the latest updates from our
-                                    store.
-                                </p>
-                            </div>
-
                             <div class="row g-4">
                                 @forelse ($blogs as $blog)
                                     <div class="col-6 col-lg-4">
