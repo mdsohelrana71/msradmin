@@ -3,525 +3,112 @@
 @section('title', $product->name . ' - NICK')
 
 @push('styles')
-<link rel="stylesheet" href="{{ asset('frontend/css/design-1/details.css') }}">
+    <link rel="stylesheet" href="{{ app(\App\Services\Frontend\DesignManager::class)->getTemplateCss('product-details') }}">
+    <link rel="stylesheet" href="{{ app(\App\Services\Frontend\DesignManager::class)->getSectionCss('product_details') }}">
 @endpush
 
 @section('content')
-<div class="container pb-1 pt-4">
-    <!-- Breadcrumb -->
-    <nav aria-label="breadcrumb" class="mb-3">
-        <ol class="breadcrumb small mb-0">
-            <li class="breadcrumb-item">
-                <a href="{{ route('home') }}" class="text-muted text-decoration-none">Home</a>
-            </li>
-            <li class="breadcrumb-item">
-                <a href="{{ route('products.index') }}" class="text-muted text-decoration-none">Products</a>
-            </li>
-            <li class="breadcrumb-item active">{{ $product->name }}</li>
-        </ol>
-    </nav>
-
-    <div class="row g-4">
-        <!-- Images Section -->
-        <div class="col-lg-7">
-            <div class="product-image-viewer d-flex gap-3">
-                <!-- Vertical Thumbnails -->
-                <div class="thumbnails d-flex flex-column gap-3">
-                    @if($product->images?->count())
-                        @foreach($product->images as $image)
-                            <img src="{{ asset('storage/' . $image->image) }}"
-                                alt="{{ $product->name }}"
-                                class="thumbnail {{ $loop->first ? 'active' : '' }}"
-                                onclick="changeImage(this)">
-                        @endforeach
-                    @elseif($product->image)
-                        <img src="{{ asset('storage/' . $product->image) }}"
-                            alt="{{ $product->name }}"
-                            class="thumbnail active"
-                            onclick="changeImage(this)">
-                    @else
-                        <img src="{{ asset('frontend/images/p-1.jpg') }}"
-                            alt="{{ $product->name }}"
-                            class="thumbnail active"
-                            onclick="changeImage(this)">
-                    @endif
-                </div>
-
-                <!-- Main Image -->
-                <div class="main-image-wrapper grow d-flex justify-content-center align-items-start">
-                    <div class="main-image-container position-relative overflow-hidden"
-                        id="mainImageContainer"
-                        onmousemove="zoomImage(event)"
-                        onmouseleave="resetZoom()">
-                        @if($product->images?->count())
-                            <img id="mainImage"
-                                src="{{ asset('storage/' . $product->images->first()->image) }}"
-                                alt="{{ $product->name }}"
-                                class="main-product-image">
-                        @elseif($product->image)
-                            <img id="mainImage"
-                                src="{{ asset('storage/' . $product->image) }}"
-                                alt="{{ $product->name }}"
-                                class="main-product-image">
-                        @else
-                            <img id="mainImage"
-                                src="{{ asset('frontend/images/p-1.jpg') }}"
-                                alt="{{ $product->name }}"
-                                class="main-product-image">
-                        @endif
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- Product Info -->
-        <div class="col-lg-5">
-            <h1 class="h6 fw-semibold mb-2">{{ $product->name }}</h1>
-
-            <div class="d-flex align-items-center gap-2 my-2">
-                <span class="fs-6 fw-bold">৳ {{ number_format($product->price, 2) }}</span>
-                <span class="text-muted small">+ VAT</span>
-            </div>
-
-            <p class="fw-medium small mb-3 d-flex align-items-center gap-2">
-                SKU:
-                <span class="text-muted small" id="skuNumber">{{ $product->sku ?? '—' }}</span>
-                <button onclick="copySKU()" class="btn btn-link p-0 ms-1 copy-btn" title="Copy SKU">
-                    <i class="fa-solid fa-copy"></i>
-                </button>
-            </p>
-
-            <!-- Size -->
-            @if($product->variants?->count())
-                <div class="mb-3">
-                    <div class="d-flex align-items-center justify-content-between">
-                        <p class="fw-medium small mb-0">Size:</p>
-                        <button onclick="showSizeChart()"
-                            class="btn btn-link text-decoration-none p-0 small fw-medium text-orange">
-                            <i class="fa-solid fa-ruler-combined"></i> Size Chart
-                        </button>
-                    </div>
-
-                    <div class="d-flex gap-2 flex-wrap mt-2">
-                        @foreach($product->variants as $variant)
-                            <button onclick="selectSize(this)"
-                                class="size-btn btn btn-sm {{ $loop->first ? 'active' : '' }}">
-                                {{ $variant->name ?? $variant->value }}
-                            </button>
-                        @endforeach
-                    </div>
-                </div>
-            @endif
-
-            <!-- Buttons -->
-            <div class="row buttons-container">
-                <div class="col-12 col-lg-6">
-                    <button onclick="addToCart()" class="btn add-to-cart w-100 py-2 fw-medium">
-                        <i class="fas fa-shopping-cart"></i>
-                        Add to cart
-                    </button>
-                </div>
-                <div class="col-12 col-lg-6">
-                    <button onclick="checkAvailability()" class="btn trial-room w-100 py-2 fw-medium">
-                        <i class="fa-solid fa-shirt"></i>
-                        Trial Room
-                    </button>
-                </div>
-            </div>
-
-            <div class="mt-3 product-description">
-                <p class="small">
-                    {!! $product->description ?? '' !!}
-                </p>
-            </div>
-
-            <!-- Check Store Availability -->
-            <div class="row g-3 buttons-container">
-                <div class="col-12">
-                    <button onclick="checkStoreAvailability()"
-                        class="btn btn-outline check-availability w-100 py-2 d-flex align-items-center justify-content-between">
-                        <div class="d-flex align-items-center gap-2">
-                            <i class="fa-solid fa-store"></i>
-                            <span>Check Store Availability</span>
-                        </div>
-                        <i class="fa-solid fa-right-long"></i>
-                    </button>
-                </div>
-            </div>
-
-            <!-- Collapse Sections -->
-            <div class="mt-4">
-                <!-- Product Info -->
-                <div class="custom-collapse">
-                    <div class="collapse-header" onclick="toggleCollapse(this)">
-                        <span>Product Info</span>
-                        <i class="fa-solid fa-chevron-down"></i>
-                    </div>
-                    <div class="collapse-content show">
-                        <p class="small">
-                            Product colour may slightly vary, depending on your device's screen resolution.<br><br>
-                            Free shipping at ৳8000 purchase.
-                        </p>
-                    </div>
-                </div>
-
-                <!-- Product Details -->
-                <div class="custom-collapse">
-                    <div class="collapse-header" onclick="toggleCollapse(this)">
-                        <span>Product Details</span>
-                        <i class="fa-solid fa-chevron-down"></i>
-                    </div>
-                    <div class="collapse-content">
-                        <div class="row small">
-                            @if($product->unit)
-                                <div class="col-6 mb-2">
-                                    <strong>Unit:</strong> {{ $product->unit }}
-                                </div>
-                            @endif
-                            @if($product->weight)
-                                <div class="col-6 mb-2">
-                                    <strong>Weight:</strong> {{ $product->weight }}
-                                </div>
-                            @endif
-                            @if($product->category)
-                                <div class="col-6 mb-2">
-                                    <strong>Category:</strong> {{ $product->category->name }}
-                                </div>
-                            @endif
-                            @if($product->brand)
-                                <div class="col-6 mb-2">
-                                    <strong>Brand:</strong> {{ $product->brand->name }}
-                                </div>
-                            @endif
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
-
-<!-- Similar Products -->
-<div class="container-fluid px-4 px-md-5 pb-5 py-4">
-    <div class="row g-3 g-lg-4">
-        <h2 class="products-section-title">Similar Products</h2>
-
-        @forelse($similarProducts ?? [] as $similarProduct)
-            <div class="col-5-cards">
-                <div class="product-card position-relative">
-                    <a href="{{ route('products.show', $similarProduct) }}" class="product-image-container">
-                        @if($similarProduct->images?->count())
-                            <img src="{{ asset('storage/' . $similarProduct->images->first()->image) }}"
-                                alt="{{ $similarProduct->name }}">
-                        @elseif($similarProduct->image)
-                            <img src="{{ asset('storage/' . $similarProduct->image) }}"
-                                alt="{{ $similarProduct->name }}">
-                        @else
-                            <img src="{{ asset('frontend/images/p-1.jpg') }}"
-                                alt="{{ $similarProduct->name }}">
-                        @endif
-                    </a>
-
-                    <div class="product-info">
-                        <div>
-                            <div class="divider-lines">
-                                <div class="divider-line color1"></div>
-                                <div class="divider-line color2"></div>
-                                <div class="divider-line color3"></div>
-                                <div class="divider-line color4"></div>
-                            </div>
-
-                            <a href="{{ route('products.show', $similarProduct) }}"
-                                class="product-name d-block text-decoration-none">
-                                {{ $similarProduct->name }}
-                            </a>
-
-                            <div class="product-price-container">
-                                <span class="currency">৳</span>
-                                <span class="product-price">{{ number_format($similarProduct->price, 0) }}</span>
-                                <span class="product-vat">+ VAT</span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        @empty
-        @endforelse
-    </div>
-</div>
-
-<!-- Size Chart Modal -->
-<div class="modal fade" id="sizeChartModal" tabindex="-1">
-    <div class="modal-dialog modal-dialog-centered modal-lg">
-        <div class="modal-content">
-            <div class="modal-header pb-2">
-                <h5 class="modal-title fw-semibold">Size Chart</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body p-3 p-md-4">
-                <div class="table-responsive">
-                    <table class="table table-bordered mb-0 text-center align-middle">
-                        <thead class="table-light">
-                            <tr>
-                                <th style="min-width: 130px;">Size Name (Inch.)</th>
-                                <th>32</th>
-                                <th>34</th>
-                                <th>36</th>
-                                <th>38</th>
-                                <th>40</th>
-                                <th>42</th>
-                                <th>44</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                <td><strong>Shoulder</strong></td>
-                                <td>13.5</td>
-                                <td>14</td>
-                                <td>14.5</td>
-                                <td>15</td>
-                                <td>15.5</td>
-                                <td>16</td>
-                                <td>16.5</td>
-                            </tr>
-                            <tr>
-                                <td><strong>Bust</strong></td>
-                                <td>35</td>
-                                <td>37</td>
-                                <td>39</td>
-                                <td>41</td>
-                                <td>43</td>
-                                <td>45</td>
-                                <td>47</td>
-                            </tr>
-                            <tr>
-                                <td><strong>Waist</strong></td>
-                                <td>32</td>
-                                <td>34</td>
-                                <td>36</td>
-                                <td>38</td>
-                                <td>40</td>
-                                <td>42</td>
-                                <td>43</td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
-
-<!-- Check Store Modal -->
-<div class="modal fade check-store-modal" id="checkStoreModal" tabindex="-1">
-    <div class="modal-dialog modal-dialog-centered custom-modal">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title fw-semibold">Store Availability</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body p-3 p-md-3">
-                <div class="container">
-                    <div class="row align-items-start">
-                        <p class="fw-medium d-block d-md-none">Please select size</p>
-
-                        <div class="col-4">
-                            <p class="fw-medium d-none d-md-block">Please select size</p>
-
-                            <div class="size-list">
-                                @if($product->variants?->count())
-                                    @foreach($product->variants as $variant)
-                                        <label>
-                                            <input class="form-check-input"
-                                                type="radio"
-                                                name="size"
-                                                value="{{ $variant->name ?? $variant->value }}">
-                                            {{ $variant->name ?? $variant->value }}
-                                        </label>
-                                    @endforeach
-                                @endif
-                            </div>
-                        </div>
-
-                        <div class="col-8">
-                            @if($product->images?->count())
-                                <img loading="lazy"
-                                    width="189"
-                                    height="217"
-                                    decoding="async"
-                                    src="{{ asset('storage/' . $product->images->first()->image) }}"
-                                    alt="{{ $product->name }}"
-                                    class="img-fluid rounded shadow-sm"
-                                    style="max-height: 480px; object-fit: contain;">
-                            @elseif($product->image)
-                                <img loading="lazy"
-                                    width="189"
-                                    height="217"
-                                    decoding="async"
-                                    src="{{ asset('storage/' . $product->image) }}"
-                                    alt="{{ $product->name }}"
-                                    class="img-fluid rounded shadow-sm"
-                                    style="max-height: 480px; object-fit: contain;">
-                            @else
-                                <img loading="lazy"
-                                    width="189"
-                                    height="217"
-                                    decoding="async"
-                                    src="{{ asset('frontend/images/p-1.jpg') }}"
-                                    alt="{{ $product->name }}"
-                                    class="img-fluid rounded shadow-sm"
-                                    style="max-height: 480px; object-fit: contain;">
-                            @endif
-                        </div>
-                    </div>
-
-                    <div class="shop-info" id="shopInfo">
-                        <div class="table-responsive">
-                            <table class="table table-bordered mb-0 text-start align-middle">
-                                <thead class="table-success">
-                                    <tr>
-                                        <th style="min-width: 80px;">Shop</th>
-                                        <th>Address</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <tr>
-                                        <td>Banasree</td>
-                                        <td>H ? 5, Block ? E, Main Road, Near by National Ideal School & College, Banasree, Rampura, Dhaka. Mobile 01847189614</td>
-                                    </tr>
-                                    <tr>
-                                        <td>Mirpur</td>
-                                        <td>Multiplan Red Crescent City, Level 2, Mirpur 1. Mobile 01811456051</td>
-                                    </tr>
-                                    <tr>
-                                        <td>Cumilla</td>
-                                        <td>Silver Rahman Villa (2nd Floor) 567 Nazrul Avenue, Kandirpar, Cumilla Sadar Cumilla- 3500</td>
-                                    </tr>
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
+    @include($productDetailsView, ['product' => $product])
 @endsection
 
 @push('scripts')
-<script>
-function selectSize(el) {
-    document.querySelectorAll('.size-btn').forEach(btn => btn.classList.remove('active'));
-    el.classList.add('active');
-}
+    <script>
+        function selectSize(el) {
+            document.querySelectorAll('.size-btn').forEach(btn => btn.classList.remove('active'));
+            el.classList.add('active');
+        }
 
-function toggleCollapse(header) {
-    const content = header.nextElementSibling;
-    content.classList.toggle('show');
-    const icon = header.querySelector('i');
+        function toggleCollapse(header) {
+            const content = header.nextElementSibling;
+            content.classList.toggle('show');
+            const icon = header.querySelector('i');
+            if (icon) {
+                icon.classList.toggle('fa-chevron-down');
+                icon.classList.toggle('fa-chevron-up');
+            }
+        }
 
-    if (icon) {
-        icon.classList.toggle('fa-chevron-down');
-        icon.classList.toggle('fa-chevron-up');
-    }
-}
+        function showSizeChart() {
+            const modal = new bootstrap.Modal(document.getElementById('sizeChartModal'));
+            modal.show();
+        }
 
-function showSizeChart() {
-    const modal = new bootstrap.Modal(document.getElementById('sizeChartModal'));
-    modal.show();
-}
+        function checkAvailability() {
+            const modal = new bootstrap.Modal(document.getElementById('checkStoreModal'));
+            modal.show();
+        }
 
-function checkAvailability() {
-    const modal = new bootstrap.Modal(document.getElementById('checkStoreModal'));
-    modal.show();
-}
+        function checkStoreAvailability() {
+            const modal = new bootstrap.Modal(document.getElementById('checkStoreModal'));
+            modal.show();
+        }
 
-function checkStoreAvailability() {
-    const modal = new bootstrap.Modal(document.getElementById('checkStoreModal'));
-    modal.show();
-}
+        function addToCart() {
+            // Cart module will be connected later.
+        }
 
-function addToCart() {
-    // Cart module will be connected later.
-}
+        function copySKU() {
+            const sku = document.getElementById('skuNumber').textContent;
+            navigator.clipboard.writeText(sku).then(() => {
+                const btn = document.querySelector('.copy-btn i');
+                const originalIcon = btn.className;
+                btn.className = 'fa-solid fa-check text-success';
+                setTimeout(() => {
+                    btn.className = originalIcon;
+                }, 2000);
+            });
+        }
+        let currentScale = 1;
+        let isZoomed = false;
 
-function copySKU() {
-    const sku = document.getElementById('skuNumber').textContent;
+        function changeImage(thumb) {
+            const mainImg = document.getElementById('mainImage');
+            const thumbnails = document.querySelectorAll('.thumbnail');
+            mainImg.src = thumb.src;
+            thumbnails.forEach(t => t.classList.remove('active'));
+            thumb.classList.add('active');
+            resetZoom();
+        }
 
-    navigator.clipboard.writeText(sku).then(() => {
-        const btn = document.querySelector('.copy-btn i');
-        const originalIcon = btn.className;
+        function zoomImage(e) {
+            const container = document.getElementById('mainImageContainer');
+            const img = document.getElementById('mainImage');
+            if (!isZoomed) {
+                container.classList.add('zoomed');
+                isZoomed = true;
+                currentScale = 2.5;
+            }
+            const rect = container.getBoundingClientRect();
+            const x = ((e.clientX - rect.left) / rect.width) * 100;
+            const y = ((e.clientY - rect.top) / rect.height) * 100;
+            img.style.transformOrigin = `${x}% ${y}%`;
+            img.style.transform = `scale(${currentScale})`;
+        }
 
-        btn.className = 'fa-solid fa-check text-success';
-
-        setTimeout(() => {
-            btn.className = originalIcon;
-        }, 2000);
-    });
-}
-
-let currentScale = 1;
-let isZoomed = false;
-
-function changeImage(thumb) {
-    const mainImg = document.getElementById('mainImage');
-    const thumbnails = document.querySelectorAll('.thumbnail');
-
-    mainImg.src = thumb.src;
-
-    thumbnails.forEach(t => t.classList.remove('active'));
-    thumb.classList.add('active');
-
-    resetZoom();
-}
-
-function zoomImage(e) {
-    const container = document.getElementById('mainImageContainer');
-    const img = document.getElementById('mainImage');
-
-    if (!isZoomed) {
-        container.classList.add('zoomed');
-        isZoomed = true;
-        currentScale = 2.5;
-    }
-
-    const rect = container.getBoundingClientRect();
-    const x = ((e.clientX - rect.left) / rect.width) * 100;
-    const y = ((e.clientY - rect.top) / rect.height) * 100;
-
-    img.style.transformOrigin = `${x}% ${y}%`;
-    img.style.transform = `scale(${currentScale})`;
-}
-
-function resetZoom() {
-    const img = document.getElementById('mainImage');
-    const container = document.getElementById('mainImageContainer');
-
-    if (!img || !container) return;
-
-    img.style.transform = 'scale(1)';
-    container.classList.remove('zoomed');
-    isZoomed = false;
-    currentScale = 1;
-}
-
-document.addEventListener('keydown', e => {
-    if (e.key === 'Escape') {
-        resetZoom();
-    }
-});
-
-document.addEventListener('DOMContentLoaded', function () {
-    const radios = document.querySelectorAll('input[name="size"]');
-    const shopInfo = document.getElementById('shopInfo');
-
-    radios.forEach(radio => {
-        radio.addEventListener('change', function () {
-            if (shopInfo) {
-                shopInfo.classList.add('show');
+        function resetZoom() {
+            const img = document.getElementById('mainImage');
+            const container = document.getElementById('mainImageContainer');
+            if (!img || !container) return;
+            img.style.transform = 'scale(1)';
+            container.classList.remove('zoomed');
+            isZoomed = false;
+            currentScale = 1;
+        }
+        document.addEventListener('keydown', e => {
+            if (e.key === 'Escape') {
+                resetZoom();
             }
         });
-    });
-});
-</script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const radios = document.querySelectorAll('input[name="size"]');
+            const shopInfo = document.getElementById('shopInfo');
+            radios.forEach(radio => {
+                radio.addEventListener('change', function() {
+                    if (shopInfo) {
+                        shopInfo.classList.add('show');
+                    }
+                });
+            });
+        });
+    </script>
 @endpush

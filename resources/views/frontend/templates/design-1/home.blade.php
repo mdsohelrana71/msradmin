@@ -1,7 +1,11 @@
 @extends('frontend.layouts.app')
 
 @section('title', config('app.name'))
-
+@push('styles')
+    <link rel="stylesheet" href="{{ app(\App\Services\Frontend\DesignManager::class)->getTemplateCss('home') }}">
+    <link rel="stylesheet" href="{{ app(\App\Services\Frontend\DesignManager::class)->getSectionCss('product_card') }}">
+    <link rel="stylesheet" href="{{ app(\App\Services\Frontend\DesignManager::class)->getSectionCss('blog_card') }}">
+@endpush
 @section('content')
     <!-- Categories Section -->
     <div class="category-section">

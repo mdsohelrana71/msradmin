@@ -37,14 +37,7 @@
                     {{ $product->name }}
                 </a>
 
-                <div class="product-price-container">
-                    @if ($hasDiscount)
-                        <span class="product-price-old">
-                            <span class="currency">৳</span>
-                            {{ number_format($product->selling_price, 2) }}
-                        </span>
-                    @endif
-                    
+                <div class="product-price-container">                    
                     <span class="product-price">
                         <span class="currency">৳</span>
                         {{ number_format($currentPrice, 2) }}

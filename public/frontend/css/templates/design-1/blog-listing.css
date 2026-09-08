@@ -1,0 +1,30 @@
+
+
+.content-area {
+    background: white;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.06);
+    padding: 40px;
+}
+
+
+.content-area i{
+    color: var(--primary);
+}
+
+.card-img-top.blog-img{
+    height: 250px;
+    object-fit: cover;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+
+    .content-area {
+        padding: 20px;
+    }
+
+    .card-img-top.blog-img{
+        height: 200px;
+    }
+
+}

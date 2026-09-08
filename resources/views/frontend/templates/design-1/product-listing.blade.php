@@ -2,7 +2,10 @@
 
 @section('title', 'Products')
 
-
+@push('styles')
+    <link rel="stylesheet" href="{{ app(\App\Services\Frontend\DesignManager::class)->getTemplateCss('product-listing') }}">
+    <link rel="stylesheet" href="{{ app(\App\Services\Frontend\DesignManager::class)->getSectionCss('product_card') }}">
+@endpush
 
 @section('content')
     <div class="container-fluid px-4 px-md-5 pb-5 py-4">

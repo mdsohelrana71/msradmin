@@ -19,6 +19,7 @@ class ProductController extends Controller
         $data = $this->productService->getProducts();
         $productListingView = $this->designManager->getSectionView('product_listing');
         $productCardView = $this->designManager->getSectionView('product_card');
+        $data['productListingView'] = $productListingView;
         $data['productCardView'] = $productCardView;
         if ($request->ajax()) {
             return response()->json([
@@ -36,9 +37,10 @@ class ProductController extends Controller
     public function show(Product $product)
     {
         $product = $this->productService->getProduct($product);
+        $productDetailsView = $this->designManager->getSectionView('product_details');
         return view(
             $this->designManager->getPageView('product_details'),
-            compact('product')
+            compact('product', 'productDetailsView')
         );
     }
 }

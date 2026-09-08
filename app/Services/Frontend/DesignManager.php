@@ -86,4 +86,21 @@ class DesignManager
     {
         return view($this->getSectionView($section), $data)->render();
     }
+
+    public function getTemplateCss(string $file): string
+    {
+        return asset("frontend/css/templates/{$this->getActiveTemplate()}/{$file}.css");
+    }
+
+    public function getSectionCss(string $section): string
+    {
+        $design = $this->getSectionDesign($section);
+        $group = match ($section) {
+            'product_card' => 'product/card',
+            'blog_card' => 'blog/card',
+            default => $section,
+        };
+        return asset("frontend/css/sections/{$group}/{$design}.css");
+    }
+    
 }

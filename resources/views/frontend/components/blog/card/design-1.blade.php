@@ -1,60 +1,24 @@
-<div class="product-card">
-    @php
-        $hasDiscount = $product->discount_price !== null && $product->discount_price < $product->selling_price;
-        $currentPrice = $hasDiscount ? $product->discount_price : $product->selling_price;
-        $discountPercentage = $hasDiscount && $product->selling_price > 0
-            ? round((($product->selling_price - $product->discount_price) / $product->selling_price) * 100)
-            : 0;
-    @endphp
+<div class="card border-0 shadow-sm h-100">
+    <img src="{{ asset('storage/' . ltrim($blog->featured_image, '/')) }}"
+        class="card-img-top blog-img" alt="Blog Image">
 
-    @if ($hasDiscount)
-        <div class="product-badge product-badge-sale">
-            -{{ $discountPercentage }}%
-        </div>
-    @endif
+    <div class="card-body">
+        <small class="text-muted">
+            <i class="far fa-calendar-alt me-1"></i>
+            {{ $blog->published_at }}
+        </small>
 
-    <a href="{{ route('products.show', $product->slug) }}" class="product-image-link">
-        <div class="product-image">
-            @if ($product->thumbnail)
-                <img src="{{ asset('storage/' . ltrim($product->thumbnail, '/')) }}"
-                    alt="{{ $product->name }}">
-            @else
-                <span>
-                    <i class="fas fa-image"></i>
-                </span>
-            @endif
-        </div>
-    </a>
+        <h5 class="card-title mt-3">
+            {{ $blog->title }}
+        </h5>
 
-    <div class="product-info pt-2">
-        <a href="{{ route('products.show', $product->slug) }}" class="product-name-link">
-            <h3 class="product-name">{{ $product->name }}</h3>
+        <p class="card-text text-muted">
+            {{ $blog->excerpt }}
+        </p>
+
+        <a href="{{ route('blog.show', $blog) }}"
+            class="btn btn-outline-primary btn-sm">
+            Read More
         </a>
-
-        <div class="product-price">
-            @if ($hasDiscount)
-                <span class="product-price-old">
-                    ${{ number_format($product->selling_price, 2) }}
-                </span>
-            @endif
-
-            <span class="product-price-current">
-                ${{ number_format($currentPrice, 2) }}
-            </span>
-        </div>
-
-        <div class="product-actions">
-            <a href="#" class="product-action-btn">
-                <i class="fas fa-heart"></i>
-            </a>
-
-            <a href="#" class="product-action-btn">
-                <i class="fas fa-shopping-cart"></i>
-            </a>
-
-            <a href="{{ route('products.show', $product->slug) }}" class="product-action-btn">
-                <i class="fas fa-eye"></i>
-            </a>
-        </div>
     </div>
 </div>
