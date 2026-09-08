@@ -67,76 +67,9 @@
         </div>
 
         <!-- Products -->
-        <div class="row g-3 g-lg-4">
-            @forelse ($products as $product)
-                @php
-                    $hasDiscount =
-                        $product->discount_price !== null && $product->discount_price < $product->selling_price;
-                    $currentPrice = $hasDiscount ? $product->discount_price : $product->selling_price;
-                    $productImage = $product->thumbnail;
-                @endphp
-
-                <div class="col-5-cards">
-                    <div class="product-card position-relative">
-                        <!-- Heart Icon -->
-                        <button class="wishlist-btn position-absolute top-0 end-0 m-2">
-                            <i class="fa-regular fa-heart"></i>
-                        </button>
-
-                        <a href="{{ route('products.show', $product->slug) }}" class="product-image-container">
-                            @if ($productImage)
-                                <img src="{{ asset('storage/' . ltrim($product->thumbnail, '/')) }}"
-                                    alt="{{ $product->name }}">
-                            @else
-                                <img class="border" src="{{ asset('frontend/images/no-image.jpg') }}"
-                                    alt="{{ $product->name }}">
-                            @endif
-
-                            <!-- Quick View Button -->
-                            <span class="quick-view-btn text-decoration-none">
-                                <i class="fa-regular fa-eye"></i>Quick View
-                            </span>
-                        </a>
-
-                        <div class="product-info">
-                            <div>
-                                <a href="{{ route('products.show', $product->slug) }}"
-                                    class="product-name d-block text-decoration-none">
-                                    {{ $product->name }}
-                                </a>
-
-                                <div class="product-price-container">
-                                    <span class="currency">৳</span>
-                                    <span class="product-price">{{ number_format($currentPrice, 0) }}</span>
-                                    <span class="product-vat">+ VAT</span>
-
-                                    @if ($hasDiscount)
-                                        <span class="text-muted text-decoration-line-through ms-2">
-                                            ৳ {{ number_format($product->selling_price, 0) }}
-                                        </span>
-                                    @endif
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            @empty
-                <div class="col-12">
-                    <div class="text-center py-5">
-                        <i class="fa-solid fa-box-open fs-1 text-muted mb-3"></i>
-                        <h5 class="mb-2">No Products Found</h5>
-                        <p class="text-muted mb-0">There are no products available at the moment.</p>
-                    </div>
-                </div>
-            @endforelse
+       <div id="products-container">
+            @include('frontend.components.product.grid.design-1', ['products' => $products])
         </div>
-
-        <!-- Pagination -->
-        @if ($products->hasPages())
-            <div class="d-flex justify-content-center mt-5">
-                {{ $products->withQueryString()->links() }}
-            </div>
-        @endif
     </div>
 
     <!-- Filter Offcanvas -->
@@ -275,9 +208,151 @@
 
 @push('scripts')
     <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const filterForm = document.getElementById('productFilterForm');
+            const productsContainer = document.getElementById('products-container');
+            const sortSelect = document.getElementById('sortSelect');
+            const filterOffcanvas = document.getElementById('filterOffcanvas');
+
+            function loadProducts(url = null, closeOffcanvas = true, updateHistory = true) {
+                let requestUrl = url || new URL(filterForm.action, window.location.origin);
+                requestUrl = new URL(requestUrl, window.location.origin);
+
+                if (!url) {
+                    const formData = new FormData(filterForm);
+                    requestUrl.search = new URLSearchParams(formData).toString();
+                }
+
+                productsContainer.classList.add('products-loading');
+
+                fetch(requestUrl.toString(), {
+                    method: 'GET',
+                    headers: {
+                        'X-Requested-With': 'XMLHttpRequest',
+                        'Accept': 'application/json'
+                    }
+                })
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Failed to load products.');
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    productsContainer.innerHTML = data.html;
+
+                    if (updateHistory) {
+                        window.history.pushState({}, '', requestUrl.toString());
+                    }
+
+                    bindPagination();
+
+                    if (closeOffcanvas && filterOffcanvas) {
+                        const offcanvas = bootstrap.Offcanvas.getInstance(filterOffcanvas);
+                        if (offcanvas) {
+                            offcanvas.hide();
+                        }
+                    }
+
+                    window.scrollTo({
+                        top: productsContainer.offsetTop - 100,
+                        behavior: 'smooth'
+                    });
+                })
+                .catch(error => {
+                    console.error(error);
+                })
+                .finally(() => {
+                    productsContainer.classList.remove('products-loading');
+                });
+            }
+
+            function sortProducts(value) {
+                const sortInput = filterForm.querySelector('input[name="sort"]');
+
+                if (sortInput) {
+                    sortInput.value = value;
+                }
+
+                loadProducts();
+            }
+
+            function bindPagination() {
+                productsContainer.querySelectorAll('.pagination a').forEach(link => {
+                    link.addEventListener('click', function (event) {
+                        event.preventDefault();
+                        loadProducts(this.href, false);
+                    });
+                });
+            }
+
+            window.sortProducts = sortProducts;
+
+            filterForm.addEventListener('submit', function (event) {
+                event.preventDefault();
+                loadProducts();
+            });
+
+            document.querySelectorAll('[data-filter]').forEach(button => {
+                button.addEventListener('click', function () {
+                    const filter = this.dataset.filter;
+
+                    if (filter === 'all') {
+                        return;
+                    }
+
+                    const section = document.querySelector(
+                        `[data-filter-section="${filter}"]`
+                    );
+
+                    if (!section) {
+                        return;
+                    }
+
+                    const header = section.querySelector('.section-header');
+
+                    if (header) {
+                        toggleSection(header);
+                    }
+                });
+            });
+
+            document.getElementById('clearFilters')?.addEventListener('click', function (event) {
+                event.preventDefault();
+
+                filterForm.querySelectorAll('input[type="checkbox"]').forEach(input => {
+                    input.checked = false;
+                });
+
+                const sortInput = filterForm.querySelector('input[name="sort"]');
+
+                if (sortInput) {
+                    sortInput.value = 'newest';
+                }
+
+                if (sortSelect) {
+                    sortSelect.value = 'newest';
+                }
+
+                const clearUrl = new URL(filterForm.action, window.location.origin);
+
+                loadProducts(clearUrl.toString(), true);
+            });
+
+            bindPagination();
+
+            window.addEventListener('popstate', function () {
+                loadProducts(window.location.href, false, false);
+            });
+        });
+
         function toggleSection(header) {
             const content = header.nextElementSibling;
-            const icon = header.querySelector('.toggle-icon');
+            const icon = header.querySelector('.section-toggle-icon');
+
+            if (!content) {
+                return;
+            }
 
             content.classList.toggle('show');
 
@@ -285,58 +360,5 @@
                 icon.textContent = content.classList.contains('show') ? '−' : '+';
             }
         }
-
-        function sortProducts(value) {
-            const url = new URL(window.location.href);
-
-            url.searchParams.set('sort', value);
-            url.searchParams.delete('page');
-
-            window.location.href = url.toString();
-        }
-
-        document.addEventListener('DOMContentLoaded', function() {
-            const filterButtons = document.querySelectorAll('[data-filter]');
-            const filterSections = document.querySelectorAll('[data-filter-section]');
-
-            filterButtons.forEach(button => {
-                button.addEventListener('click', function() {
-                    const filter = this.dataset.filter;
-
-                    filterSections.forEach(section => {
-                        const content = section.querySelector('.filter-content');
-                        const icon = section.querySelector('.toggle-icon');
-
-                        if (!content) {
-                            return;
-                        }
-
-                        if (filter === 'all') {
-                            content.classList.remove('show');
-
-                            if (icon) {
-                                icon.textContent = '+';
-                            }
-
-                            return;
-                        }
-
-                        if (section.dataset.filterSection === filter) {
-                            content.classList.add('show');
-
-                            if (icon) {
-                                icon.textContent = '−';
-                            }
-                        } else {
-                            content.classList.remove('show');
-
-                            if (icon) {
-                                icon.textContent = '+';
-                            }
-                        }
-                    });
-                });
-            });
-        });
-    </script>
+        </script>
 @endpush

@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Product;
 use App\Services\Frontend\DesignManager;
 use App\Services\Frontend\Product\ProductService;
+use Illuminate\Http\Request;
 
 class ProductController extends Controller
 {
@@ -20,9 +21,18 @@ class ProductController extends Controller
         $this->productService = $productService;
     }
 
-    public function index()
+    public function index(Request $request)
     {
         $data = $this->productService->getProducts();
+
+        if ($request->ajax()) {
+            return response()->json([
+                'html' => view(
+                    'frontend.components.product.grid.design-1',
+                    ['products' => $data['products']]
+                )->render(),
+            ]);
+        }
 
         return view(
             $this->designManager->getPageView('product_listing'),

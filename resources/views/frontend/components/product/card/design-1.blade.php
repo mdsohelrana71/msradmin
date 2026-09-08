@@ -1,30 +1,60 @@
-<div class="card h-100 border-0 shadow-sm">
-    <a href="{{ route('products.show', $product) }}" class="text-decoration-none">
-        <div class="ratio ratio-1x1 bg-light">
-            @if ($product->primary_image)
-                <img
-                    src="{{ asset('storage/' . $product->primary_image) }}"
-                    class="img-fluid object-fit-cover"
-                    alt="{{ $product->name }}"
-                >
+<div class="product-card">
+    @php
+        $hasDiscount = $product->discount_price !== null && $product->discount_price < $product->selling_price;
+        $currentPrice = $hasDiscount ? $product->discount_price : $product->selling_price;
+        $discountPercentage = $hasDiscount && $product->selling_price > 0
+            ? round((($product->selling_price - $product->discount_price) / $product->selling_price) * 100)
+            : 0;
+    @endphp
+
+    @if ($hasDiscount)
+        <div class="product-badge product-badge-sale">
+            -{{ $discountPercentage }}%
+        </div>
+    @endif
+
+    <a href="{{ route('products.show', $product->slug) }}" class="product-image-link">
+        <div class="product-image">
+            @if ($product->thumbnail)
+                <img src="{{ asset('storage/' . ltrim($product->thumbnail, '/')) }}"
+                    alt="{{ $product->name }}">
             @else
-                <div class="d-flex align-items-center justify-content-center text-muted">
-                    No Image
-                </div>
+                <span>
+                    <i class="fas fa-image"></i>
+                </span>
             @endif
         </div>
     </a>
-    <div class="card-body">
-        <h6 class="mb-2">
-            <a href="{{ route('products.show', $product) }}" class="text-dark text-decoration-none">
-                {{ $product->name }}
-            </a>
-        </h6>
-        <div class="fw-bold">
-            {{ number_format($product->price, 2) }}
-        </div>
-        <a href="{{ route('products.show', $product) }}" class="btn btn-dark btn-sm mt-3 w-100">
-            View Product
+
+    <div class="product-info pt-2">
+        <a href="{{ route('products.show', $product->slug) }}" class="product-name-link">
+            <h3 class="product-name">{{ $product->name }}</h3>
         </a>
+
+        <div class="product-price">
+            @if ($hasDiscount)
+                <span class="product-price-old">
+                    ${{ number_format($product->selling_price, 2) }}
+                </span>
+            @endif
+
+            <span class="product-price-current">
+                ${{ number_format($currentPrice, 2) }}
+            </span>
+        </div>
+
+        <div class="product-actions">
+            <a href="#" class="product-action-btn">
+                <i class="fas fa-heart"></i>
+            </a>
+
+            <a href="#" class="product-action-btn">
+                <i class="fas fa-shopping-cart"></i>
+            </a>
+
+            <a href="{{ route('products.show', $product->slug) }}" class="product-action-btn">
+                <i class="fas fa-eye"></i>
+            </a>
+        </div>
     </div>
 </div>
