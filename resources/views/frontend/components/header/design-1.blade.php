@@ -22,9 +22,18 @@
         <div class="info-bar-content">
             <div class="left-section">
                 <div class="info-links">
-                    <a href="{{ route('products.index') }}">Products</a>
-                    <a href="{{ route('blog.index') }}">Blogs</a>
-                    <a href="#">Contact Us</a>
+                    <a href="{{ route('products.index') }}">
+                        <i class="fas fa-box"></i>
+                        Products
+                    </a>
+                    <a href="{{ route('blog.index') }}">
+                        <i class="fas fa-blog"></i>
+                        Blogs
+                    </a>
+                    <a href="#">
+                        <i class="fas fa-envelope"></i>
+                        Contact Us
+                    </a>
                 </div>
             </div>
             <div class="right-section">

@@ -127,6 +127,15 @@
     font-weight: 600;
 }
 
+.info-bar-content .info-links a {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+}
+.info-bar-content .info-links a i {
+    font-size: 12px;
+}
+
 .info-bar-content .right-section {
     display: flex;
     align-items: center;
