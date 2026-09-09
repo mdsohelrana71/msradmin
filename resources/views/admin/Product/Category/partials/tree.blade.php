@@ -1,8 +1,19 @@
 @foreach ($categories as $category)
     <div class="category-item">
         <div class="category-row">
-            {{-- Category Name + Status + Expand --}}
+            {{-- Category Image + Name + Status + Expand --}}
             <div class="category-left">
+                @if ($category->image)
+                    <img
+                        src="{{ asset('storage/' . $category->image) }}"
+                        alt="{{ $category->name }}"
+                        class="category-image w">
+                @else
+                    <div class="category-image category-image-placeholder">
+                        <i class="fa fa-folder"></i>
+                    </div>
+                @endif
+
                 <span class="category-name">
                     <span class="category-title">
                         {{ $category->name }}
@@ -29,7 +40,7 @@
             </div>
 
             {{-- Actions --}}
-                <div class="category-actions">
+            <div class="category-actions">
                 @can('product-categories.edit')
                     <a
                         href="{{ route('admin.product-categories.edit', $category) }}"
@@ -44,8 +55,7 @@
                         id="deleteCategoryForm{{ $category->id }}"
                         action="{{ route('admin.product-categories.destroy', $category) }}"
                         method="POST"
-                        class="d-inline"
-                    >
+                        class="d-inline">
                         @csrf
                         @method('DELETE')
 
@@ -54,8 +64,7 @@
                             class="btn btn-danger btn-sm"
                             title="Delete"
                             data-bs-toggle="modal"
-                            data-bs-target="#deleteCategoryModal{{ $category->id }}"
-                        >
+                            data-bs-target="#deleteCategoryModal{{ $category->id }}">
                             <i class="fa fa-trash"></i>
                         </button>
                     </form>
@@ -66,8 +75,7 @@
                         title="Delete Category?"
                         message="Are you sure you want to delete this category?"
                         confirmText="Yes, Delete"
-                        confirmClass="btn-danger"
-                    />
+                        confirmClass="btn-danger" />
                 @endcan
             </div>
         </div>
@@ -77,11 +85,9 @@
             <div
                 class="collapse category-children"
                 id="category-children-{{ $category->id }}">
-
                 @include('admin.Product.Category.partials.tree', [
                     'categories' => $category->children
                 ])
-
             </div>
         @endif
     </div>

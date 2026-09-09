@@ -26,6 +26,13 @@ class CategoryRequest extends FormRequest
                 'exists:categories,id',
             ],
 
+            'image' => [
+                'nullable',
+                'image',
+                'mimes:jpg,jpeg,png,webp',
+                'max:2048',
+            ],
+
             'status' => [
                 'required',
                 'boolean',

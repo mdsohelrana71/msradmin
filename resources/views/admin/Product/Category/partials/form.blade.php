@@ -71,6 +71,37 @@
                 min="0">
         </div>
     </div>
+
+    {{-- Image --}}
+    <div class="col-md-6">
+        <div class="form-group">
+            <label for="image">
+                Category Image
+            </label>
+            <input
+                type="file"
+                name="image"
+                id="image"
+                class="form-control @error('image') is-invalid @enderror"
+                accept="image/*">
+            @error('image')
+            <div class="invalid-feedback">
+                {{ $message }}
+            </div>
+            @enderror
+            @if (!empty($category?->image))
+                <div class="mt-2">
+                    <img
+                        src="{{ asset('storage/' . $category->image) }}"
+                        alt="{{ $category->name }}"
+                        width="100"
+                        height="100"
+                        class="rounded object-fit-cover">
+                </div>
+            @endif
+        </div>
+    </div>
+
     <div class="col-md-12">
         <div class="form-group">
             <label class="form-label">

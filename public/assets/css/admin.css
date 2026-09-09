@@ -492,6 +492,28 @@
     background: #adb5bd;
 }
 
+.category-image {
+    width: 40px;
+    height: 40px;
+    object-fit: cover;
+    border-radius: 6px;
+    flex-shrink: 0;
+}
+
+.category-image-placeholder {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #f1f1f1;
+    color: #999;
+}
+
+.category-left {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
 /*
 |--------------------------------------------------------------------------
 | Blog css

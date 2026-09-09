@@ -37,6 +37,7 @@
                         <form
                             action="{{ route('admin.product-categories.update', $category) }}"
                             method="POST"
+                            enctype="multipart/form-data"
                         >
                             @csrf
                             @method('PUT')
