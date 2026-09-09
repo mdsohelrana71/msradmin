@@ -151,4 +151,10 @@ return [
         'icon' => 'ti ti-slideshow',
         'permission' => 'sliders.view',
     ],
+    [
+        'title' => 'Promos',
+        'route' => 'admin.promos.index',
+        'icon' => 'fas fa-bullhorn',
+        'permission' => 'promos.view',
+    ],
 ];

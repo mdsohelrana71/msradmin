@@ -651,6 +651,39 @@
                         </li>
                     @endcanany
 
+                    {{-- Promos --}}
+                    @canany(['promos.view', 'promos.create', 'promos.edit', 'promos.delete'])
+                        <li class="nav-item {{ request()->routeIs('admin.promos.*') ? 'active' : '' }}">
+                            <a
+                                data-bs-toggle="collapse"
+                                href="#promos"
+                                class="{{ request()->routeIs('admin.promos.*') ? '' : 'collapsed' }}"
+                                aria-expanded="{{ request()->routeIs('admin.promos.*') ? 'true' : 'false' }}">
+                                <i class="fas fa-bullhorn"></i>
+                                <p>Promos</p>
+                                <span class="caret"></span>
+                            </a>
+                            <div class="collapse {{ request()->routeIs('admin.promos.*') ? 'show' : '' }}" id="promos">
+                                <ul class="nav nav-collapse">
+                                    @can('promos.view')
+                                        <li class="{{ request()->routeIs('admin.promos.index') ? 'active' : '' }}">
+                                            <a href="{{ route('admin.promos.index') }}">
+                                                <span class="sub-item">All Promos</span>
+                                            </a>
+                                        </li>
+                                    @endcan
+                                    @can('promos.create')
+                                        <li class="{{ request()->routeIs('admin.promos.create') ? 'active' : '' }}">
+                                            <a href="{{ route('admin.promos.create') }}">
+                                                <span class="sub-item">Create Promo</span>
+                                            </a>
+                                        </li>
+                                    @endcan
+                                </ul>
+                            </div>
+                        </li>
+                    @endcanany
+
                     @can('store-designs.view')
                         <li class="nav-item {{ request()->routeIs('admin.store-designs.*') ? 'active' : '' }}">
                             <a href="{{ route('admin.store-designs.index') }}">
