@@ -100,6 +100,7 @@ class ProductService
     public function getCategories()
     {
         return Category::query()
+            ->ofType('product')
             ->where('status', true)
             ->orderBy('name')
             ->get();
