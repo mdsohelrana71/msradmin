@@ -139,7 +139,6 @@
             $featuredHasDiscount =
                 $featuredProduct->discount_price !== null &&
                 $featuredProduct->discount_price < $featuredProduct->selling_price;
-            $featuredPrice = $featuredHasDiscount ? $featuredProduct->discount_price : $featuredProduct->selling_price;
         @endphp
 
         <section class="trending-section py-5">
@@ -147,9 +146,6 @@
                 <div class="text-center mb-5">
                     <p class="trending-badge mb-2">🔥 Super Sale</p>
                     <h2 class="trending-heading">TRENDING LOOKS</h2>
-                    <p class="trending-subheading">
-                        Starting from only
-                        <span class="trending-price-highlight">${{ number_format($featuredPrice, 2) }}</span>
                     </p>
                 </div>
 
