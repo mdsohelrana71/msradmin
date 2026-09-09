@@ -2,7 +2,7 @@
     <div class="sidebar-logo">
         <div class="logo-header" data-background-color="{{ $settings->logo_header_color ?? 'dark' }}">
             <a href="{{ route('admin.dashboard') }}" class="logo">
-                <img src="{{ asset($settings->site_logo) }}" alt="navbar brand" class="navbar-brand" height="20" />
+                <img src="{{ asset($settings->site_logo) }}" alt="navbar brand" class="navbar-brand" height="40" />
             </a>
             <div class="nav-toggle">
                 <button class="btn btn-toggle toggle-sidebar">

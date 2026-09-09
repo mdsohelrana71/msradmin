@@ -70,7 +70,7 @@
                     <i class="fas fa-bars"></i>
                 </div>
                 <a href="{{ route('home') }}" class="logo d-block text-decoration-none">
-                    <img src="{{ asset('frontend/images/logo.png') }}" alt="Logo">
+                    <img src="{{ asset($settings->site_logo) }}" alt="Logo">
                 </a>
             </div>
             <div class="search-container">
