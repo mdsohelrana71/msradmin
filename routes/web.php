@@ -26,6 +26,7 @@ use App\Http\Controllers\Admin\ProductWishlistController;
 use App\Http\Controllers\Admin\ProductCategoryController;
 use App\Http\Controllers\Admin\ProductAttributeController;
 use App\Http\Controllers\Admin\ProductInventoryController;
+use App\Http\Controllers\Admin\NewsletterSubscriberController;
 use App\Http\Controllers\Admin\ProductAttributeValueController;
 
 require __DIR__.'/frontend.php';
@@ -76,7 +77,8 @@ Route::middleware('auth')->prefix('admin')->name('admin.')->group(function () {
     Route::resource('sliders', SliderController::class);
     Route::resource('promos', PromoController::class);
     Route::resource('store-designs', StoreDesignController::class)->only(['index', 'edit', 'update']);
-
+    Route::resource('newsletter-subscribers', NewsletterSubscriberController::class)->except(['create', 'store']);
+    
     Route::post('/cache/clear', function () {
         Artisan::call('optimize:clear');
         return back()->with('success', 'All cache cleared successfully.');
