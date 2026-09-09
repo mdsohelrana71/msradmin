@@ -204,4 +204,13 @@ return [
             'promos.delete' => 'Delete promos',
         ],
     ],
+
+    'newsletter-subscribers' => [
+        'label' => 'Newsletter Subscribers',
+        'permissions' => [
+            'newsletter-subscribers.view' => 'View newsletter subscribers',
+            'newsletter-subscribers.edit' => 'Edit newsletter subscribers',
+            'newsletter-subscribers.delete' => 'Delete newsletter subscribers',
+        ],
+    ],
 ];

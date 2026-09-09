@@ -693,6 +693,15 @@
                         </li>
                     @endcan
 
+                    @can('newsletter-subscribers.view')
+                        <li class="nav-item {{ request()->routeIs('admin.newsletter-subscribers.*') ? 'active' : '' }}">
+                            <a href="{{ route('admin.newsletter-subscribers.index') }}">
+                                <i class="fa fa-envelope"></i>
+                                <p>Newsletter Subscribers</p>
+                            </a>
+                        </li>
+                    @endcan
+
                     <li class="nav-item {{ request()->routeIs('admin.settings.index') ? 'active' : '' }}">
                         <a href="{{ route('admin.settings.index') }}" class="{{ request()->routeIs('admin.settings.index') ? '' : 'collapsed' }}">
                             <i class="fas fa-cog"></i>

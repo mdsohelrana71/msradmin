@@ -157,4 +157,10 @@ return [
         'icon' => 'fas fa-bullhorn',
         'permission' => 'promos.view',
     ],
+    [
+        'title' => 'Newsletter',
+        'icon' => 'fas fa-envelope',
+        'route' => 'admin.newsletter-subscribers.index',
+        'permission' => 'newsletter-subscribers.view',
+    ],
 ];
