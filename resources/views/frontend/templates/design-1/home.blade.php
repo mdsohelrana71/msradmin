@@ -10,7 +10,7 @@
     <!-- Categories Section -->
     <div class="category-section">
         <div class="categories-container container">
-            <a href="#" class="category-item">
+            <a href="{{ route('products.index') }}" class="category-item">
                 <div class="hamburger-menu">
                     <i class="fas fa-bars"></i>
                 </div>
