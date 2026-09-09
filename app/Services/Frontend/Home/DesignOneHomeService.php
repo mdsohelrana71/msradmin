@@ -2,19 +2,24 @@
 
 namespace App\Services\Frontend\Home;
 
-use App\Models\Category;
 use App\Models\Product;
 use App\Models\Slider;
 use App\Services\Frontend\DesignManager;
+use App\Services\Frontend\Global\CategoryService;
 
 class DesignOneHomeService
 {
-
     protected DesignManager $designManager;
-    public function __construct(DesignManager $designManager)
-    {
+    protected CategoryService $categoryService;
+
+    public function __construct(
+        DesignManager $designManager,
+        CategoryService $categoryService
+    ) {
         $this->designManager = $designManager;
+        $this->categoryService = $categoryService;
     }
+
     public function getData(): array
     {
         $sliders = Slider::query()
@@ -30,14 +35,8 @@ class DesignOneHomeService
             ->orderBy('sort_order')
             ->latest('id')
             ->get();
-        
-        $categories = Category::query()
-            ->whereNull('parent_id')
-            ->where('status', true)
-            ->where('type', 'product')
-            ->orderBy('sort_order', 'asc')
-            ->latest('id')
-            ->get();
+
+        $categories = $this->categoryService->getHomeCategories();
 
         $baseQuery = Product::query()
             ->where('status', true);

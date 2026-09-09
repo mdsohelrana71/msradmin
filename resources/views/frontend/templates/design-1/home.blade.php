@@ -7,7 +7,7 @@
     <link rel="stylesheet" href="{{ app(\App\Services\Frontend\DesignManager::class)->getSectionCss('blog_card') }}">
 @endpush
 @section('content')
-    <!-- Categories Section -->
+    <!-- Desktop Category Bar -->
     <div class="category-section">
         <div class="categories-container container">
             <a href="{{ route('products.index') }}" class="category-item">
@@ -21,36 +21,12 @@
                 <a href="{{ route('products.index', ['category' => $category->slug]) }}" class="category-item">
                     <div class="category-circle">
                         @if ($category->image)
-                            <img src="{{ asset('storage/' . $category->image) }}"
-                                alt="{{ $category->name }}">
+                            <img src="{{ asset('storage/' . $category->image) }}" alt="{{ $category->name }}">
+                        @else
+                            <i class="fas fa-folder"></i>
                         @endif
                     </div>
                     <div class="category-name">{{ $category->name }}</div>
-                </a>
-            @endforeach
-        </div>
-    </div>
-
-    <!-- Mobile Menu -->
-    <div class="mobile-menu" id="mobileMenu">
-        <div class="mobile-menu-content">
-            <a href="#" class="mobile-category-item category-bars">
-                <div class="mobile-category-icon mt-1">
-                    <i class="fas fa-bars"></i>
-                </div>
-                <span>Categories</span>
-            </a>
-
-            @foreach ($categories as $category)
-                <a href="{{ route('products.index', ['category' => $category->slug]) }}"
-                    class="mobile-category-item">
-                    <div class="mobile-category-icon">
-                        @if ($category->image)
-                            <img src="{{ asset('storage/' . $category->image) }}"
-                                alt="{{ $category->name }}">
-                        @endif
-                    </div>
-                    <span>{{ $category->name }}</span>
                 </a>
             @endforeach
         </div>

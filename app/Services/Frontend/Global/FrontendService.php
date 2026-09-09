@@ -5,13 +5,15 @@ namespace App\Services\Frontend\Global;
 class FrontendService
 {
     public function __construct(
-        protected PromoService $promoService
+        protected PromoService $promoService,
+        protected CategoryService $categoryService
     ) {}
 
     public function getHeaderData(): array
     {
         return [
             'promo' => $this->promoService->getActivePromo(),
+            'categories' => $this->categoryService->getHeaderCategories(),
         ];
     }
 
