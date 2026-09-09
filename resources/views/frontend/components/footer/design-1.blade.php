@@ -58,9 +58,21 @@
                 <div class="col-6 col-md-3">
                     <h4 class="footer-heading">SOCIAL MEDIA</h4>
                     <div class="footer-social">
-                        <a href="#" class="footer-social-icon"><i class="fab fa-facebook-f"></i></a>
-                        <a href="#" class="footer-social-icon"><i class="fa-brands fa-x-twitter"></i></a>
-                        <a href="#" class="footer-social-icon"><i class="fab fa-instagram"></i></a>
+                        @if($settings->facebook_url)
+                            <a href="{{ $settings->facebook_url }}" class="footer-social-icon" target="_blank" rel="noopener noreferrer" title="Facebook">
+                                <i class="fab fa-facebook-f"></i>
+                            </a>
+                        @endif
+                        @if($settings->twitter_url)
+                            <a href="{{ $settings->twitter_url }}" class="footer-social-icon" target="_blank" rel="noopener noreferrer" title="X">
+                                <i class="fa-brands fa-x-twitter"></i>
+                            </a>
+                        @endif
+                        @if($settings->instagram_url)
+                            <a href="{{ $settings->instagram_url }}" class="footer-social-icon" target="_blank" rel="noopener noreferrer" title="Instagram">
+                                <i class="fab fa-instagram"></i>
+                            </a>
+                        @endif
                     </div>
                 </div>
             </div>
@@ -72,7 +84,7 @@
         <div class="container">
             <div class="footer-bottom-content">
                 <div class="footer-copyright">
-                    NICK eCommerce. © {{ date('Y') }}. All Rights Reserved
+                    {{$settings->site_name}}. © {{ date('Y') }}. All Rights Reserved
                 </div>
                 <div class="footer-payments">
                     <i class="fab fa-cc-visa fa-2x" title="Visa"></i>
