@@ -3,8 +3,10 @@
 namespace App\Services\Admin;
 
 use App\Models\Category;
-use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Support\Str;
+use Illuminate\Http\UploadedFile;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Validation\ValidationException;
 
 class CategoryService
@@ -43,6 +45,13 @@ class CategoryService
             $type
         );
 
+        if (isset($data['image']) && $data['image'] instanceof UploadedFile) {
+            $data['image'] = $data['image']->store(
+                'categories',
+                'public'
+            );
+        }
+
         return Category::create($data);
     }
 
@@ -66,6 +75,17 @@ class CategoryService
             $type,
             $category
         );
+
+        if (isset($data['image']) && $data['image'] instanceof UploadedFile) {
+            if ($category->image) {
+                Storage::disk('public')->delete($category->image);
+            }
+
+            $data['image'] = $data['image']->store(
+                'categories',
+                'public'
+            );
+        }
 
         $category->update($data);
 

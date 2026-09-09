@@ -24,7 +24,7 @@ return new class extends Migration
                 'blog',
                 'product',
             ]);
-
+            $table->string('image')->nullable();
             $table->boolean('status')
                 ->default(true);
 
