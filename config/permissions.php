@@ -194,4 +194,14 @@ return [
             'sliders.delete' => 'Delete sliders',
         ],
     ],
+
+    'promos' => [
+        'label' => 'Promos',
+        'permissions' => [
+            'promos.view' => 'View promos',
+            'promos.create' => 'Create promos',
+            'promos.edit' => 'Edit promos',
+            'promos.delete' => 'Delete promos',
+        ],
+    ],
 ];
