@@ -1,136 +1,147 @@
-
-<!-- Info Bar (Desktop only) -->
-<div class="info-bar">
-    <div class="container">
-        <div class="info-bar-content">
-            <div class="shipping-info">
-                <i class="fas fa-truck shipping-icon"></i>
-                <span>FREE Express Shipping On Orders $99+</span>
-            </div>
-            <div class="right-section">
-                <div class="hover-dropdown lang-dropdown">
-                    <span class="flag-icon us-flag desktop-flag"></span>
-                    <button type="button" class="hover-dropdown-trigger">
-                        <span class="dropdown-value">Eng</span>
-                        <i class="fas fa-chevron-down"></i>
-                    </button>
-                    <ul class="hover-dropdown-menu">
-                        <li><a href="#" data-value="Eng">Eng</a></li>
-                        <li><a href="#" data-value="Esp">বাংলা</a></li>
-                    </ul>
-                </div>
-                <div class="info-links">
-                    <a href="#">Contact Us</a>
-                    <a href="#">Cart</a>
-                    <a href="{{ route('login') }}">Log In</a>
-                </div>
-                <div class="social-icons">
-                    @if (!empty($settings->facebook_url))
-                        <a href="{{ $settings->facebook_url }}" class="facebook" target="_blank" rel="noopener">
-                            <i class="fab fa-facebook-f"></i>
-                        </a>
-                    @endif
-                    @if (!empty($settings->twitter_url))
-                        <a href="{{ $settings->twitter_url }}" class="x" target="_blank" rel="noopener">
-                            <i class="fa-brands fa-x-twitter"></i>
-                        </a>
-                    @endif
-                    @if (!empty($settings->instagram_url))
-                        <a href="{{ $settings->instagram_url }}" class="instagram" target="_blank" rel="noopener">
-                            <i class="fab fa-instagram"></i>
-                        </a>
-                    @endif
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
-
-<!-- Main Header -->
-<div class="main-header">
-    <div class="container">
-        <div class="header-content">
-            <div class="header-left">
-                <div class="mobile-menu-toggle" id="mobileMenuToggle">
-                    <i class="fas fa-bars"></i>
-                </div>
-                <a href="{{ route('home') }}" class="logo d-block text-decoration-none">
-                    <img src="{{ asset('frontend/images/logo.png') }}" alt="Logo">
-                </a>
-            </div>
-            <div class="search-container">
-                <input type="text" class="search-box" placeholder="Search...">
-                <button type="submit" class="search-btn"><i class="fas fa-search"></i></button>
-            </div>
-            <div class="right-actions">
-                <div class="account-section">
-                    <div class="account-icon">
-                        <a href="#" class="action-icon text-decoration-none">
-                            <i class="fa-regular fa-user"></i>
-                        </a>
-                    </div>
-                    <div class="auth-section">
-                        <div class="account-label">Welcome</div>
-                        <div class="account-text"><a href="#">Sign In / Register</a></div>
-                    </div>
-                </div>
-                <a href="#" class="action-icon wishlist-icon text-decoration-none" title="Wishlist">
-                    <i class="fa-regular fa-heart"></i>
-                </a>
-                <div class="action-icon cart-icon">
-                    <i class="fas fa-shopping-cart"></i>
-                    <span class="cart-badge">0</span>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
-
-<div class="mobile-menu-overlay" id="mobileMenuOverlay"></div>
-
-@push('scripts')
-<script>
-document.addEventListener('DOMContentLoaded', function() {
-    const promoClose = document.querySelector('.promo-close');
-    const mobileMenuToggle = document.getElementById('mobileMenuToggle');
-    const mobileMenu = document.getElementById('mobileMenu');
-    const mobileMenuClose = document.getElementById('mobileMenuClose');
-    const mobileMenuOverlay = document.getElementById('mobileMenuOverlay');
-
-    if (promoClose) {
-        promoClose.addEventListener('click', function() {
-            const banner = document.querySelector('.promo-banner');
-            if (banner) {
-                banner.style.display = 'none';
-            }
-        });
-    }
-
-    function openMobileMenu() {
-        if (mobileMenu) {
-            mobileMenu.classList.add('active');
-        }
-        if (mobileMenuOverlay) {
-            mobileMenuOverlay.classList.add('active');
-        }
-        document.body.classList.add('menu-open');
-    }
-
-    function closeMobileMenu() {
-        if (mobileMenu) {
-            mobileMenu.classList.remove('active');
-        }
-        document.body.classList.remove('menu-open');
-    }
-
-    if (mobileMenuToggle) {
-        mobileMenuToggle.addEventListener('click', openMobileMenu);
-    }
-
-    if (mobileMenuClose) {
-        mobileMenuClose.addEventListener('click', closeMobileMenu);
-    }
-
-});
-</script>
+@push('styles')
 @endpush
+    
+    {{-- <!-- Page Preloder -->
+    <div id="preloder">
+        <div class="loader"></div>
+    </div> --}}
+
+    <!-- Humberger Begin -->
+    <div class="humberger__menu__overlay"></div>
+    <div class="humberger__menu__wrapper">
+        <div class="humberger__menu__logo">
+            <a href="#"><img src="img/logo.png" alt=""></a>
+        </div>
+        <div class="humberger__menu__cart">
+            <ul>
+                <li><a href="#"><i class="fa fa-heart"></i> <span>1</span></a></li>
+                <li><a href="#"><i class="fa fa-shopping-bag"></i> <span>3</span></a></li>
+            </ul>
+            <div class="header__cart__price">item: <span>$150.00</span></div>
+        </div>
+        <div class="humberger__menu__widget">
+            <div class="header__top__right__language">
+                <img src="img/language.png" alt="">
+                <div>English</div>
+                <span class="arrow_carrot-down"></span>
+                <ul>
+                    <li><a href="#">Spanis</a></li>
+                    <li><a href="#">English</a></li>
+                </ul>
+            </div>
+            <div class="header__top__right__auth">
+                <a href="#"><i class="fa fa-user"></i> Login</a>
+            </div>
+        </div>
+        <nav class="humberger__menu__nav mobile-menu">
+            <ul>
+                <li class="active"><a href="./index.html">Home</a></li>
+                <li><a href="./shop-grid.html">Shop</a></li>
+                <li><a href="#">Pages</a>
+                    <ul class="header__menu__dropdown">
+                        <li><a href="./shop-details.html">Shop Details</a></li>
+                        <li><a href="./shoping-cart.html">Shoping Cart</a></li>
+                        <li><a href="./checkout.html">Check Out</a></li>
+                        <li><a href="./blog-details.html">Blog Details</a></li>
+                    </ul>
+                </li>
+                <li><a href="./blog.html">Blog</a></li>
+                <li><a href="./contact.html">Contact</a></li>
+            </ul>
+        </nav>
+        <div id="mobile-menu-wrap"></div>
+        <div class="header__top__right__social">
+            <a href="#"><i class="fa fa-facebook"></i></a>
+            <a href="#"><i class="fa fa-twitter"></i></a>
+            <a href="#"><i class="fa fa-linkedin"></i></a>
+            <a href="#"><i class="fa fa-pinterest-p"></i></a>
+        </div>
+        <div class="humberger__menu__contact">
+            <ul>
+                <li><i class="fa fa-envelope"></i> hello@colorlib.com</li>
+                <li>Free Shipping for all Order of $99</li>
+            </ul>
+        </div>
+    </div>
+    <!-- Humberger End -->
+
+    <!-- Header Section Begin -->
+    <header class="header">
+        <div class="header__top">
+            <div class="container">
+                <div class="row">
+                    <div class="col-lg-6 col-md-6">
+                        <div class="header__top__left">
+                            <ul>
+                                <li><i class="fa fa-envelope"></i> hello@colorlib.com</li>
+                                <li>Free Shipping for all Order of $99</li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="col-lg-6 col-md-6">
+                        <div class="header__top__right">
+                            <div class="header__top__right__social">
+                                <a href="#"><i class="fa fa-facebook"></i></a>
+                                <a href="#"><i class="fa fa-twitter"></i></a>
+                                <a href="#"><i class="fa fa-linkedin"></i></a>
+                                <a href="#"><i class="fa fa-pinterest-p"></i></a>
+                            </div>
+                            <div class="header__top__right__language">
+                                <img src="img/language.png" alt="">
+                                <div>English</div>
+                                <span class="arrow_carrot-down"></span>
+                                <ul>
+                                    <li><a href="#">Spanis</a></li>
+                                    <li><a href="#">English</a></li>
+                                </ul>
+                            </div>
+                            <div class="header__top__right__auth">
+                                <a href="#"><i class="fa fa-user"></i> Login</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-3">
+                    <div class="header__logo">
+                        <a href="./index.html"><img src="img/logo.png" alt=""></a>
+                    </div>
+                </div>
+                <div class="col-lg-6">
+                    <nav class="header__menu">
+                        <ul>
+                            <li class="active"><a href="./index.html">Home</a></li>
+                            <li><a href="./shop-grid.html">Shop</a></li>
+                            <li><a href="#">Pages</a>
+                                <ul class="header__menu__dropdown">
+                                    <li><a href="./shop-details.html">Shop Details</a></li>
+                                    <li><a href="./shoping-cart.html">Shoping Cart</a></li>
+                                    <li><a href="./checkout.html">Check Out</a></li>
+                                    <li><a href="./blog-details.html">Blog Details</a></li>
+                                </ul>
+                            </li>
+                            <li><a href="./blog.html">Blog</a></li>
+                            <li><a href="./contact.html">Contact</a></li>
+                        </ul>
+                    </nav>
+                </div>
+                <div class="col-lg-3">
+                    <div class="header__cart">
+                        <ul>
+                            <li><a href="#"><i class="fa fa-heart"></i> <span>1</span></a></li>
+                            <li><a href="#"><i class="fa fa-shopping-bag"></i> <span>3</span></a></li>
+                        </ul>
+                        <div class="header__cart__price">item: <span>$150.00</span></div>
+                    </div>
+                </div>
+            </div>
+            <div class="humberger__open">
+                <i class="fa fa-bars"></i>
+            </div>
+        </div>
+    </header>
+    <!-- Header Section End -->
+    <script src="{{ asset('frontend/js/templates/design-2/main.js') }}"></script>
