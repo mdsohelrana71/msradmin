@@ -265,22 +265,37 @@
     @endif
 
     {{-- Big Sale Banner --}}
-    <section class="big-sale-banner-section">
-        <div class="container">
-            <div class="big-sale-banner">
-                <div class="banner-content">
-                    <div class="banner-text">
-                        <span class="big-sale-badge">BIG SALE</span>
-                        <div>
-                            <div class="banner-main-text">Up to <span class="highlight">50% OFF</span></div>
-                            <div class="banner-subtitle">Don't miss our biggest deals of the season.</div>
+    @if($promo)
+        <section class="big-sale-banner-section">
+            <div class="container">
+                <div class="big-sale-banner">
+                    <div class="banner-content">
+                        <div class="banner-text">
+                            <span class="big-sale-badge">BIG SALE</span>
+                            <div>
+                                <div class="banner-main-text">
+                                    {{ $promo->title }}
+                                </div>
+                                @if($promo->description)
+                                    <div class="banner-subtitle">
+                                        {{ $promo->description }}
+                                    </div>
+                                @endif
+                            </div>
                         </div>
+                        @php
+                            $button = $promo->buttons->first();
+                        @endphp
+                        @if($button)
+                            <a href="{{ $button->url }}" class="view-sale-btn">
+                                {{ $button->label }}
+                            </a>
+                        @endif
                     </div>
-                    <a href="{{ route('products.index') }}" class="view-sale-btn">View Sale</a>
                 </div>
             </div>
-        </div>
-    </section>
+        </section>
+    @endif
 
     {{-- New Arrivals Section --}}
     @if ($newArrivalsProducts->isNotEmpty())

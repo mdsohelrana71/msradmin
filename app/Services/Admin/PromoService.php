@@ -4,6 +4,7 @@ namespace App\Services\Admin;
 
 use App\Models\Promo;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
 
 class PromoService
@@ -36,7 +37,7 @@ class PromoService
 
     public function create(array $data): Promo
     {
-        return DB::transaction(function () use ($data) {
+        $promo = DB::transaction(function () use ($data) {
             $buttons = $data['buttons'] ?? [];
             unset($data['buttons']);
             $data['created_by'] = Auth::id();
@@ -44,11 +45,15 @@ class PromoService
             $this->syncButtons($promo, $buttons);
             return $promo->load('buttons');
         });
+
+        Cache::forget('frontend.active_promo_id');
+
+        return $promo;
     }
 
     public function update(Promo $promo, array $data): Promo
     {
-        return DB::transaction(function () use ($promo, $data) {
+        $promo = DB::transaction(function () use ($promo, $data) {
             $buttons = $data['buttons'] ?? [];
             unset($data['buttons']);
             $data['updated_by'] = Auth::id();
@@ -56,21 +61,31 @@ class PromoService
             $this->syncButtons($promo, $buttons);
             return $promo->load('buttons');
         });
+
+        Cache::forget('frontend.active_promo_id');
+
+        return $promo;
     }
 
     public function delete(Promo $promo): bool
     {
-        return DB::transaction(function () use ($promo) {
+        $deleted = DB::transaction(function () use ($promo) {
             return $promo->delete();
         });
+
+        Cache::forget('frontend.active_promo_id');
+
+        return $deleted;
     }
 
     private function syncButtons(Promo $promo, array $buttons): void
     {
         $existingButtonIds = [];
+
         foreach ($buttons as $buttonData) {
             $buttonId = $buttonData['id'] ?? null;
             unset($buttonData['id']);
+
             if ($buttonId) {
                 $button = $promo->buttons()->findOrFail($buttonId);
                 $buttonData['updated_by'] = Auth::id();
@@ -82,6 +97,7 @@ class PromoService
                 $existingButtonIds[] = $button->id;
             }
         }
+
         if (empty($existingButtonIds)) {
             $promo->buttons()->delete();
         } else {

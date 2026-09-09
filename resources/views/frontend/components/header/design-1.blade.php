@@ -1,13 +1,19 @@
-<!-- Promo Banner -->
-<div class="promo-banner">
-    <div class="promo-banner-content">
-        Get Up to 40% OFF New-Season Styles &nbsp;&nbsp;
-        <a href="#">MEN</a>
-        <a href="#">WOMEN</a>
-        &nbsp;&nbsp; * Limited time only.
+@if($promo)
+    <div class="promo-banner">
+        <div class="promo-banner-content">
+            {{ $promo->title }}
+            @foreach($promo->buttons as $button)
+                <a href="{{ $button->url }}">{{ $button->label }}</a>
+            @endforeach
+            @if($promo->description)
+                &nbsp;&nbsp; * {{ $promo->description }}
+            @endif
+        </div>
+        <button class="promo-close">
+            <i class="fas fa-times"></i>
+        </button>
     </div>
-    <button class="promo-close"><i class="fas fa-times"></i></button>
-</div>
+@endif
 
 <!-- Mobile Top Bar -->
 <div class="mobile-top-bar">

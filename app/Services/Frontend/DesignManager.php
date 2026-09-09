@@ -3,10 +3,15 @@
 namespace App\Services\Frontend;
 
 use App\Models\Option;
+use App\Services\Frontend\Global\FrontendService;
 use InvalidArgumentException;
 
 class DesignManager
 {
+    public function __construct(
+        protected FrontendService $frontendService
+    ) {}
+
     public function getTemplates(): array
     {
         return config('store_design.templates', []);
@@ -84,7 +89,16 @@ class DesignManager
 
     public function render(string $section, array $data = []): string
     {
-        return view($this->getSectionView($section), $data)->render();
+        $globalData = match ($section) {
+            'header' => $this->frontendService->getHeaderData(),
+            'footer' => $this->frontendService->getFooterData(),
+            default => [],
+        };
+
+        return view(
+            $this->getSectionView($section),
+            array_merge($globalData, $data)
+        )->render();
     }
 
     public function getTemplateCss(string $file): string
@@ -102,5 +116,5 @@ class DesignManager
         };
         return asset("frontend/css/sections/{$group}/{$design}.css");
     }
-    
+
 }
