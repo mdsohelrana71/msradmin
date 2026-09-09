@@ -13,7 +13,8 @@
     @php
         $designManager = app(\App\Services\Frontend\DesignManager::class);
     @endphp
-    <link rel="stylesheet" href="{{ asset('frontend/css/common.css') }}">
+    <link rel="stylesheet" href="{{ asset('frontend/css/global.css') }}">
+    <link rel="stylesheet" href="{{ $designManager->getTemplateCss('common') }}">
     <link rel="stylesheet" href="{{ $designManager->getSectionCss('header') }}">
     <link rel="stylesheet" href="{{ $designManager->getSectionCss('footer') }}">
     @stack('styles')

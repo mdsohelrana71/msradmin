@@ -78,10 +78,12 @@
             </div>
 
             <div class="search-container">
-                <input type="text" class="search-box" placeholder="Search...">
+                <input type="text" class="search-box" id="productSearchInput"
+                    placeholder="Search..." autocomplete="off">
                 <button type="button" class="search-btn">
                     <i class="fas fa-search"></i>
                 </button>
+                <div class="product-search-results" id="productSearchResults"></div>
             </div>
 
             <div class="right-actions">
@@ -195,6 +197,81 @@
 
         if (mobileMenuOverlay) {
             mobileMenuOverlay.addEventListener('click', closeMobileMenu);
+        }
+
+        const productSearchInput = document.getElementById('productSearchInput');
+        const productSearchResults = document.getElementById('productSearchResults');
+        let searchTimeout;
+
+        if (productSearchInput && productSearchResults) {
+            productSearchInput.addEventListener('input', function() {
+                const query = this.value.trim();
+                clearTimeout(searchTimeout);
+
+                if (query.length < 2) {
+                    productSearchResults.innerHTML = '';
+                    productSearchResults.classList.remove('active');
+                    return;
+                }
+
+                searchTimeout = setTimeout(function() {
+                    fetch(`{{ route('products.search') }}?q=${encodeURIComponent(query)}`, {
+                        headers: {
+                            'X-Requested-With': 'XMLHttpRequest',
+                            'Accept': 'application/json'
+                        }
+                    })
+                    .then(response => response.json())
+                    .then(products => {
+                        productSearchResults.innerHTML = '';
+
+                        if (!products.length) {
+                            productSearchResults.innerHTML = `
+                                <div class="product-search-empty">
+                                    No products found
+                                </div>
+                            `;
+                            productSearchResults.classList.add('active');
+                            return;
+                        }
+
+                        products.forEach(product => {
+                            const item = document.createElement('a');
+                            item.href = product.url;
+                            item.className = 'product-search-item';
+                            item.innerHTML = `
+                                <div class="product-search-image">
+                                    <img src="${product.thumbnail}" alt="${escapeHtml(product.name)}">
+                                </div>
+                                <div class="product-search-info">
+                                    <div class="product-search-name">${escapeHtml(product.name)}</div>
+                                    <div class="product-search-sku">SKU: ${escapeHtml(product.sku || 'N/A')}</div>
+                                </div>
+                            `;
+                            productSearchResults.appendChild(item);
+                        });
+
+                        productSearchResults.classList.add('active');
+                    })
+                    .catch(() => {
+                        productSearchResults.innerHTML = '';
+                        productSearchResults.classList.remove('active');
+                    });
+                }, 300);
+            });
+
+            document.addEventListener('click', function(event) {
+                if (!productSearchInput.contains(event.target) &&
+                    !productSearchResults.contains(event.target)) {
+                    productSearchResults.classList.remove('active');
+                }
+            });
+        }
+
+        function escapeHtml(value) {
+            const div = document.createElement('div');
+            div.textContent = value ?? '';
+            return div.innerHTML;
         }
     });
 </script>

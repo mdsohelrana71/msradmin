@@ -43,4 +43,23 @@ class ProductController extends Controller
             compact('product', 'productDetailsView')
         );
     }
+    public function search(Request $request)
+    {
+        $search = trim($request->get('q', ''));
+        if (mb_strlen($search) < 2) {
+            return response()->json([]);
+        }
+        $products = $this->productService->searchProducts($search);
+        return response()->json($products->map(function ($product) {
+            return [
+                'id' => $product->id,
+                'name' => $product->name,
+                'sku' => $product->sku,
+                'thumbnail' => $product->thumbnail
+                    ? asset('storage/' . $product->thumbnail)
+                    : null,
+                'url' => route('products.show', ['product' => $product->slug]),
+            ];
+        }));
+    }
 }

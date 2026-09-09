@@ -33,4 +33,18 @@ class ProductService
             default => throw new InvalidArgumentException('Product design service not found.'),
         };
     }
+
+    public function searchProducts(string $search)
+    {
+        return Product::query()
+            ->where('status', true)
+            ->where(function ($query) use ($search) {
+                $query->where('name', 'like', "%{$search}%")
+                    ->orWhere('sku', 'like', "%{$search}%")
+                    ->orWhere('barcode', 'like', "%{$search}%");
+            })
+            ->latest('created_at')
+            ->take(8)
+            ->get(['id', 'name', 'sku', 'thumbnail', 'slug']);
+    }
 }
