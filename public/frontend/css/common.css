@@ -158,7 +158,7 @@ body {
     align-items: center;
 }
 
-.shipping-info {
+.info-bar-content .left-section {
     color: #666;
     display: flex;
     align-items: center;
@@ -166,12 +166,7 @@ body {
     font-weight: 600;
 }
 
-.shipping-icon {
-    font-size: 16px;
-    color: #666;
-}
-
-.right-section {
+.info-bar-content .right-section {
     display: flex;
     align-items: center;
     gap: 20px;
@@ -706,22 +701,6 @@ body {
 
 .us-flag {
     background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 480"><g><path d="M0 0h640v37H0z" fill="%23B22234"/><path d="M0 74h640v37H0z" fill="%23B22234"/><path d="M0 148h640v37H0z" fill="%23B22234"/><path d="M0 222h640v37H0z" fill="%23B22234"/><path d="M0 296h640v37H0z" fill="%23B22234"/><path d="M0 370h640v37H0z" fill="%23B22234"/><path d="M0 37h640v37H0z"/><path d="M0 111h640v37H0z"/><path d="M0 185h640v37H0z"/><path d="M0 259h640v37H0z"/><path d="M0 333h640v37H0z"/><path d="M0 407h640v73H0z" fill="%23B22234"/><path d="M0 0h254v360H0z" fill="%23282B6E"/></g></svg>');
-}
-
-/* Mobile Top Bar */
-.mobile-top-bar {
-    background-color: #f8f9fa;
-    padding: 8px 0;
-    border-bottom: 1px solid #e9ecef;
-    font-size: 11px;
-    display: none;
-}
-
-.mobile-top-bar-inner {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    width: 100%;
 }
 
 .header-left {
@@ -1302,8 +1281,6 @@ html {
     .search-container { display: none; }
     .auth-section { display: none; }
     .category-section { display: none; }
-
-    .mobile-top-bar { display: flex !important; }
 
     .promo-banner {
         padding: 8px 15px;

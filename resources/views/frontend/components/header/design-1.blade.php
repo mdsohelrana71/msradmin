@@ -15,62 +15,16 @@
     </div>
 @endif
 
-<!-- Mobile Top Bar -->
-<div class="mobile-top-bar">
-    <div class="container">
-        <div class="mobile-top-bar-inner">
-            <div class="top-bar-selects">
-                <div class="hover-dropdown">
-                    <button type="button" class="hover-dropdown-trigger">
-                        <span class="dropdown-value">USD</span>
-                        <i class="fas fa-chevron-down"></i>
-                    </button>
-                    <ul class="hover-dropdown-menu">
-                        <li><a href="#" data-value="USD">USD</a></li>
-                        <li><a href="#" data-value="EUR">EUR</a></li>
-                        <li><a href="#" data-value="GBP">GBP</a></li>
-                    </ul>
-                </div>
-                <div class="hover-dropdown lang-dropdown">
-                    <span class="flag-icon us-flag mobile-flag"></span>
-                    <button type="button" class="hover-dropdown-trigger">
-                        <span class="dropdown-value">Eng</span>
-                        <i class="fas fa-chevron-down"></i>
-                    </button>
-                    <ul class="hover-dropdown-menu">
-                        <li><a href="#" data-value="Eng">Eng</a></li>
-                        <li><a href="#" data-value="Esp">Esp</a></li>
-                    </ul>
-                </div>
-            </div>
-            <div class="mobile-top-icons">
-                @if (!empty($settings->facebook_url))
-                    <a href="{{ $settings->facebook_url }}" class="facebook" target="_blank" rel="noopener">
-                        <i class="fab fa-facebook-f"></i>
-                    </a>
-                @endif
-                @if (!empty($settings->twitter_url))
-                    <a href="{{ $settings->twitter_url }}" class="x" target="_blank" rel="noopener">
-                        <i class="fa-brands fa-x-twitter"></i>
-                    </a>
-                @endif
-                @if (!empty($settings->instagram_url))
-                    <a href="{{ $settings->instagram_url }}" class="instagram" target="_blank" rel="noopener">
-                        <i class="fab fa-instagram"></i>
-                    </a>
-                @endif
-            </div>
-        </div>
-    </div>
-</div>
-
-<!-- Info Bar (Desktop only) -->
+<!-- Info Bar (Desktop only) --> 
 <div class="info-bar">
     <div class="container">
         <div class="info-bar-content">
-            <div class="shipping-info">
-                <i class="fas fa-truck shipping-icon"></i>
-                <span>FREE Express Shipping On Orders $99+</span>
+            <div class="left-section">
+                <div class="info-links">
+                    <a href="{{ route('products.index') }}">Products</a>
+                    <a href="{{ route('blog.index') }}">Blogs</a>
+                    <a href="#">Contact Us</a>
+                </div>
             </div>
             <div class="right-section">
                 <div class="hover-dropdown lang-dropdown">
@@ -84,11 +38,7 @@
                         <li><a href="#" data-value="Esp">বাংলা</a></li>
                     </ul>
                 </div>
-                <div class="info-links">
-                    <a href="#">Contact Us</a>
-                    <a href="#">Cart</a>
-                    <a href="{{ route('login') }}">Log In</a>
-                </div>
+                
                 <div class="social-icons">
                     @if (!empty($settings->facebook_url))
                         <a href="{{ $settings->facebook_url }}" class="facebook" target="_blank" rel="noopener">
