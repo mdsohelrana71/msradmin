@@ -1,9 +1,11 @@
 <?php
 
+use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\Frontend\BlogController;
 use App\Http\Controllers\Frontend\HomeController;
 use App\Http\Controllers\Frontend\ProductController;
-use App\Http\Controllers\Frontend\BlogController;
-use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\Frontend\NewsletterController;
+
 
 Route::get('/', [HomeController::class, 'index'])->name('home');
 
@@ -13,3 +15,5 @@ Route::get('/products/{product:slug}', [ProductController::class, 'show'])->name
 
 Route::get('/blog', [BlogController::class, 'index'])->name('blog.index');
 Route::get('/blog/{blog:slug}', [BlogController::class, 'show'])->name('blog.show');
+
+Route::post('/newsletter/subscribe', [NewsletterController::class, 'subscribe'])->name('newsletter.subscribe');

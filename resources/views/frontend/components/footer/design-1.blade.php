@@ -4,13 +4,16 @@
         <div class="newsletter-section">
             <h2 class="newsletter-title">Get Special Offers and Savings</h2>
             <p class="newsletter-subtitle">Get all the latest information on Events, Sales and Offers.</p>
-            <div class="newsletter-form">
+            <form action="{{ route('newsletter.subscribe') }}" method="POST" class="newsletter-form" id="newsletterForm">
+                @csrf
                 <div class="input-wrapper">
                     <i class="fa-regular fa-envelope"></i>
-                    <input type="email" class="newsletter-input" placeholder="Enter Your E-mail Address...">
+                    <input type="email" name="email" class="newsletter-input"
+                        placeholder="Enter Your E-mail Address..." required>
                 </div>
-                <button class="newsletter-btn">OK</button>
-            </div>
+                <button type="submit" class="newsletter-btn">OK</button>
+            </form>
+            <div id="newsletterMessage" class="mt-2"></div>
         </div>
     </div>
 
@@ -58,18 +61,21 @@
                 <div class="col-6 col-md-3">
                     <h4 class="footer-heading">SOCIAL MEDIA</h4>
                     <div class="footer-social">
-                        @if($settings->facebook_url)
-                            <a href="{{ $settings->facebook_url }}" class="footer-social-icon" target="_blank" rel="noopener noreferrer" title="Facebook">
+                        @if ($settings->facebook_url)
+                            <a href="{{ $settings->facebook_url }}" class="footer-social-icon" target="_blank"
+                                rel="noopener noreferrer" title="Facebook">
                                 <i class="fab fa-facebook-f"></i>
                             </a>
                         @endif
-                        @if($settings->twitter_url)
-                            <a href="{{ $settings->twitter_url }}" class="footer-social-icon" target="_blank" rel="noopener noreferrer" title="X">
+                        @if ($settings->twitter_url)
+                            <a href="{{ $settings->twitter_url }}" class="footer-social-icon" target="_blank"
+                                rel="noopener noreferrer" title="X">
                                 <i class="fa-brands fa-x-twitter"></i>
                             </a>
                         @endif
-                        @if($settings->instagram_url)
-                            <a href="{{ $settings->instagram_url }}" class="footer-social-icon" target="_blank" rel="noopener noreferrer" title="Instagram">
+                        @if ($settings->instagram_url)
+                            <a href="{{ $settings->instagram_url }}" class="footer-social-icon" target="_blank"
+                                rel="noopener noreferrer" title="Instagram">
                                 <i class="fab fa-instagram"></i>
                             </a>
                         @endif
@@ -84,7 +90,7 @@
         <div class="container">
             <div class="footer-bottom-content">
                 <div class="footer-copyright">
-                    {{$settings->site_name}}. © {{ date('Y') }}. All Rights Reserved
+                    {{ $settings->site_name }}. © {{ date('Y') }}. All Rights Reserved
                 </div>
                 <div class="footer-payments">
                     <i class="fab fa-cc-visa fa-2x" title="Visa"></i>
