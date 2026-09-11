@@ -302,20 +302,45 @@
     }
 
     function updateVariantImage(variant) {
-        if (!variant || !variant.variant_image) {
+        if (!variant) {
             return;
         }
 
         const image = document.getElementById('mainImage');
+        const thumbnails = document.getElementById('productThumbnails');
 
-        if (!image) {
+        if (!image || !thumbnails) {
             return;
         }
 
-        image.src = "{{ asset('storage') }}/" + variant.variant_image;
+        if (variant.variant_image) {
+            image.src = "{{ asset('storage') }}/" + variant.variant_image;
+        }
 
-        document.querySelectorAll('.thumbnail').forEach(thumbnail => {
-            thumbnail.classList.remove('active');
+        const colorAttribute = productData.variants.find(item =>
+            String(item.attribute_slug).toLowerCase() === 'color'
+        );
+
+        if (!colorAttribute) {
+            return;
+        }
+
+        const colorValueId = String(
+            productData.variants.find(item =>
+                String(item.variant_id) === String(variant.variant_id) &&
+                String(item.attribute_slug).toLowerCase() === 'color'
+            )?.attribute_value_id || ''
+        );
+
+        if (!colorValueId) {
+            return;
+        }
+
+        document.querySelectorAll('#productThumbnails .thumbnail').forEach(thumbnail => {
+            thumbnail.classList.toggle(
+                'active',
+                String(thumbnail.dataset.colorValueId) === colorValueId
+            );
         });
     }
 

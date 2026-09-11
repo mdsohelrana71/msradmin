@@ -22,9 +22,43 @@
     <div class="row g-4">
         <!-- Images Section -->
         <div class="col-lg-7">
+            @php
+                $colorAttribute = $variants->firstWhere('attribute_slug', 'color');
+
+                $colorImages = collect();
+
+                if ($isVariantProduct && $colorAttribute) {
+                    $colorImages = $variants
+                        ->where('attribute_id', $colorAttribute->attribute_id)
+                        ->filter(fn ($variant) => !empty($variant->variant_image))
+                        ->groupBy('attribute_value_id')
+                        ->map(function ($items) {
+                            return $items->first();
+                        })
+                        ->values();
+                }
+
+                $defaultImage = $colorImages->isNotEmpty()
+                    ? asset('storage/' . $colorImages->first()->variant_image)
+                    : ($product->images?->count()
+                        ? asset('storage/' . $product->images->first()->image)
+                        : ($product->thumbnail
+                            ? asset('storage/' . $product->thumbnail)
+                            : asset('frontend/images/p-1.jpg')));
+            @endphp
+
             <div class="product-image-viewer d-flex gap-3">
-                <div class="thumbnails d-flex flex-column gap-3">
-                    @if($product->images?->count())
+                <div class="thumbnails d-flex flex-column gap-3" id="productThumbnails">
+                    @if($isVariantProduct && $colorImages->count())
+                        @foreach($colorImages as $colorImage)
+                            <img src="{{ asset('storage/' . $colorImage->variant_image) }}"
+                                alt="{{ $product->name }} - {{ $colorImage->attribute_value }}"
+                                class="thumbnail {{ $loop->first ? 'active' : '' }}"
+                                data-color-value-id="{{ $colorImage->attribute_value_id }}"
+                                data-variant-image="{{ $colorImage->variant_image }}"
+                                onclick="changeImage(this)">
+                        @endforeach
+                    @elseif($product->images?->count())
                         @foreach($product->images as $image)
                             <img src="{{ asset('storage/' . $image->image) }}"
                                 alt="{{ $product->name }}"
@@ -49,22 +83,10 @@
                         id="mainImageContainer"
                         onmousemove="zoomImage(event)"
                         onmouseleave="resetZoom">
-                        @if($product->images?->count())
-                            <img id="mainImage"
-                                src="{{ asset('storage/' . $product->images->first()->image) }}"
-                                alt="{{ $product->name }}"
-                                class="main-product-image">
-                        @elseif($product->thumbnail)
-                            <img id="mainImage"
-                                src="{{ asset('storage/' . $product->thumbnail) }}"
-                                alt="{{ $product->name }}"
-                                class="main-product-image">
-                        @else
-                            <img id="mainImage"
-                                src="{{ asset('frontend/images/p-1.jpg') }}"
-                                alt="{{ $product->name }}"
-                                class="main-product-image">
-                        @endif
+                        <img id="mainImage"
+                            src="{{ $defaultImage }}"
+                            alt="{{ $product->name }}"
+                            class="main-product-image">
                     </div>
                 </div>
             </div>
