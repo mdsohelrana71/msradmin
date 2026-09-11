@@ -49,7 +49,7 @@ class DesignOneHomeService
 
         $trendingProducts = (clone $baseQuery)
             ->latest('created_at')
-            ->take(5)
+            ->take(6)
             ->get();
 
         $saleProducts = (clone $baseQuery)
