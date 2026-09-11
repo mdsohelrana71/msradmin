@@ -34,6 +34,13 @@
     let selectedValues = {};
 
     document.addEventListener('DOMContentLoaded', function () {
+        const imageContainer = document.getElementById('mainImageContainer');
+
+        if (imageContainer) {
+            imageContainer.addEventListener('mousemove', zoomImage);
+            imageContainer.addEventListener('mouseleave', resetZoom);
+        }
+
         if (productData.isVariantProduct) {
             initializeVariants();
         } else {

@@ -80,9 +80,7 @@
 
                 <div class="main-image-wrapper grow d-flex justify-content-center align-items-start">
                     <div class="main-image-container position-relative overflow-hidden"
-                        id="mainImageContainer"
-                        onmousemove="zoomImage(event)"
-                        onmouseleave="resetZoom">
+                        id="mainImageContainer">
                         <img id="mainImage"
                             src="{{ $defaultImage }}"
                             alt="{{ $product->name }}"
