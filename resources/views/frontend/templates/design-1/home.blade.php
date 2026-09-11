@@ -66,7 +66,7 @@
     </section>
 
     {{-- Trust Features --}}
-    <section class="py-4">
+    <section class="py-4 trust-features">
         <div class="container">
             <div class="row text-center g-4">
                 <div class="col-6 col-lg-3">

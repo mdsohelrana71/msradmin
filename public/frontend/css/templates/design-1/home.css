@@ -121,6 +121,13 @@ body, html {
     opacity: 1;
 }
 
+/* ===== Trust Features SECTION ===== */
+
+.trust-features i{
+    color: var(--primary);
+}
+
+
 /* ===== TOP PRODUCTS SECTION ===== */
 .products-section {
     padding: 25px 0;
