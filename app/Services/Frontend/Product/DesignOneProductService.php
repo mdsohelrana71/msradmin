@@ -1,8 +1,12 @@
 <?php
+
 namespace App\Services\Frontend\Product;
+
 use App\Models\Category;
 use App\Models\Product;
 use App\Models\ProductAttribute;
+use Illuminate\Support\Facades\DB;
+
 class DesignOneProductService
 {
     public function getProducts(): array
@@ -10,11 +14,14 @@ class DesignOneProductService
         $query = Product::query()
             ->where('status', true)
             ->with(['images', 'category']);
+
         $this->applyCategoryFilter($query);
         $this->applyPriceFilter($query);
         $this->applyAttributeFilters($query);
         $this->applySorting($query);
+
         $products = $query->paginate(12)->withQueryString();
+
         $categories = Category::query()
             ->active()
             ->ofType('product')
@@ -23,6 +30,7 @@ class DesignOneProductService
             ->orderBy('sort_order')
             ->latest('id')
             ->get();
+
         $attributes = ProductAttribute::query()
             ->where('status', true)
             ->with([
@@ -34,6 +42,7 @@ class DesignOneProductService
             ->orderBy('sort_order')
             ->latest('id')
             ->get();
+
         return [
             'products' => $products,
             'categories' => $categories,
@@ -48,16 +57,25 @@ class DesignOneProductService
         $product->load([
             'images',
             'category',
+            'brand',
+            'variants',
         ]);
+
+        $isVariantProduct = $product->variants->isNotEmpty();
+
+        $productStock = $isVariantProduct
+            ? 0
+            : $this->getProductStock($product->id);
+
+        $variants = $isVariantProduct
+            ? $this->getProductVariants($product->id)
+            : collect();
 
         $similarProducts = Product::query()
             ->where('status', true)
             ->where('category_id', $product->category_id)
             ->whereKeyNot($product->id)
-            ->with([
-                'images',
-                'category',
-            ])
+            ->with(['images', 'category', 'brand'])
             ->latest('created_at')
             ->take(6)
             ->get();
@@ -65,13 +83,97 @@ class DesignOneProductService
         return [
             'product' => $product,
             'similarProducts' => $similarProducts,
+            'isVariantProduct' => $isVariantProduct,
+            'productStock' => $productStock,
+            'variants' => $variants,
         ];
+    }
+
+    private function getProductStock(int $productId): int
+    {
+        return (int) DB::table('product_inventory')
+            ->where('product_id', $productId)
+            ->whereNull('product_variant_id')
+            ->selectRaw('GREATEST(COALESCE(SUM(stock - reserved_stock), 0), 0) as available_stock')
+            ->value('available_stock');
+    }
+
+    private function getProductVariants(int $productId)
+    {
+        return DB::table('product_variants as variants')
+            ->join(
+                'product_variant_values as variant_values',
+                'variant_values.variant_id',
+                '=',
+                'variants.id'
+            )
+            ->join(
+                'product_attribute_values as attribute_values',
+                'attribute_values.id',
+                '=',
+                'variant_values.attribute_value_id'
+            )
+            ->join(
+                'product_attributes as attributes',
+                'attributes.id',
+                '=',
+                'variant_values.attribute_id'
+            )
+            ->leftJoin('product_inventory as inventory', function ($join) {
+                $join->on('inventory.product_variant_id', '=', 'variants.id')
+                    ->whereColumn('inventory.product_id', 'variants.product_id');
+            })
+            ->where('variants.product_id', $productId)
+            ->where('variants.status', true)
+            ->where('attributes.status', true)
+            ->where('attribute_values.status', true)
+            ->select([
+                'variants.id as variant_id',
+                'variants.price',
+                'variants.discount_price',
+                'variants.sku as variant_sku',
+                'variants.image as variant_image',
+                'variant_values.id as variant_value_id',
+                'attribute_values.id as attribute_value_id',
+                'attribute_values.value as attribute_value',
+                'attribute_values.slug as attribute_value_slug',
+                'attributes.id as attribute_id',
+                'attributes.name as attribute_name',
+                'attributes.slug as attribute_slug',
+            ])
+            ->selectRaw(
+                'GREATEST(COALESCE(SUM(inventory.stock - inventory.reserved_stock), 0), 0) as available_stock'
+            )
+            ->groupBy([
+                'variants.id',
+                'variants.price',
+                'variants.discount_price',
+                'variants.sku',
+                'variants.image',
+                'variant_values.id',
+                'attribute_values.id',
+                'attribute_values.value',
+                'attribute_values.slug',
+                'attributes.id',
+                'attributes.name',
+                'attributes.slug',
+                'attributes.sort_order',
+                'attribute_values.sort_order',
+            ])
+            ->orderBy('variants.id')
+            ->orderBy('attributes.sort_order')
+            ->orderBy('attribute_values.sort_order')
+            ->get();
     }
 
     private function applyCategoryFilter($query): void
     {
         $categories = array_filter((array) request('category', []));
-        if (!$categories) return;
+
+        if (! $categories) {
+            return;
+        }
+
         $query->whereHas('category', function ($query) use ($categories) {
             $query->whereIn('slug', $categories);
         });
@@ -80,7 +182,11 @@ class DesignOneProductService
     private function applyPriceFilter($query): void
     {
         $prices = array_filter((array) request('price', []));
-        if (!$prices) return;
+
+        if (! $prices) {
+            return;
+        }
+
         $query->where(function ($query) use ($prices) {
             foreach ($prices as $price) {
                 match ($price) {
@@ -103,9 +209,14 @@ class DesignOneProductService
         $attributes = ProductAttribute::query()
             ->where('status', true)
             ->get(['id', 'slug']);
+
         foreach ($attributes as $attribute) {
             $values = array_filter((array) request($attribute->slug, []));
-            if (!$values) continue;
+
+            if (! $values) {
+                continue;
+            }
+
             $query->whereHas('variants.values', function ($query) use ($attribute, $values) {
                 $query->where('attribute_id', $attribute->id)
                     ->whereHas('attributeValue', function ($query) use ($values) {
