@@ -31,7 +31,7 @@ use App\Http\Controllers\Admin\ProductAttributeValueController;
 
 require __DIR__.'/frontend.php';
 
-Route::middleware('auth')->prefix('admin')->name('admin.')->group(function () {
+Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(function () {
 
     Route::get('dashboard', [DashboardController::class, 'index'])->name('dashboard');
     Route::get('search', [SettingsController::class, 'menuSearch'])->name('search');

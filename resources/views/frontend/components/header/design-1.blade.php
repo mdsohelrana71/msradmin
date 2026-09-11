@@ -105,7 +105,15 @@
                     <div class="auth-section">
                         <div class="account-label">Welcome</div>
                         <div class="account-text">
-                            <a href="#">Sign In / Register</a>
+                            @auth
+                                @if (Auth::user()->role_id === null)
+                                    <a href="{{ route('customer.account') }}">My Account</a>
+                                @else
+                                    <a href="{{ route('admin.dashboard') }}">Admin Panel</a>
+                                @endif
+                            @else
+                                <a href="{{ route('customer.login') }}">Sign In / Register</a>
+                            @endauth
                         </div>
                     </div>
                 </div>

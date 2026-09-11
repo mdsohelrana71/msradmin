@@ -5,7 +5,26 @@ use App\Http\Controllers\Frontend\BlogController;
 use App\Http\Controllers\Frontend\HomeController;
 use App\Http\Controllers\Frontend\ProductController;
 use App\Http\Controllers\Frontend\NewsletterController;
+use App\Http\Controllers\Frontend\Customer\AuthController;
+use App\Http\Controllers\Frontend\Customer\AccountController;
 
+
+
+Route::prefix('customer')->name('customer.')->group(function () {
+    Route::middleware('guest')->group(function () {
+        Route::get('/login', [AuthController::class, 'showLogin'])->name('login');
+        Route::post('/login', [AuthController::class, 'login'])->name('login.submit');
+        Route::get('/register', [AuthController::class, 'showRegister'])->name('register');
+        Route::post('/register', [AuthController::class, 'register'])->name('register.submit');
+    });
+
+    Route::middleware('customer')->group(function () {
+        Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
+    });
+});
+Route::middleware('customer')->prefix('account')->name('customer.')->group(function () {
+    Route::get('/', [AccountController::class, 'index'])->name('account');
+});
 
 Route::get('/', [HomeController::class, 'index'])->name('home');
 
