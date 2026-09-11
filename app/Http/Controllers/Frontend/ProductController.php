@@ -9,11 +9,13 @@ class ProductController extends Controller
 {
     protected DesignManager $designManager;
     protected ProductService $productService;
+
     public function __construct(DesignManager $designManager, ProductService $productService)
     {
         $this->designManager = $designManager;
         $this->productService = $productService;
     }
+
     public function index(Request $request)
     {
         $data = $this->productService->getProducts();
@@ -34,15 +36,19 @@ class ProductController extends Controller
             $data
         );
     }
+
     public function show(Product $product)
     {
-        $product = $this->productService->getProduct($product);
-        $productDetailsView = $this->designManager->getSectionView('product_details');
+        $data = $this->productService->getProduct($product);
+        $data['productDetailsView'] = $this->designManager->getSectionView('product_details');
+        $data['productCardView'] = $this->designManager->getSectionView('product_card');
+
         return view(
             $this->designManager->getPageView('product_details'),
-            compact('product', 'productDetailsView')
+            $data
         );
     }
+
     public function search(Request $request)
     {
         $search = trim($request->get('q', ''));

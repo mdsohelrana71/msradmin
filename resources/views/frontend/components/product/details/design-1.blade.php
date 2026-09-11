@@ -179,50 +179,21 @@
         </div>
     </div>
 </div>
+
 <!-- Similar Products -->
 <div class="container-fluid px-4 px-md-5 pb-5 py-4">
     <div class="row g-3 g-lg-4">
         <h2 class="products-section-title">Similar Products</h2>
-        @forelse($similarProducts ?? [] as $similarProduct)
-            <div class="col-5-cards">
-                <div class="product-card position-relative">
-                    <a href="{{ route('products.show', $similarProduct) }}" class="product-image-container">
-                        @if($similarProduct->images?->count())
-                            <img src="{{ asset('storage/' . $similarProduct->images->first()->image) }}"
-                                alt="{{ $similarProduct->name }}">
-                        @elseif($similarProduct->image)
-                            <img src="{{ asset('storage/' . $similarProduct->image) }}"
-                                alt="{{ $similarProduct->name }}">
-                        @else
-                            <img src="{{ asset('frontend/images/p-1.jpg') }}"
-                                alt="{{ $similarProduct->name }}">
-                        @endif
-                    </a>
-                    <div class="product-info">
-                        <div>
-                            <div class="divider-lines">
-                                <div class="divider-line color1"></div>
-                                <div class="divider-line color2"></div>
-                                <div class="divider-line color3"></div>
-                                <div class="divider-line color4"></div>
-                            </div>
-                            <a href="{{ route('products.show', $similarProduct) }}"
-                                class="product-name d-block text-decoration-none">
-                                {{ $similarProduct->name }}
-                            </a>
-                            <div class="product-price-container">
-                                <span class="currency">৳</span>
-                                <span class="product-price">{{ number_format($similarProduct->price, 0) }}</span>
-                                <span class="product-vat">+ VAT</span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+
+        @forelse($similarProducts ?? [] as $product)
+            <div class="col-6 col-md-3 col-lg-2">
+                @include($productCardView, ['product' => $product])
             </div>
         @empty
         @endforelse
     </div>
 </div>
+
 <!-- Size Chart Modal -->
 <div class="modal fade" id="sizeChartModal" tabindex="-1">
     <div class="modal-dialog modal-dialog-centered modal-lg">

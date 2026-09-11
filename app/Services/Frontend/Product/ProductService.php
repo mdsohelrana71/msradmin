@@ -8,6 +8,7 @@ class ProductService
     protected DesignManager $designManager;
     protected DesignOneProductService $designOneProductService;
     protected DesignTwoProductService $designTwoProductService;
+
     public function __construct(
         DesignManager $designManager,
         DesignOneProductService $designOneProductService,
@@ -17,6 +18,7 @@ class ProductService
         $this->designOneProductService = $designOneProductService;
         $this->designTwoProductService = $designTwoProductService;
     }
+
     public function getProducts(): array
     {
         return match ($this->designManager->getActiveTemplate()) {
@@ -25,7 +27,8 @@ class ProductService
             default => throw new InvalidArgumentException('Product design service not found.'),
         };
     }
-    public function getProduct(Product $product): Product
+
+    public function getProduct(Product $product): array
     {
         return match ($this->designManager->getActiveTemplate()) {
             'design-1' => $this->designOneProductService->getProduct($product),

@@ -40,11 +40,34 @@ class DesignOneProductService
             'attributes' => $attributes,
         ];
     }
-    public function getProduct(Product $product): Product
+
+    public function getProduct(Product $product): array
     {
         abort_unless($product->status, 404);
-        return $product;
+
+        $product->load([
+            'images',
+            'category',
+        ]);
+
+        $similarProducts = Product::query()
+            ->where('status', true)
+            ->where('category_id', $product->category_id)
+            ->whereKeyNot($product->id)
+            ->with([
+                'images',
+                'category',
+            ])
+            ->latest('created_at')
+            ->take(6)
+            ->get();
+
+        return [
+            'product' => $product,
+            'similarProducts' => $similarProducts,
+        ];
     }
+
     private function applyCategoryFilter($query): void
     {
         $categories = array_filter((array) request('category', []));
@@ -53,6 +76,7 @@ class DesignOneProductService
             $query->whereIn('slug', $categories);
         });
     }
+
     private function applyPriceFilter($query): void
     {
         $prices = array_filter((array) request('price', []));
@@ -73,6 +97,7 @@ class DesignOneProductService
             }
         });
     }
+
     private function applyAttributeFilters($query): void
     {
         $attributes = ProductAttribute::query()
@@ -89,6 +114,7 @@ class DesignOneProductService
             });
         }
     }
+
     private function applySorting($query): void
     {
         match (request('sort', 'newest')) {
