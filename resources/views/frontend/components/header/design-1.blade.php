@@ -181,26 +181,14 @@
         }
 
         function openMobileMenu() {
-            if (mobileMenu) {
-                mobileMenu.classList.add('active');
-            }
-
-            if (mobileMenuOverlay) {
-                mobileMenuOverlay.classList.add('active');
-            }
-
+            if (mobileMenu) mobileMenu.classList.add('active');
+            if (mobileMenuOverlay) mobileMenuOverlay.classList.add('active');
             document.body.classList.add('menu-open');
         }
 
         function closeMobileMenu() {
-            if (mobileMenu) {
-                mobileMenu.classList.remove('active');
-            }
-
-            if (mobileMenuOverlay) {
-                mobileMenuOverlay.classList.remove('active');
-            }
-
+            if (mobileMenu) mobileMenu.classList.remove('active');
+            if (mobileMenuOverlay) mobileMenuOverlay.classList.remove('active');
             document.body.classList.remove('menu-open');
         }
 
@@ -220,9 +208,16 @@
         const productSearchResults = document.getElementById('productSearchResults');
         let searchTimeout;
 
+        function escapeHtml(value) {
+            const div = document.createElement('div');
+            div.textContent = value ?? '';
+            return div.innerHTML;
+        }
+
         if (productSearchInput && productSearchResults) {
             productSearchInput.addEventListener('input', function() {
                 const query = this.value.trim();
+
                 clearTimeout(searchTimeout);
 
                 if (query.length < 2) {
@@ -231,18 +226,31 @@
                     return;
                 }
 
-                searchTimeout = setTimeout(function() {
-                    fetch(`{{ route('products.search') }}?q=${encodeURIComponent(query)}`, {
-                        headers: {
-                            'X-Requested-With': 'XMLHttpRequest',
-                            'Accept': 'application/json'
+                searchTimeout = setTimeout(async function() {
+                    try {
+                        const response = await fetch(
+                            `{{ route('products.search') }}?q=${encodeURIComponent(query)}`,
+                            {
+                                method: 'GET',
+                                headers: {
+                                    'X-Requested-With': 'XMLHttpRequest',
+                                    'Accept': 'application/json'
+                                }
+                            }
+                        );
+
+                        if (!response.ok) {
+                            const errorText = await response.text();
+                            console.error('Search HTTP Error:', response.status);
+                            console.error(errorText);
+                            throw new Error(`HTTP ${response.status}`);
                         }
-                    })
-                    .then(response => response.json())
-                    .then(products => {
+
+                        const products = await response.json();
+
                         productSearchResults.innerHTML = '';
 
-                        if (!products.length) {
+                        if (!Array.isArray(products) || products.length === 0) {
                             productSearchResults.innerHTML = `
                                 <div class="product-search-empty">
                                     No products found
@@ -252,43 +260,55 @@
                             return;
                         }
 
-                        products.forEach(product => {
+                        products.forEach(function(product) {
                             const item = document.createElement('a');
+
                             item.href = product.url;
                             item.className = 'product-search-item';
+
                             item.innerHTML = `
                                 <div class="product-search-image">
-                                    <img src="${product.thumbnail}" alt="${escapeHtml(product.name)}">
+                                    ${product.thumbnail
+                                        ? `<img src="${product.thumbnail}" alt="${escapeHtml(product.name)}">`
+                                        : '<div class="product-search-no-image"></div>'
+                                    }
                                 </div>
                                 <div class="product-search-info">
-                                    <div class="product-search-name">${escapeHtml(product.name)}</div>
-                                    <div class="product-search-sku">SKU: ${escapeHtml(product.sku || 'N/A')}</div>
+                                    <div class="product-search-name">
+                                        ${escapeHtml(product.name)}
+                                    </div>
+                                    <div class="product-search-sku">
+                                        SKU: ${escapeHtml(product.sku || 'N/A')}
+                                    </div>
                                 </div>
                             `;
+
                             productSearchResults.appendChild(item);
                         });
 
                         productSearchResults.classList.add('active');
-                    })
-                    .catch(() => {
-                        productSearchResults.innerHTML = '';
-                        productSearchResults.classList.remove('active');
-                    });
+                    } catch (error) {
+                        console.error('Product Search Error:', error);
+
+                        productSearchResults.innerHTML = `
+                            <div class="product-search-empty">
+                                Search failed. Please try again.
+                            </div>
+                        `;
+
+                        productSearchResults.classList.add('active');
+                    }
                 }, 300);
             });
 
             document.addEventListener('click', function(event) {
-                if (!productSearchInput.contains(event.target) &&
-                    !productSearchResults.contains(event.target)) {
+                if (
+                    !productSearchInput.contains(event.target) &&
+                    !productSearchResults.contains(event.target)
+                ) {
                     productSearchResults.classList.remove('active');
                 }
             });
-        }
-
-        function escapeHtml(value) {
-            const div = document.createElement('div');
-            div.textContent = value ?? '';
-            return div.innerHTML;
         }
     });
 </script>

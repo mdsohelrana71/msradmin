@@ -3,6 +3,7 @@
 namespace App\Services\Frontend\Product;
 
 use App\Models\Category;
+use App\Models\Option;
 use App\Models\Product;
 use App\Models\ProductAttribute;
 use Illuminate\Support\Facades\DB;
@@ -15,6 +16,7 @@ class DesignOneProductService
             ->where('status', true)
             ->with(['images', 'category']);
 
+        $this->applyStockFilter($query);
         $this->applyCategoryFilter($query);
         $this->applyPriceFilter($query);
         $this->applyAttributeFilters($query);
@@ -71,11 +73,15 @@ class DesignOneProductService
             ? $this->getProductVariants($product->id)
             : collect();
 
-        $similarProducts = Product::query()
+        $similarQuery = Product::query()
             ->where('status', true)
             ->where('category_id', $product->category_id)
             ->whereKeyNot($product->id)
-            ->with(['images', 'category', 'brand'])
+            ->with(['images', 'category', 'brand']);
+
+        $this->applyStockFilter($similarQuery);
+
+        $similarProducts = $similarQuery
             ->latest('created_at')
             ->take(6)
             ->get();
@@ -87,6 +93,31 @@ class DesignOneProductService
             'productStock' => $productStock,
             'variants' => $variants,
         ];
+    }
+
+    private function applyStockFilter($query): void
+    {
+        $showOutOfStock = Option::getOption('show_out_of_stock_products', true);
+
+        if ((bool) $showOutOfStock) {
+            return;
+        }
+
+        $query->where(function ($query) {
+            $query->whereExists(function ($query) {
+                $query->select(DB::raw(1))
+                    ->from('product_inventory')
+                    ->whereColumn('product_inventory.product_id', 'products.id')
+                    ->whereNull('product_inventory.product_variant_id')
+                    ->whereRaw('product_inventory.stock > product_inventory.reserved_stock');
+            })->orWhereExists(function ($query) {
+                $query->select(DB::raw(1))
+                    ->from('product_inventory')
+                    ->whereColumn('product_inventory.product_id', 'products.id')
+                    ->whereNotNull('product_inventory.product_variant_id')
+                    ->whereRaw('product_inventory.stock > product_inventory.reserved_stock');
+            });
+        });
     }
 
     private function getProductStock(int $productId): int

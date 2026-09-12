@@ -1,22 +1,29 @@
 <?php
+
 namespace App\Services\Frontend\Product;
+
 use App\Models\Product;
 use App\Services\Frontend\DesignManager;
+use App\Services\Frontend\Global\ProductSearchService;
 use InvalidArgumentException;
+
 class ProductService
 {
     protected DesignManager $designManager;
     protected DesignOneProductService $designOneProductService;
     protected DesignTwoProductService $designTwoProductService;
+    protected ProductSearchService $productSearchService;
 
     public function __construct(
         DesignManager $designManager,
         DesignOneProductService $designOneProductService,
-        DesignTwoProductService $designTwoProductService
+        DesignTwoProductService $designTwoProductService,
+        ProductSearchService $productSearchService
     ) {
         $this->designManager = $designManager;
         $this->designOneProductService = $designOneProductService;
         $this->designTwoProductService = $designTwoProductService;
+        $this->productSearchService = $productSearchService;
     }
 
     public function getProducts(): array
@@ -39,15 +46,6 @@ class ProductService
 
     public function searchProducts(string $search)
     {
-        return Product::query()
-            ->where('status', true)
-            ->where(function ($query) use ($search) {
-                $query->where('name', 'like', "%{$search}%")
-                    ->orWhere('sku', 'like', "%{$search}%")
-                    ->orWhere('barcode', 'like', "%{$search}%");
-            })
-            ->latest('created_at')
-            ->take(8)
-            ->get(['id', 'name', 'sku', 'thumbnail', 'slug']);
+        return $this->productSearchService->search($search);
     }
 }
