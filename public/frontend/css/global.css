@@ -18,3 +18,84 @@ body {
     background-color: #ffffff;
     color: #333;
 }
+
+
+/* Common Container */
+.container {
+    max-width: 1245px;
+    margin: 0 auto;
+    padding: 3px 0px;
+    width: 100%;
+}
+
+/* Logo Styles */
+.logo {
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+}
+
+.logo img {
+    max-height: 50px;
+    width: auto;
+    transition: all 0.3s ease;
+    object-fit: contain;
+}
+
+.btn-primary{
+    background-color: var(--primary);
+    color: #fff;
+    border: 1px solid var(--primary);
+    border-radius: 0%;
+}
+
+.btn-primary:hover{
+    background-color: var(--secondary);
+    color: #fff;
+    border: 1px solid var(--primary);
+}
+
+.btn-outline-primary{
+    color: var(--primary);;
+    border: 1px solid var(--primary);
+    border-radius: 0%;
+}
+
+.btn-outline-primary:hover{
+    background-color: var(--secondary);
+    color: #fff;
+    border: 1px solid var(--primary);
+}
+
+.btn-outline-secondary{
+    background: var(--brand-light);
+    color: #000;
+    border: 1px solid var(--secondary);
+    border-radius: 0%;
+}
+
+.btn-outline-secondary:hover{
+    background-color: var(--primary);
+    color: #fff;
+    border: 1px solid var(--primary);
+}
+
+
+/* Responsive Logo */
+@media (max-width: 992px) {
+    .logo img {
+        max-height: 48px;
+    }
+}
+
+@media (max-width: 768px) {
+    .logo img {
+        max-height: 42px;
+    }
+}
+
+@media (max-width: 576px) {
+    .logo img {
+        max-height: 30px;
+    }
+}
