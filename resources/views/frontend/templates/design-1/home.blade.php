@@ -200,13 +200,13 @@
 
                                                 @if ($hasDiscount)
                                                     <small
-                                                        class="d-block text-decoration-line-through text-muted">${{ number_format($product->selling_price, 2) }}</small>
+                                                        class="d-block text-decoration-line-through text-muted">{{ $settings->price_symbol }}{{ number_format($product->selling_price, 2) }}</small>
                                                 @endif
                                             </div>
                                         </div>
 
                                         <div class="d-flex align-items-center gap-3">
-                                            <strong>${{ number_format($currentPrice, 2) }}</strong>
+                                            <strong>{{ $settings->price_symbol }}{{ number_format($currentPrice, 2) }}</strong>
 
                                             <a href="#" class="btn trending-add-cart-btn">
                                                 <i class="fas fa-shopping-cart"></i>

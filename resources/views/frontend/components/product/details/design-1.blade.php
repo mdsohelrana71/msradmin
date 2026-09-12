@@ -96,17 +96,17 @@
 
             <div class="d-flex align-items-center gap-2 my-2">
                 <span class="fs-6 fw-bold" id="productPrice">
-                    ৳ {{ number_format($isVariantProduct ? ($variants->first()->price ?? 0) : $product->selling_price, 2) }}
+                    {{ $settings->price_symbol }} {{ number_format($isVariantProduct ? ($variants->first()->price ?? 0) : $product->selling_price, 2) }}
                 </span>
 
                 <span id="productOldPrice"
                     class="text-muted small {{ $isVariantProduct ? (($variants->first()->discount_price ?? null) ? '' : 'd-none') : (($product->discount_price ?? null) ? '' : 'd-none') }}">
                     @if($isVariantProduct)
                         @if($variants->first()?->discount_price)
-                            <del>৳ {{ number_format($variants->first()->discount_price, 2) }}</del>
+                            <del>{{ $settings->price_symbol }} {{ number_format($variants->first()->discount_price, 2) }}</del>
                         @endif
                     @elseif($product->discount_price)
-                        <del>৳ {{ number_format($product->discount_price, 2) }}</del>
+                        <del>{{ $settings->price_symbol }} {{ number_format($product->discount_price, 2) }}</del>
                     @endif
                 </span>
 
@@ -233,8 +233,7 @@
 
                     <div class="collapse-content show">
                         <p class="small">
-                            Product colour may slightly vary, depending on your device's screen resolution.<br><br>
-                            Free shipping at ৳8000 purchase.
+                            {{ $product->short_description ?? 'No description available.' }}
                         </p>
                     </div>
                 </div>

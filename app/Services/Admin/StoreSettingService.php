@@ -4,6 +4,7 @@ namespace App\Services\Admin;
 
 use App\Models\Option;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Cache;
 
 class StoreSettingService
 {
@@ -31,5 +32,7 @@ class StoreSettingService
                 Option::setOption($key, $value);
             }
         });
+
+        Cache::forget('global_settings');
     }
 }

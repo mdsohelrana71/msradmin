@@ -27,6 +27,7 @@
         baseDiscountPrice: @json($product->discount_price ? (float) $product->discount_price : null),
         baseStock: @json((int) $productStock),
         baseSku: @json($product->sku),
+        priceSymbol: @json($settings->price_symbol),
         variants: @json($variants->values()),
     };
 
@@ -162,7 +163,7 @@
         }
 
         if (!variant) {
-            priceElement.textContent = '৳ 0.00';
+            priceElement.textContent = `${productData.priceSymbol} 0.00`;
 
             oldPriceElement.innerHTML = '';
             oldPriceElement.classList.add('d-none');
@@ -186,11 +187,11 @@
             : null;
         const stock = parseInt(variant.available_stock || 0);
 
-        priceElement.textContent = `৳ ${formatPrice(price)}`;
+        priceElement.textContent = `${productData.priceSymbol} ${formatPrice(price)}`;
 
         if (discountPrice !== null && discountPrice > 0) {
             oldPriceElement.innerHTML =
-                `<del>৳ ${formatPrice(discountPrice)}</del>`;
+                `<del>${productData.priceSymbol} ${formatPrice(discountPrice)}</del>`;
 
             oldPriceElement.classList.remove('d-none');
         } else {

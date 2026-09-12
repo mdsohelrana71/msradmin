@@ -5,6 +5,7 @@ namespace App\Providers;
 use App\Http\Middleware\EnsurePermission;
 use App\Models\Option;
 use Illuminate\Database\QueryException;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Facades\View;
@@ -39,6 +40,8 @@ class AppServiceProvider extends ServiceProvider
             'facebook_url',
             'twitter_url',
             'instagram_url',
+            'price_symbol',
+            'show_out_of_stock_products',
         ];
 
         $defaults = [
@@ -53,12 +56,22 @@ class AppServiceProvider extends ServiceProvider
             'facebook_url' => '',
             'twitter_url' => '',
             'instagram_url' => '',
+            'price_symbol' => '৳',
+            'show_out_of_stock_products' => true,
         ];
 
         try {
-            $settings = Schema::hasTable('options')
-                ? Option::getSettings($names, $defaults)
-                : (object) $defaults;
+            if (Schema::hasTable('options')) {
+                $cachedSettings = Cache::remember(
+                    'global_settings',
+                    now()->addDay(),
+                    fn () => (array) Option::getSettings($names, $defaults)
+                );
+
+                $settings = (object) $cachedSettings;
+            } else {
+                $settings = (object) $defaults;
+            }
         } catch (QueryException) {
             $settings = (object) $defaults;
         }
