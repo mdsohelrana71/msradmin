@@ -1,35 +1,37 @@
 <?php
+
 namespace App\Services\Frontend\Blog;
-use App\Services\Frontend\DesignManager;
-use InvalidArgumentException;
+
+use App\Models\Blog;
+use App\Services\Frontend\Global\BlogQuery;
+
 class BlogService
 {
-    protected DesignManager $designManager;
-    protected DesignOneBlogService $designOneBlogService;
-    protected DesignTwoBlogService $designTwoBlogService;
-    public function __construct(
-        DesignManager $designManager,
-        DesignOneBlogService $designOneBlogService,
-        DesignTwoBlogService $designTwoBlogService
-    ) {
-        $this->designManager = $designManager;
-        $this->designOneBlogService = $designOneBlogService;
-        $this->designTwoBlogService = $designTwoBlogService;
+    protected BlogQuery $blogQuery;
+
+    public function __construct(BlogQuery $blogQuery)
+    {
+        $this->blogQuery = $blogQuery;
     }
+
     public function getBlogs()
     {
-        return match ($this->designManager->getActiveTemplate()) {
-            'design-1' => $this->designOneBlogService->getBlogs(),
-            'design-2' => $this->designTwoBlogService->getBlogs(),
-            default => throw new InvalidArgumentException('Blog design service not found.'),
-        };
+        return $this->blogQuery
+            ->frontend()
+            ->with(['category:id,name', 'author:id,name'])
+            ->latest()
+            ->paginate(12)
+            ->withQueryString();
     }
-    public function getBlog($blog)
+
+    public function getBlog(Blog $blog): Blog
     {
-        return match ($this->designManager->getActiveTemplate()) {
-            'design-1' => $this->designOneBlogService->getBlog($blog),
-            'design-2' => $this->designTwoBlogService->getBlog($blog),
-            default => throw new InvalidArgumentException('Blog design service not found.'),
-        };
+        abort_unless($blog->status, 404);
+
+        return $blog->load([
+            'category:id,name',
+            'author:id,name',
+            'tags:id,name',
+        ]);
     }
 }
