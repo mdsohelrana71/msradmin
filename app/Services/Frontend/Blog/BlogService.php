@@ -24,6 +24,16 @@ class BlogService
             ->withQueryString();
     }
 
+    public function getLatestBlogs(int $limit = 3)
+    {
+        return $this->blogQuery
+            ->frontend()
+            ->with(['category:id,name', 'author:id,name'])
+            ->latest('created_at')
+            ->take($limit)
+            ->get();
+    }
+
     public function getBlog(Blog $blog): Blog
     {
         abort_unless($blog->status, 404);

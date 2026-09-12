@@ -1,11 +1,14 @@
 @extends('frontend.layouts.app')
 
 @section('title', config('app.name'))
+
 @push('styles')
+    <link rel="stylesheet" href="{{ asset('frontend/css/owl.carousel.min.css') }}">
     <link rel="stylesheet" href="{{ app(\App\Services\Frontend\DesignManager::class)->getTemplateCss('home') }}">
     <link rel="stylesheet" href="{{ app(\App\Services\Frontend\DesignManager::class)->getSectionCss('product_card') }}">
     <link rel="stylesheet" href="{{ app(\App\Services\Frontend\DesignManager::class)->getSectionCss('blog_card') }}">
 @endpush
+
 @section('content')
 
     <!-- Hero Section Begin -->
@@ -19,34 +22,34 @@
                             <span>All departments</span>
                         </div>
                         <ul>
-                            <li><a href="#">Fresh Meat</a></li>
-                            <li><a href="#">Vegetables</a></li>
-                            <li><a href="#">Fruit & Nut Gifts</a></li>
-                            <li><a href="#">Fresh Berries</a></li>
-                            <li><a href="#">Ocean Foods</a></li>
-                            <li><a href="#">Butter & Eggs</a></li>
-                            <li><a href="#">Fastfood</a></li>
-                            <li><a href="#">Fresh Onion</a></li>
-                            <li><a href="#">Papayaya & Crisps</a></li>
-                            <li><a href="#">Oatmeal</a></li>
-                            <li><a href="#">Fresh Bananas</a></li>
+                            @forelse ($categories as $category)
+                                <li>
+                                    <a href="{{ route('products.index', ['category' => $category->slug]) }}">
+                                        {{ $category->name }}
+                                    </a>
+                                </li>
+                            @empty
+                                <li><a href="#">No categories found</a></li>
+                            @endforelse
                         </ul>
                     </div>
                 </div>
+
                 <div class="col-lg-9">
                     <div class="hero__search">
                         <div class="hero__search__form">
-                            <form action="#">
+                            <form action="{{ route('products.index') }}" method="GET">
                                 <div class="hero__search__categories">
                                     All Categories
                                     <span class="arrow_carrot-down"></span>
                                 </div>
-                                <input type="text" class="search-box" id="productSearchInput"
-                                    placeholder="What do yo u need?" autocomplete="off">
+                                <input type="text" name="search" class="search-box" id="productSearchInput"
+                                    placeholder="What do you need?" autocomplete="off">
                                 <button type="submit" class="site-btn">SEARCH</button>
                                 <div class="product-search-results" id="productSearchResults"></div>
                             </form>
                         </div>
+
                         <div class="hero__search__phone">
                             <div class="hero__search__phone__icon">
                                 <i class="fa fa-phone"></i>
@@ -57,14 +60,45 @@
                             </div>
                         </div>
                     </div>
-                    <div class="hero__item set-bg" data-setbg="img/hero/banner.jpg">
-                        <div class="hero__text">
-                            <span>FRUIT FRESH</span>
-                            <h2>Vegetable <br />100% Organic</h2>
-                            <p>Free Pickup and Delivery Available</p>
-                            <a href="#" class="primary-btn">SHOP NOW</a>
+
+                    @if ($sliders->isNotEmpty())
+                        <div class="hero__slider owl-carousel">
+                            @foreach ($sliders as $slider)
+                                <div class="hero__item set-bg" data-setbg="{{ asset('storage/' . $slider->image) }}">
+                                    <div class="hero__text">
+                                        @if ($slider->subtitle)
+                                            <span>{{ $slider->subtitle }}</span>
+                                        @endif
+
+                                        @if ($slider->title)
+                                            <h2>{!! nl2br(e($slider->title)) !!}</h2>
+                                        @endif
+
+                                        @if ($slider->description)
+                                            <p>{{ $slider->description }}</p>
+                                        @endif
+
+                                        @if ($slider->button_text && $slider->button_url)
+                                            <a href="{{ $slider->button_url }}" class="primary-btn">
+                                                {{ $slider->button_text }}
+                                            </a>
+                                        @endif
+                                    </div>
+                                </div>
+                            @endforeach
                         </div>
-                    </div>
+                    @else
+                        <div class="hero__item set-bg" data-setbg="{{ asset('frontend/images/default-slider.jpg') }}">
+                            <div class="hero__text">
+                                <span>WELCOME</span>
+                                <h2>{{ $settings->site_name }}</h2>
+                                <p>Shop our latest products</p>
+                                <a href="{{ route('products.index') }}" class="primary-btn">
+                                    SHOP NOW
+                                </a>
+                            </div>
+                        </div>
+                    @endif
                 </div>
             </div>
         </div>
@@ -76,31 +110,22 @@
         <div class="container">
             <div class="row">
                 <div class="categories__slider owl-carousel">
-                    <div class="col-lg-3">
-                        <div class="categories__item set-bg" data-setbg="img/categories/cat-1.jpg">
-                            <h5><a href="#">Fresh Fruit</a></h5>
+                    @forelse ($categories as $category)
+                        <div class="col-lg-3">
+                            <div class="categories__item set-bg"
+                                @if ($category->image) data-setbg="{{ asset('storage/' . $category->image) }}" @endif>
+                                <h5>
+                                    <a href="{{ route('products.index', ['category' => $category->slug]) }}">
+                                        {{ $category->name }}
+                                    </a>
+                                </h5>
+                            </div>
                         </div>
-                    </div>
-                    <div class="col-lg-3">
-                        <div class="categories__item set-bg" data-setbg="img/categories/cat-2.jpg">
-                            <h5><a href="#">Dried Fruit</a></h5>
+                    @empty
+                        <div class="col-12">
+                            <p class="text-center">No categories found.</p>
                         </div>
-                    </div>
-                    <div class="col-lg-3">
-                        <div class="categories__item set-bg" data-setbg="img/categories/cat-3.jpg">
-                            <h5><a href="#">Vegetables</a></h5>
-                        </div>
-                    </div>
-                    <div class="col-lg-3">
-                        <div class="categories__item set-bg" data-setbg="img/categories/cat-4.jpg">
-                            <h5><a href="#">drink fruits</a></h5>
-                        </div>
-                    </div>
-                    <div class="col-lg-3">
-                        <div class="categories__item set-bg" data-setbg="img/categories/cat-5.jpg">
-                            <h5><a href="#">drink fruits</a></h5>
-                        </div>
-                    </div>
+                    @endforelse
                 </div>
             </div>
         </div>
@@ -115,138 +140,32 @@
                     <div class="section-title">
                         <h2>Featured Product</h2>
                     </div>
-                    <div class="featured__controls">
-                        <ul>
-                            <li class="active" data-filter="*">All</li>
-                            <li data-filter=".oranges">Oranges</li>
-                            <li data-filter=".fresh-meat">Fresh Meat</li>
-                            <li data-filter=".vegetables">Vegetables</li>
-                            <li data-filter=".fastfood">Fastfood</li>
-                        </ul>
-                    </div>
+
+                    @if ($topTenProducts->isNotEmpty())
+                        <div class="featured__controls">
+                            <ul>
+                                <li class="active" data-filter="*">All</li>
+                                @foreach ($categories as $category)
+                                    <li data-filter=".category-{{ $category->id }}">
+                                        {{ $category->name }}
+                                    </li>
+                                @endforeach
+                            </ul>
+                        </div>
+                    @endif
                 </div>
             </div>
+
             <div class="row featured__filter">
-                <div class="col-lg-3 col-md-4 col-sm-6 mix oranges fresh-meat">
-                    <div class="featured__item">
-                        <div class="featured__item__pic set-bg" data-setbg="img/featured/feature-1.jpg">
-                            <ul class="featured__item__pic__hover">
-                                <li><a href="#"><i class="fa fa-heart"></i></a></li>
-                                <li><a href="#"><i class="fa fa-retweet"></i></a></li>
-                                <li><a href="#"><i class="fa fa-shopping-cart"></i></a></li>
-                            </ul>
-                        </div>
-                        <div class="featured__item__text">
-                            <h6><a href="#">Crab Pool Security</a></h6>
-                            <h5>$30.00</h5>
-                        </div>
+                @forelse ($topTenProducts as $product)
+                    <div class="col-lg-3 col-md-4 col-sm-6 mix category-{{ $product->category_id }}">
+                        @include($productCardView, ['product' => $product])
                     </div>
-                </div>
-                <div class="col-lg-3 col-md-4 col-sm-6 mix vegetables fastfood">
-                    <div class="featured__item">
-                        <div class="featured__item__pic set-bg" data-setbg="img/featured/feature-2.jpg">
-                            <ul class="featured__item__pic__hover">
-                                <li><a href="#"><i class="fa fa-heart"></i></a></li>
-                                <li><a href="#"><i class="fa fa-retweet"></i></a></li>
-                                <li><a href="#"><i class="fa fa-shopping-cart"></i></a></li>
-                            </ul>
-                        </div>
-                        <div class="featured__item__text">
-                            <h6><a href="#">Crab Pool Security</a></h6>
-                            <h5>$30.00</h5>
-                        </div>
+                @empty
+                    <div class="col-12">
+                        <p class="text-center">No featured products found.</p>
                     </div>
-                </div>
-                <div class="col-lg-3 col-md-4 col-sm-6 mix vegetables fresh-meat">
-                    <div class="featured__item">
-                        <div class="featured__item__pic set-bg" data-setbg="img/featured/feature-3.jpg">
-                            <ul class="featured__item__pic__hover">
-                                <li><a href="#"><i class="fa fa-heart"></i></a></li>
-                                <li><a href="#"><i class="fa fa-retweet"></i></a></li>
-                                <li><a href="#"><i class="fa fa-shopping-cart"></i></a></li>
-                            </ul>
-                        </div>
-                        <div class="featured__item__text">
-                            <h6><a href="#">Crab Pool Security</a></h6>
-                            <h5>$30.00</h5>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-lg-3 col-md-4 col-sm-6 mix fastfood oranges">
-                    <div class="featured__item">
-                        <div class="featured__item__pic set-bg" data-setbg="img/featured/feature-4.jpg">
-                            <ul class="featured__item__pic__hover">
-                                <li><a href="#"><i class="fa fa-heart"></i></a></li>
-                                <li><a href="#"><i class="fa fa-retweet"></i></a></li>
-                                <li><a href="#"><i class="fa fa-shopping-cart"></i></a></li>
-                            </ul>
-                        </div>
-                        <div class="featured__item__text">
-                            <h6><a href="#">Crab Pool Security</a></h6>
-                            <h5>$30.00</h5>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-lg-3 col-md-4 col-sm-6 mix fresh-meat vegetables">
-                    <div class="featured__item">
-                        <div class="featured__item__pic set-bg" data-setbg="img/featured/feature-5.jpg">
-                            <ul class="featured__item__pic__hover">
-                                <li><a href="#"><i class="fa fa-heart"></i></a></li>
-                                <li><a href="#"><i class="fa fa-retweet"></i></a></li>
-                                <li><a href="#"><i class="fa fa-shopping-cart"></i></a></li>
-                            </ul>
-                        </div>
-                        <div class="featured__item__text">
-                            <h6><a href="#">Crab Pool Security</a></h6>
-                            <h5>$30.00</h5>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-lg-3 col-md-4 col-sm-6 mix oranges fastfood">
-                    <div class="featured__item">
-                        <div class="featured__item__pic set-bg" data-setbg="img/featured/feature-6.jpg">
-                            <ul class="featured__item__pic__hover">
-                                <li><a href="#"><i class="fa fa-heart"></i></a></li>
-                                <li><a href="#"><i class="fa fa-retweet"></i></a></li>
-                                <li><a href="#"><i class="fa fa-shopping-cart"></i></a></li>
-                            </ul>
-                        </div>
-                        <div class="featured__item__text">
-                            <h6><a href="#">Crab Pool Security</a></h6>
-                            <h5>$30.00</h5>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-lg-3 col-md-4 col-sm-6 mix fresh-meat vegetables">
-                    <div class="featured__item">
-                        <div class="featured__item__pic set-bg" data-setbg="img/featured/feature-7.jpg">
-                            <ul class="featured__item__pic__hover">
-                                <li><a href="#"><i class="fa fa-heart"></i></a></li>
-                                <li><a href="#"><i class="fa fa-retweet"></i></a></li>
-                                <li><a href="#"><i class="fa fa-shopping-cart"></i></a></li>
-                            </ul>
-                        </div>
-                        <div class="featured__item__text">
-                            <h6><a href="#">Crab Pool Security</a></h6>
-                            <h5>$30.00</h5>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-lg-3 col-md-4 col-sm-6 mix fastfood vegetables">
-                    <div class="featured__item">
-                        <div class="featured__item__pic set-bg" data-setbg="img/featured/feature-8.jpg">
-                            <ul class="featured__item__pic__hover">
-                                <li><a href="#"><i class="fa fa-heart"></i></a></li>
-                                <li><a href="#"><i class="fa fa-retweet"></i></a></li>
-                                <li><a href="#"><i class="fa fa-shopping-cart"></i></a></li>
-                            </ul>
-                        </div>
-                        <div class="featured__item__text">
-                            <h6><a href="#">Crab Pool Security</a></h6>
-                            <h5>$30.00</h5>
-                        </div>
-                    </div>
-                </div>
+                @endforelse
             </div>
         </div>
     </section>
@@ -258,12 +177,12 @@
             <div class="row">
                 <div class="col-lg-6 col-md-6 col-sm-6">
                     <div class="banner__pic">
-                        <img src="img/banner/banner-1.jpg" alt="">
+                        <img src="{{ asset('frontend/images/banner/banner-1.jpg') }}" alt="">
                     </div>
                 </div>
                 <div class="col-lg-6 col-md-6 col-sm-6">
                     <div class="banner__pic">
-                        <img src="img/banner/banner-2.jpg" alt="">
+                        <img src="{{ asset('frontend/images/banner/banner-2.jpg') }}" alt="">
                     </div>
                 </div>
             </div>
@@ -275,198 +194,120 @@
     <section class="latest-product spad">
         <div class="container">
             <div class="row">
+
+                <!-- New Arrivals -->
                 <div class="col-lg-4 col-md-6">
                     <div class="latest-product__text">
-                        <h4>Latest Products</h4>
+                        <h4>New Arrivals</h4>
+
                         <div class="latest-product__slider owl-carousel">
-                            <div class="latest-prdouct__slider__item">
-                                <a href="#" class="latest-product__item">
-                                    <div class="latest-product__item__pic">
-                                        <img src="img/latest-product/lp-1.jpg" alt="">
-                                    </div>
-                                    <div class="latest-product__item__text">
-                                        <h6>Crab Pool Security</h6>
-                                        <span>$30.00</span>
-                                    </div>
-                                </a>
-                                <a href="#" class="latest-product__item">
-                                    <div class="latest-product__item__pic">
-                                        <img src="img/latest-product/lp-2.jpg" alt="">
-                                    </div>
-                                    <div class="latest-product__item__text">
-                                        <h6>Crab Pool Security</h6>
-                                        <span>$30.00</span>
-                                    </div>
-                                </a>
-                                <a href="#" class="latest-product__item">
-                                    <div class="latest-product__item__pic">
-                                        <img src="img/latest-product/lp-3.jpg" alt="">
-                                    </div>
-                                    <div class="latest-product__item__text">
-                                        <h6>Crab Pool Security</h6>
-                                        <span>$30.00</span>
-                                    </div>
-                                </a>
-                            </div>
-                            <div class="latest-prdouct__slider__item">
-                                <a href="#" class="latest-product__item">
-                                    <div class="latest-product__item__pic">
-                                        <img src="img/latest-product/lp-1.jpg" alt="">
-                                    </div>
-                                    <div class="latest-product__item__text">
-                                        <h6>Crab Pool Security</h6>
-                                        <span>$30.00</span>
-                                    </div>
-                                </a>
-                                <a href="#" class="latest-product__item">
-                                    <div class="latest-product__item__pic">
-                                        <img src="img/latest-product/lp-2.jpg" alt="">
-                                    </div>
-                                    <div class="latest-product__item__text">
-                                        <h6>Crab Pool Security</h6>
-                                        <span>$30.00</span>
-                                    </div>
-                                </a>
-                                <a href="#" class="latest-product__item">
-                                    <div class="latest-product__item__pic">
-                                        <img src="img/latest-product/lp-3.jpg" alt="">
-                                    </div>
-                                    <div class="latest-product__item__text">
-                                        <h6>Crab Pool Security</h6>
-                                        <span>$30.00</span>
-                                    </div>
-                                </a>
-                            </div>
+                            @forelse ($newArrivalsProducts->chunk(3) as $products)
+                                <div class="latest-prdouct__slider__item">
+                                    @foreach ($products as $product)
+                                        @php
+                                            $productImage = $product->thumbnail
+                                                ? asset('storage/' . $product->thumbnail)
+                                                : ($product->images->first()?->image
+                                                    ? asset('storage/' . $product->images->first()->image)
+                                                    : asset('frontend/images/product-placeholder.jpg'));
+                                        @endphp
+
+                                        <a href="{{ route('products.show', ['product' => $product->slug]) }}"
+                                            class="latest-product__item">
+                                            <div class="latest-product__item__pic">
+                                                <img src="{{ $productImage }}" alt="{{ $product->name }}">
+                                            </div>
+
+                                            <div class="latest-product__item__text">
+                                                <h6>{{ $product->name }}</h6>
+                                                <span>
+                                                    {{ $settings->price_symbol }}{{ number_format($product->selling_price, 2) }}
+                                                </span>
+                                            </div>
+                                        </a>
+                                    @endforeach
+                                </div>
+                            @empty
+                                <p>No products found.</p>
+                            @endforelse
                         </div>
                     </div>
                 </div>
+
+                <!-- Featured Products -->
                 <div class="col-lg-4 col-md-6">
                     <div class="latest-product__text">
-                        <h4>Top Rated Products</h4>
+                        <h4>Featured Products</h4>
+
                         <div class="latest-product__slider owl-carousel">
-                            <div class="latest-prdouct__slider__item">
-                                <a href="#" class="latest-product__item">
-                                    <div class="latest-product__item__pic">
-                                        <img src="img/latest-product/lp-1.jpg" alt="">
-                                    </div>
-                                    <div class="latest-product__item__text">
-                                        <h6>Crab Pool Security</h6>
-                                        <span>$30.00</span>
-                                    </div>
-                                </a>
-                                <a href="#" class="latest-product__item">
-                                    <div class="latest-product__item__pic">
-                                        <img src="img/latest-product/lp-2.jpg" alt="">
-                                    </div>
-                                    <div class="latest-product__item__text">
-                                        <h6>Crab Pool Security</h6>
-                                        <span>$30.00</span>
-                                    </div>
-                                </a>
-                                <a href="#" class="latest-product__item">
-                                    <div class="latest-product__item__pic">
-                                        <img src="img/latest-product/lp-3.jpg" alt="">
-                                    </div>
-                                    <div class="latest-product__item__text">
-                                        <h6>Crab Pool Security</h6>
-                                        <span>$30.00</span>
-                                    </div>
-                                </a>
-                            </div>
-                            <div class="latest-prdouct__slider__item">
-                                <a href="#" class="latest-product__item">
-                                    <div class="latest-product__item__pic">
-                                        <img src="img/latest-product/lp-1.jpg" alt="">
-                                    </div>
-                                    <div class="latest-product__item__text">
-                                        <h6>Crab Pool Security</h6>
-                                        <span>$30.00</span>
-                                    </div>
-                                </a>
-                                <a href="#" class="latest-product__item">
-                                    <div class="latest-product__item__pic">
-                                        <img src="img/latest-product/lp-2.jpg" alt="">
-                                    </div>
-                                    <div class="latest-product__item__text">
-                                        <h6>Crab Pool Security</h6>
-                                        <span>$30.00</span>
-                                    </div>
-                                </a>
-                                <a href="#" class="latest-product__item">
-                                    <div class="latest-product__item__pic">
-                                        <img src="img/latest-product/lp-3.jpg" alt="">
-                                    </div>
-                                    <div class="latest-product__item__text">
-                                        <h6>Crab Pool Security</h6>
-                                        <span>$30.00</span>
-                                    </div>
-                                </a>
-                            </div>
+                            @forelse ($topTenProducts->chunk(3) as $products)
+                                <div class="latest-prdouct__slider__item">
+                                    @foreach ($products as $product)
+                                        @php
+                                            $productImage = $product->thumbnail
+                                                ? asset('storage/' . $product->thumbnail)
+                                                : ($product->images->first()?->image
+                                                    ? asset('storage/' . $product->images->first()->image)
+                                                    : asset('frontend/images/product-placeholder.jpg'));
+                                        @endphp
+
+                                        <a href="{{ route('products.show', ['product' => $product->slug]) }}"
+                                            class="latest-product__item">
+                                            <div class="latest-product__item__pic">
+                                                <img src="{{ $productImage }}" alt="{{ $product->name }}">
+                                            </div>
+
+                                            <div class="latest-product__item__text">
+                                                <h6>{{ $product->name }}</h6>
+                                                <span>
+                                                    {{ $settings->price_symbol }}{{ number_format($product->selling_price, 2) }}
+                                                </span>
+                                            </div>
+                                        </a>
+                                    @endforeach
+                                </div>
+                            @empty
+                                <p>No products found.</p>
+                            @endforelse
                         </div>
                     </div>
                 </div>
+
+                <!-- Sale Products -->
                 <div class="col-lg-4 col-md-6">
                     <div class="latest-product__text">
-                        <h4>Review Products</h4>
+                        <h4>Sale Products</h4>
+
                         <div class="latest-product__slider owl-carousel">
-                            <div class="latest-prdouct__slider__item">
-                                <a href="#" class="latest-product__item">
-                                    <div class="latest-product__item__pic">
-                                        <img src="img/latest-product/lp-1.jpg" alt="">
-                                    </div>
-                                    <div class="latest-product__item__text">
-                                        <h6>Crab Pool Security</h6>
-                                        <span>$30.00</span>
-                                    </div>
-                                </a>
-                                <a href="#" class="latest-product__item">
-                                    <div class="latest-product__item__pic">
-                                        <img src="img/latest-product/lp-2.jpg" alt="">
-                                    </div>
-                                    <div class="latest-product__item__text">
-                                        <h6>Crab Pool Security</h6>
-                                        <span>$30.00</span>
-                                    </div>
-                                </a>
-                                <a href="#" class="latest-product__item">
-                                    <div class="latest-product__item__pic">
-                                        <img src="img/latest-product/lp-3.jpg" alt="">
-                                    </div>
-                                    <div class="latest-product__item__text">
-                                        <h6>Crab Pool Security</h6>
-                                        <span>$30.00</span>
-                                    </div>
-                                </a>
-                            </div>
-                            <div class="latest-prdouct__slider__item">
-                                <a href="#" class="latest-product__item">
-                                    <div class="latest-product__item__pic">
-                                        <img src="img/latest-product/lp-1.jpg" alt="">
-                                    </div>
-                                    <div class="latest-product__item__text">
-                                        <h6>Crab Pool Security</h6>
-                                        <span>$30.00</span>
-                                    </div>
-                                </a>
-                                <a href="#" class="latest-product__item">
-                                    <div class="latest-product__item__pic">
-                                        <img src="img/latest-product/lp-2.jpg" alt="">
-                                    </div>
-                                    <div class="latest-product__item__text">
-                                        <h6>Crab Pool Security</h6>
-                                        <span>$30.00</span>
-                                    </div>
-                                </a>
-                                <a href="#" class="latest-product__item">
-                                    <div class="latest-product__item__pic">
-                                        <img src="img/latest-product/lp-3.jpg" alt="">
-                                    </div>
-                                    <div class="latest-product__item__text">
-                                        <h6>Crab Pool Security</h6>
-                                        <span>$30.00</span>
-                                    </div>
-                                </a>
-                            </div>
+                            @forelse ($saleProducts->chunk(3) as $products)
+                                <div class="latest-prdouct__slider__item">
+                                    @foreach ($products as $product)
+                                        @php
+                                            $productImage = $product->thumbnail
+                                                ? asset('storage/' . $product->thumbnail)
+                                                : ($product->images->first()?->image
+                                                    ? asset('storage/' . $product->images->first()->image)
+                                                    : asset('frontend/images/product-placeholder.jpg'));
+                                        @endphp
+
+                                        <a href="{{ route('products.show', ['product' => $product->slug]) }}"
+                                            class="latest-product__item">
+                                            <div class="latest-product__item__pic">
+                                                <img src="{{ $productImage }}" alt="{{ $product->name }}">
+                                            </div>
+
+                                            <div class="latest-product__item__text">
+                                                <h6>{{ $product->name }}</h6>
+                                                <span>
+                                                    {{ $settings->price_symbol }}{{ number_format($product->discount_price, 2) }}
+                                                </span>
+                                            </div>
+                                        </a>
+                                    @endforeach
+                                </div>
+                            @empty
+                                <p>No sale products found.</p>
+                            @endforelse
                         </div>
                     </div>
                 </div>
@@ -485,6 +326,7 @@
                     </div>
                 </div>
             </div>
+
             <div class="row">
                 @forelse ($blogs as $blog)
                     <div class="col-lg-4 col-md-4 col-sm-6">
@@ -503,9 +345,9 @@
 @endsection
 
 @push('scripts')
+    <script src="{{ asset('frontend/js/owl.carousel.min.js') }}"></script>
     <script>
         document.addEventListener('DOMContentLoaded', function() {
-
             const productSearchInput = document.getElementById('productSearchInput');
             const productSearchResults = document.getElementById('productSearchResults');
             let searchTimeout;
@@ -541,9 +383,6 @@
                             );
 
                             if (!response.ok) {
-                                const errorText = await response.text();
-                                console.error('Search HTTP Error:', response.status);
-                                console.error(errorText);
                                 throw new Error(`HTTP ${response.status}`);
                             }
 
@@ -553,10 +392,10 @@
 
                             if (!Array.isArray(products) || products.length === 0) {
                                 productSearchResults.innerHTML = `
-                            <div class="product-search-empty">
-                                No products found
-                            </div>
-                        `;
+                                    <div class="product-search-empty">
+                                        No products found
+                                    </div>
+                                `;
                                 productSearchResults.classList.add('active');
                                 return;
                             }
@@ -568,21 +407,21 @@
                                 item.className = 'product-search-item';
 
                                 item.innerHTML = `
-                            <div class="product-search-image">
-                                ${product.thumbnail
-                                    ? `<img src="${product.thumbnail}" alt="${escapeHtml(product.name)}">`
-                                    : '<div class="product-search-no-image"></div>'
-                                }
-                            </div>
-                            <div class="product-search-info">
-                                <div class="product-search-name">
-                                    ${escapeHtml(product.name)}
-                                </div>
-                                <div class="product-search-sku">
-                                    SKU: ${escapeHtml(product.sku || 'N/A')}
-                                </div>
-                            </div>
-                        `;
+                                    <div class="product-search-image">
+                                        ${product.thumbnail
+                                            ? `<img src="${product.thumbnail}" alt="${escapeHtml(product.name)}">`
+                                            : '<div class="product-search-no-image"></div>'
+                                        }
+                                    </div>
+                                    <div class="product-search-info">
+                                        <div class="product-search-name">
+                                            ${escapeHtml(product.name)}
+                                        </div>
+                                        <div class="product-search-sku">
+                                            SKU: ${escapeHtml(product.sku || 'N/A')}
+                                        </div>
+                                    </div>
+                                `;
 
                                 productSearchResults.appendChild(item);
                             });
@@ -592,10 +431,10 @@
                             console.error('Product Search Error:', error);
 
                             productSearchResults.innerHTML = `
-                        <div class="product-search-empty">
-                            Search failed. Please try again.
-                        </div>
-                    `;
+                                <div class="product-search-empty">
+                                    Search failed. Please try again.
+                                </div>
+                            `;
 
                             productSearchResults.classList.add('active');
                         }

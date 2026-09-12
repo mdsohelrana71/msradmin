@@ -1,8 +1,9 @@
 <?php
+
 namespace App\Services\Frontend\Home;
 
 use App\Models\Slider;
-use App\Models\Blog;
+use App\Services\Frontend\Blog\BlogService;
 use App\Services\Frontend\DesignManager;
 use App\Services\Frontend\Global\CategoryService;
 use App\Services\Frontend\Global\ProductQuery;
@@ -12,15 +13,18 @@ class DesignTwoHomeService
     protected DesignManager $designManager;
     protected CategoryService $categoryService;
     protected ProductQuery $productQuery;
+    protected BlogService $blogService;
 
     public function __construct(
         DesignManager $designManager,
         CategoryService $categoryService,
-        ProductQuery $productQuery
+        ProductQuery $productQuery,
+        BlogService $blogService
     ) {
         $this->designManager = $designManager;
         $this->categoryService = $categoryService;
         $this->productQuery = $productQuery;
+        $this->blogService = $blogService;
     }
 
     public function getData(): array
@@ -45,38 +49,32 @@ class DesignTwoHomeService
 
         $topTenProducts = (clone $baseQuery)
             ->where('is_featured', true)
+            ->with(['images', 'category'])
             ->latest('created_at')
             ->take(10)
-            ->get();
-
-        $trendingProducts = (clone $baseQuery)
-            ->latest('created_at')
-            ->take(6)
             ->get();
 
         $saleProducts = (clone $baseQuery)
             ->whereNotNull('discount_price')
             ->whereColumn('discount_price', '<', 'selling_price')
+            ->with(['images', 'category'])
             ->latest('created_at')
-            ->take(5)
+            ->take(3)
             ->get();
+        
 
         $newArrivalsProducts = (clone $baseQuery)
+            ->with(['images', 'category'])
             ->latest('created_at')
-            ->take(5)
+            ->take(3)
             ->get();
 
-        $blogs = Blog::query()
-            ->where('status', true)
-            ->with(['category:id,name', 'author:id,name'])
-            ->latest()
-            ->paginate(3);
+        $blogs = $this->blogService->getLatestBlogs(3);
 
         return [
             'sliders' => $sliders,
             'categories' => $categories,
             'topTenProducts' => $topTenProducts,
-            'trendingProducts' => $trendingProducts,
             'saleProducts' => $saleProducts,
             'newArrivalsProducts' => $newArrivalsProducts,
             'productCardView' => $this->designManager->getSectionView('product_card'),
