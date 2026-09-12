@@ -40,6 +40,8 @@ class AppServiceProvider extends ServiceProvider
             'facebook_url',
             'twitter_url',
             'instagram_url',
+            'youtube_url',
+            'linkedin_url',
             'price_symbol',
             'show_out_of_stock_products',
         ];
@@ -56,6 +58,8 @@ class AppServiceProvider extends ServiceProvider
             'facebook_url' => '',
             'twitter_url' => '',
             'instagram_url' => '',
+            'youtube_url' => '',
+            'linkedin_url' => '',
             'price_symbol' => '৳',
             'show_out_of_stock_products' => true,
         ];

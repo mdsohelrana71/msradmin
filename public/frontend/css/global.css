@@ -3,8 +3,14 @@
     padding: 0;
     box-sizing: border-box;
 }
-:root {
+/* :root {
     --primary: #ff6600;
+    --secondary: #ff2200;
+    --brand-light: #ffe6cc;
+} */
+
+:root {
+    --primary: #7fad39;
     --secondary: #ff2200;
     --brand-light: #ffe6cc;
 }
@@ -17,6 +23,10 @@ body {
     font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif;
     background-color: #ffffff;
     color: #333;
+}
+
+a{
+	text-decoration: none !important;
 }
 
 
@@ -40,6 +50,18 @@ body {
     width: auto;
     transition: all 0.3s ease;
     object-fit: contain;
+}
+
+.text-primary {
+    color: var(--primary) !important;
+}
+
+.text-secondary {
+    color: var(--secondary) !important ;
+}
+
+.text-brand-light {
+    color: var(--brand-light) !important;
 }
 
 .btn-primary{
@@ -78,6 +100,78 @@ body {
     background-color: var(--primary);
     color: #fff;
     border: 1px solid var(--primary);
+}
+
+/* Facebook */
+.social-icons a.facebook:hover {
+    background: #1877F2;
+    color: #fff;
+}
+
+/* X (Twitter) */
+.social-icons a.x:hover {
+    background: #000000;
+    color: #fff;
+}
+
+/* Instagram */
+.social-icons a.instagram:hover {
+    background: linear-gradient(45deg, #f9ce34, #ee2a7b, #6228d7);
+    color: #fff;
+}
+
+/* LinkedIn */
+.social-icons a.linkedin:hover {
+    background: #0A66C2;
+    color: #fff;
+}
+
+/* YouTube */
+.social-icons a.youtube:hover {
+    background: #FF0000;
+    color: #fff;
+}
+
+/* Pinterest */
+.social-icons a.pinterest:hover {
+    background: #E60023;
+    color: #fff;
+}
+
+/* TikTok */
+.social-icons a.tiktok:hover {
+    background: #000000;
+    color: #fff;
+}
+
+/* WhatsApp */
+.social-icons a.whatsapp:hover {
+    background: #25D366;
+    color: #fff;
+}
+
+/* Telegram */
+.social-icons a.telegram:hover {
+    background: #229ED9;
+    color: #fff;
+}
+
+/* GitHub */
+.social-icons a.github:hover {
+    background: #181717;
+    color: #fff;
+}
+
+/* Reddit */
+.social-icons a.reddit:hover {
+    background: #FF4500;
+    color: #fff;
+}
+
+/* Discord */
+.social-icons a.discord:hover {
+    background: #5865F2;
+    color: #fff;
 }
 
 
