@@ -39,7 +39,7 @@
 
                 <div class="product-price-container">                    
                     <span class="product-price">
-                        <span class="currency">৳</span>
+                        <span class="currency">{{ $settings->price_symbol }}</span>
                         {{ number_format($currentPrice, 2) }}
                     </span>
                     <span class="product-vat">+ VAT</span>

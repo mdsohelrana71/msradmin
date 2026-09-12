@@ -3,7 +3,6 @@
 @section('title', config('app.name'))
 
 @push('styles')
-    <link rel="stylesheet" href="{{ asset('frontend/css/owl.carousel.min.css') }}">
     <link rel="stylesheet" href="{{ app(\App\Services\Frontend\DesignManager::class)->getTemplateCss('home') }}">
     <link rel="stylesheet" href="{{ app(\App\Services\Frontend\DesignManager::class)->getSectionCss('product_card') }}">
     <link rel="stylesheet" href="{{ app(\App\Services\Frontend\DesignManager::class)->getSectionCss('blog_card') }}">
@@ -62,9 +61,12 @@
                     </div>
 
                     @if ($sliders->isNotEmpty())
-                        <div class="hero__slider owl-carousel">
+                        <div class="hero__slider">
                             @foreach ($sliders as $slider)
-                                <div class="hero__item set-bg" data-setbg="{{ asset('storage/' . $slider->image) }}">
+                                <div class="hero__item">
+                                    <img src="{{ asset('storage/' . $slider->image) }}"
+                                        alt="{{ $slider->title ?? $settings->site_name }}">
+
                                     <div class="hero__text">
                                         @if ($slider->subtitle)
                                             <span>{{ $slider->subtitle }}</span>
@@ -88,14 +90,19 @@
                             @endforeach
                         </div>
                     @else
-                        <div class="hero__item set-bg" data-setbg="{{ asset('frontend/images/default-slider.jpg') }}">
-                            <div class="hero__text">
-                                <span>WELCOME</span>
-                                <h2>{{ $settings->site_name }}</h2>
-                                <p>Shop our latest products</p>
-                                <a href="{{ route('products.index') }}" class="primary-btn">
-                                    SHOP NOW
-                                </a>
+                        <div class="hero__slider">
+                            <div class="hero__item">
+                                <img src="{{ asset('frontend/images/default-slider.jpg') }}"
+                                    alt="{{ $settings->site_name }}">
+
+                                <div class="hero__text">
+                                    <span>WELCOME</span>
+                                    <h2>{{ $settings->site_name }}</h2>
+                                    <p>Shop our latest products</p>
+                                    <a href="{{ route('products.index') }}" class="primary-btn">
+                                        SHOP NOW
+                                    </a>
+                                </div>
                             </div>
                         </div>
                     @endif
@@ -109,11 +116,12 @@
     <section class="categories">
         <div class="container">
             <div class="row">
-                <div class="categories__slider owl-carousel">
+                <div class="categories__slider">
                     @forelse ($categories as $category)
-                        <div class="col-lg-3">
-                            <div class="categories__item set-bg"
-                                @if ($category->image) data-setbg="{{ asset('storage/' . $category->image) }}" @endif>
+                        <div class="categories__slide">
+                            <div class="categories__item set-bg">
+                                <img src="{{ $category->image ? asset('storage/' . $category->image) : asset('frontend/images/category-placeholder.jpg') }}"
+                                    alt="{{ $category->name }}">
                                 <h5>
                                     <a href="{{ route('products.index', ['category' => $category->slug]) }}">
                                         {{ $category->name }}
@@ -122,7 +130,7 @@
                             </div>
                         </div>
                     @empty
-                        <div class="col-12">
+                        <div class="categories__empty">
                             <p class="text-center">No categories found.</p>
                         </div>
                     @endforelse
@@ -140,25 +148,12 @@
                     <div class="section-title">
                         <h2>Featured Product</h2>
                     </div>
-
-                    @if ($topTenProducts->isNotEmpty())
-                        <div class="featured__controls">
-                            <ul>
-                                <li class="active" data-filter="*">All</li>
-                                @foreach ($categories as $category)
-                                    <li data-filter=".category-{{ $category->id }}">
-                                        {{ $category->name }}
-                                    </li>
-                                @endforeach
-                            </ul>
-                        </div>
-                    @endif
                 </div>
             </div>
 
             <div class="row featured__filter">
-                @forelse ($topTenProducts as $product)
-                    <div class="col-lg-3 col-md-4 col-sm-6 mix category-{{ $product->category_id }}">
+                @forelse ($featuredProduct as $product)
+                    <div class="col-lg-3 col-md-3 col-sm-6">
                         @include($productCardView, ['product' => $product])
                     </div>
                 @empty
@@ -240,7 +235,7 @@
                         <h4>Featured Products</h4>
 
                         <div class="latest-product__slider owl-carousel">
-                            @forelse ($topTenProducts->chunk(3) as $products)
+                            @forelse ($featuredProduct->take(3)->chunk(3) as $products)
                                 <div class="latest-prdouct__slider__item">
                                     @foreach ($products as $product)
                                         @php
@@ -256,7 +251,6 @@
                                             <div class="latest-product__item__pic">
                                                 <img src="{{ $productImage }}" alt="{{ $product->name }}">
                                             </div>
-
                                             <div class="latest-product__item__text">
                                                 <h6>{{ $product->name }}</h6>
                                                 <span>
@@ -345,111 +339,5 @@
 @endsection
 
 @push('scripts')
-    <script src="{{ asset('frontend/js/owl.carousel.min.js') }}"></script>
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            const productSearchInput = document.getElementById('productSearchInput');
-            const productSearchResults = document.getElementById('productSearchResults');
-            let searchTimeout;
-
-            function escapeHtml(value) {
-                const div = document.createElement('div');
-                div.textContent = value ?? '';
-                return div.innerHTML;
-            }
-
-            if (productSearchInput && productSearchResults) {
-                productSearchInput.addEventListener('input', function() {
-                    const query = this.value.trim();
-
-                    clearTimeout(searchTimeout);
-
-                    if (query.length < 2) {
-                        productSearchResults.innerHTML = '';
-                        productSearchResults.classList.remove('active');
-                        return;
-                    }
-
-                    searchTimeout = setTimeout(async function() {
-                        try {
-                            const response = await fetch(
-                                `{{ route('products.search') }}?q=${encodeURIComponent(query)}`, {
-                                    method: 'GET',
-                                    headers: {
-                                        'X-Requested-With': 'XMLHttpRequest',
-                                        'Accept': 'application/json'
-                                    }
-                                }
-                            );
-
-                            if (!response.ok) {
-                                throw new Error(`HTTP ${response.status}`);
-                            }
-
-                            const products = await response.json();
-
-                            productSearchResults.innerHTML = '';
-
-                            if (!Array.isArray(products) || products.length === 0) {
-                                productSearchResults.innerHTML = `
-                                    <div class="product-search-empty">
-                                        No products found
-                                    </div>
-                                `;
-                                productSearchResults.classList.add('active');
-                                return;
-                            }
-
-                            products.forEach(function(product) {
-                                const item = document.createElement('a');
-
-                                item.href = product.url;
-                                item.className = 'product-search-item';
-
-                                item.innerHTML = `
-                                    <div class="product-search-image">
-                                        ${product.thumbnail
-                                            ? `<img src="${product.thumbnail}" alt="${escapeHtml(product.name)}">`
-                                            : '<div class="product-search-no-image"></div>'
-                                        }
-                                    </div>
-                                    <div class="product-search-info">
-                                        <div class="product-search-name">
-                                            ${escapeHtml(product.name)}
-                                        </div>
-                                        <div class="product-search-sku">
-                                            SKU: ${escapeHtml(product.sku || 'N/A')}
-                                        </div>
-                                    </div>
-                                `;
-
-                                productSearchResults.appendChild(item);
-                            });
-
-                            productSearchResults.classList.add('active');
-                        } catch (error) {
-                            console.error('Product Search Error:', error);
-
-                            productSearchResults.innerHTML = `
-                                <div class="product-search-empty">
-                                    Search failed. Please try again.
-                                </div>
-                            `;
-
-                            productSearchResults.classList.add('active');
-                        }
-                    }, 300);
-                });
-
-                document.addEventListener('click', function(event) {
-                    if (
-                        !productSearchInput.contains(event.target) &&
-                        !productSearchResults.contains(event.target)
-                    ) {
-                        productSearchResults.classList.remove('active');
-                    }
-                });
-            }
-        });
-    </script>
+    <script src="{{ asset('frontend/js/templates/design-2/main.js') }}"></script>
 @endpush

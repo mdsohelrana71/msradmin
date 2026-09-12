@@ -47,11 +47,11 @@ class DesignTwoHomeService
 
         $baseQuery = $this->productQuery->frontend();
 
-        $topTenProducts = (clone $baseQuery)
+        $featuredProduct = (clone $baseQuery)
             ->where('is_featured', true)
             ->with(['images', 'category'])
             ->latest('created_at')
-            ->take(10)
+            ->take(4)
             ->get();
 
         $saleProducts = (clone $baseQuery)
@@ -74,7 +74,7 @@ class DesignTwoHomeService
         return [
             'sliders' => $sliders,
             'categories' => $categories,
-            'topTenProducts' => $topTenProducts,
+            'featuredProduct' => $featuredProduct,
             'saleProducts' => $saleProducts,
             'newArrivalsProducts' => $newArrivalsProducts,
             'productCardView' => $this->designManager->getSectionView('product_card'),

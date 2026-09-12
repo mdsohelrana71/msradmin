@@ -1,224 +1,156 @@
-/*  ---------------------------------------------------
-    Template Name: Ogani
-    Description:  Ogani eCommerce  HTML Template
-    Author: Colorlib
-    Author URI: https://colorlib.com
-    Version: 1.0
-    Created: Colorlib
----------------------------------------------------------  */
+document.addEventListener('DOMContentLoaded', function () {
+    const productSearchInput = document.getElementById('productSearchInput');
+    const productSearchResults = document.getElementById('productSearchResults');
+    let searchTimeout;
 
-'use strict';
+    function escapeHtml(value) {
+        const div = document.createElement('div');
+        div.textContent = value ?? '';
+        return div.innerHTML;
+    }
 
-(function ($) {
+    if (productSearchInput && productSearchResults) {
+        productSearchInput.addEventListener('input', function () {
+            const query = this.value.trim();
 
-    /*------------------
-        Preloader
-    --------------------*/
-    $(window).on('load', function () {
-        $(".loader").fadeOut();
-        $("#preloder").delay(200).fadeOut("slow");
+            clearTimeout(searchTimeout);
 
-        /*------------------
-            Gallery filter
-        --------------------*/
-        $('.featured__controls li').on('click', function () {
-            $('.featured__controls li').removeClass('active');
-            $(this).addClass('active');
+            if (query.length < 2) {
+                productSearchResults.innerHTML = '';
+                productSearchResults.classList.remove('active');
+                return;
+            }
+
+            searchTimeout = setTimeout(async function () {
+                try {
+                    const response = await fetch(
+                        `{{ route('products.search') }}?q=${encodeURIComponent(query)}`, {
+                        method: 'GET',
+                        headers: {
+                            'X-Requested-With': 'XMLHttpRequest',
+                            'Accept': 'application/json'
+                        }
+                    }
+                    );
+
+                    if (!response.ok) {
+                        throw new Error(`HTTP ${response.status}`);
+                    }
+
+                    const products = await response.json();
+
+                    productSearchResults.innerHTML = '';
+
+                    if (!Array.isArray(products) || products.length === 0) {
+                        productSearchResults.innerHTML = `
+                                    <div class="product-search-empty">
+                                        No products found
+                                    </div>
+                                `;
+                        productSearchResults.classList.add('active');
+                        return;
+                    }
+
+                    products.forEach(function (product) {
+                        const item = document.createElement('a');
+
+                        item.href = product.url;
+                        item.className = 'product-search-item';
+
+                        item.innerHTML = `
+                                    <div class="product-search-image">
+                                        ${product.thumbnail
+                                ? `<img src="${product.thumbnail}" alt="${escapeHtml(product.name)}">`
+                                : '<div class="product-search-no-image"></div>'
+                            }
+                                    </div>
+                                    <div class="product-search-info">
+                                        <div class="product-search-name">
+                                            ${escapeHtml(product.name)}
+                                        </div>
+                                        <div class="product-search-sku">
+                                            SKU: ${escapeHtml(product.sku || 'N/A')}
+                                        </div>
+                                    </div>
+                                `;
+
+                        productSearchResults.appendChild(item);
+                    });
+
+                    productSearchResults.classList.add('active');
+                } catch (error) {
+                    console.error('Product Search Error:', error);
+
+                    productSearchResults.innerHTML = `
+                                <div class="product-search-empty">
+                                    Search failed. Please try again.
+                                </div>
+                            `;
+
+                    productSearchResults.classList.add('active');
+                }
+            }, 300);
         });
-        if ($('.featured__filter').length > 0) {
-            var containerEl = document.querySelector('.featured__filter');
-            var mixer = mixitup(containerEl);
-        }
-    });
 
-    /*------------------
-        Background Set
-    --------------------*/
-    $('.set-bg').each(function () {
-        var bg = $(this).data('setbg');
-        $(this).css('background-image', 'url(' + bg + ')');
-    });
+        document.addEventListener('click', function (event) {
+            if (
+                !productSearchInput.contains(event.target) &&
+                !productSearchResults.contains(event.target)
+            ) {
+                productSearchResults.classList.remove('active');
+            }
+        });
+    }
+});
 
-    //Humberger Menu
-    $(".humberger__open").on('click', function () {
-        $(".humberger__menu__wrapper").addClass("show__humberger__menu__wrapper");
-        $(".humberger__menu__overlay").addClass("active");
-        $("body").addClass("over_hid");
-    });
+$('.hero__slider').slick({
+    slidesToShow: 1,
+    slidesToScroll: 1,
+    infinite: true,
+    arrows: true,
+    dots: true,
+    autoplay: true,
+    autoplaySpeed: 5000,
+    speed: 700,
+    fade: true,
+    cssEase: 'linear'
+});
 
-    $(".humberger__menu__overlay").on('click', function () {
-        $(".humberger__menu__wrapper").removeClass("show__humberger__menu__wrapper");
-        $(".humberger__menu__overlay").removeClass("active");
-        $("body").removeClass("over_hid");
-    });
-
-    /*------------------
-		Navigation
-	--------------------*/
-    $(".mobile-menu").slicknav({
-        prependTo: '#mobile-menu-wrap',
-        allowParentLinks: true
-    });
-
-    /*-----------------------
-        Categories Slider
-    ------------------------*/
-    $(".categories__slider").owlCarousel({
-        loop: true,
-        margin: 0,
-        items: 4,
+$(document).ready(function () {
+    $('.categories__slider').slick({
+        slidesToShow: 6,
+        slidesToScroll: 1,
+        infinite: true,
+        arrows: true,
         dots: false,
-        nav: true,
-        navText: ["<span class='fa fa-angle-left'><span/>", "<span class='fa fa-angle-right'><span/>"],
-        animateOut: 'fadeOut',
-        animateIn: 'fadeIn',
-        smartSpeed: 1200,
-        autoHeight: false,
         autoplay: true,
-        responsive: {
-
-            0: {
-                items: 1,
+        autoplaySpeed: 3000,
+        speed: 500,
+        responsive: [
+            {
+                breakpoint: 1200,
+                settings: {
+                    slidesToShow: 5
+                }
             },
-
-            480: {
-                items: 2,
+            {
+                breakpoint: 992,
+                settings: {
+                    slidesToShow: 4
+                }
             },
-
-            768: {
-                items: 3,
+            {
+                breakpoint: 768,
+                settings: {
+                    slidesToShow: 3
+                }
             },
-
-            992: {
-                items: 4,
+            {
+                breakpoint: 576,
+                settings: {
+                    slidesToShow: 2
+                }
             }
-        }
+        ]
     });
-
-
-    $('.hero__categories__all').on('click', function(){
-        $('.hero__categories ul').slideToggle(400);
-    });
-
-    /*--------------------------
-        Latest Product Slider
-    ----------------------------*/
-    $(".latest-product__slider").owlCarousel({
-        loop: true,
-        margin: 0,
-        items: 1,
-        dots: false,
-        nav: true,
-        navText: ["<span class='fa fa-angle-left'><span/>", "<span class='fa fa-angle-right'><span/>"],
-        smartSpeed: 1200,
-        autoHeight: false,
-        autoplay: true
-    });
-
-    /*-----------------------------
-        Product Discount Slider
-    -------------------------------*/
-    $(".product__discount__slider").owlCarousel({
-        loop: true,
-        margin: 0,
-        items: 3,
-        dots: true,
-        smartSpeed: 1200,
-        autoHeight: false,
-        autoplay: true,
-        responsive: {
-
-            320: {
-                items: 1,
-            },
-
-            480: {
-                items: 2,
-            },
-
-            768: {
-                items: 2,
-            },
-
-            992: {
-                items: 3,
-            }
-        }
-    });
-
-    /*---------------------------------
-        Product Details Pic Slider
-    ----------------------------------*/
-    $(".product__details__pic__slider").owlCarousel({
-        loop: true,
-        margin: 20,
-        items: 4,
-        dots: true,
-        smartSpeed: 1200,
-        autoHeight: false,
-        autoplay: true
-    });
-
-    /*-----------------------
-		Price Range Slider
-	------------------------ */
-    var rangeSlider = $(".price-range"),
-        minamount = $("#minamount"),
-        maxamount = $("#maxamount"),
-        minPrice = rangeSlider.data('min'),
-        maxPrice = rangeSlider.data('max');
-    rangeSlider.slider({
-        range: true,
-        min: minPrice,
-        max: maxPrice,
-        values: [minPrice, maxPrice],
-        slide: function (event, ui) {
-            minamount.val('$' + ui.values[0]);
-            maxamount.val('$' + ui.values[1]);
-        }
-    });
-    minamount.val('$' + rangeSlider.slider("values", 0));
-    maxamount.val('$' + rangeSlider.slider("values", 1));
-
-    /*--------------------------
-        Select
-    ----------------------------*/
-    $("select").niceSelect();
-
-    /*------------------
-		Single Product
-	--------------------*/
-    $('.product__details__pic__slider img').on('click', function () {
-
-        var imgurl = $(this).data('imgbigurl');
-        var bigImg = $('.product__details__pic__item--large').attr('src');
-        if (imgurl != bigImg) {
-            $('.product__details__pic__item--large').attr({
-                src: imgurl
-            });
-        }
-    });
-
-    /*-------------------
-		Quantity change
-	--------------------- */
-    var proQty = $('.pro-qty');
-    proQty.prepend('<span class="dec qtybtn">-</span>');
-    proQty.append('<span class="inc qtybtn">+</span>');
-    proQty.on('click', '.qtybtn', function () {
-        var $button = $(this);
-        var oldValue = $button.parent().find('input').val();
-        if ($button.hasClass('inc')) {
-            var newVal = parseFloat(oldValue) + 1;
-        } else {
-            // Don't allow decrementing below zero
-            if (oldValue > 0) {
-                var newVal = parseFloat(oldValue) - 1;
-            } else {
-                newVal = 0;
-            }
-        }
-        $button.parent().find('input').val(newVal);
-    });
-
-})(jQuery);
+});

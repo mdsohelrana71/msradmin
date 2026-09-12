@@ -7,12 +7,14 @@
     --primary: #ff6600;
     --secondary: #ff2200;
     --brand-light: #ffe6cc;
+    --secondary-rgb: 255, 34, 0;
 } */
 
 :root {
     --primary: #7fad39;
-    --secondary: #ff2200;
-    --brand-light: #ffe6cc;
+    --secondary: #5f8f20;
+    --brand-light: #f1f7e8;
+    --secondary-rgb: 95, 143, 32;
 }
 
 html {
