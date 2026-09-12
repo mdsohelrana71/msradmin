@@ -7,6 +7,7 @@ use App\Models\Option;
 use Illuminate\Http\Request;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Storage;
 
 class SettingsService
@@ -36,6 +37,8 @@ class SettingsService
 
             Option::setOption($key, $value, 'yes');
         }
+
+        Cache::forget('global_settings');
     }
 
     public function getMenus(Request $request): array
@@ -51,7 +54,6 @@ class SettingsService
 
         return collect(config('admin_menu'))
             ->filter(function ($item) use ($query, $user) {
-
                 if (
                     !empty($item['permission']) &&
                     (!$user || !$user->can($item['permission']))
@@ -87,6 +89,8 @@ class SettingsService
         }
 
         Option::setOption($key, $path, 'yes');
+
+        Cache::forget('global_settings');
     }
 
     public function saveThemeColors(array $colors): void
@@ -98,6 +102,8 @@ class SettingsService
                 $this->saveOption($key, $colors[$key]);
             }
         }
+
+        Cache::forget('global_settings');
     }
 
     protected function saveOption(string $name, mixed $value): void
