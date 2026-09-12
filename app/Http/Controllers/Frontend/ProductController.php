@@ -5,6 +5,7 @@ use App\Models\Product;
 use App\Services\Frontend\DesignManager;
 use App\Services\Frontend\Product\ProductService;
 use Illuminate\Http\Request;
+
 class ProductController extends Controller
 {
     protected DesignManager $designManager;
@@ -23,6 +24,7 @@ class ProductController extends Controller
         $productCardView = $this->designManager->getSectionView('product_card');
         $data['productListingView'] = $productListingView;
         $data['productCardView'] = $productCardView;
+
         if ($request->ajax()) {
             return response()->json([
                 'html' => view($productListingView, [
@@ -31,6 +33,7 @@ class ProductController extends Controller
                 ])->render(),
             ]);
         }
+
         return view(
             $this->designManager->getPageView('product_listing'),
             $data
@@ -52,10 +55,13 @@ class ProductController extends Controller
     public function search(Request $request)
     {
         $search = trim($request->get('q', ''));
+
         if (mb_strlen($search) < 2) {
             return response()->json([]);
         }
+
         $products = $this->productService->searchProducts($search);
+
         return response()->json($products->map(function ($product) {
             return [
                 'id' => $product->id,
