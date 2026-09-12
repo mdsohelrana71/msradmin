@@ -587,92 +587,6 @@
 }
 
 
-
-/* Category Section */
-.category-section {
-    padding: 0px 0;
-}
-
-.categories-container {
-    display: flex;
-    gap: 20px;
-    overflow-x: auto;
-    padding: 10px 0;
-    scrollbar-width: none;
-    padding-bottom: 25px;
-}
-
-.categories-container::-webkit-scrollbar {
-    display: none;
-}
-
-.category-item {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 8px;
-    text-decoration: none;
-    color: #666;
-    min-width: max-content;
-    cursor: pointer;
-    transition: all 0.2s ease;
-}
-
-.category-item:hover {
-    color: var(--secondary);
-}
-
-.category-circle {
-    width: 85px;
-    height: 85px;
-    border-radius: 50%;
-    background-color: #f8f9fa;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    overflow: hidden;
-    transition: all 0.3s ease;
-}
-
-.category-circle img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    transition: transform 0.4s ease;
-}
-
-.category-item:hover .category-circle img {
-    transform: scale(1.1);
-}
-
-.category-name {
-    font-size: 12px;
-    text-align: center;
-    color: #666;
-    font-weight: 500;
-}
-
-/* Hamburger Menu (একই রাখা হয়েছে) */
-.hamburger-menu {
-    width: 85px;
-    height: 85px;
-    border-radius: 50%;
-    background-color: var(--primary);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    cursor: pointer;
-}
-
-.hamburger-menu:hover {
-    background-color: var(--secondary);
-}
-
-.hamburger-menu i {
-    font-size: 24px;
-    color: #fff;
-}
-
 /* Flag icon */
 .flag-icon {
     width: 16px;
@@ -802,7 +716,6 @@
     .info-bar { display: none; }
     .search-container { display: none; }
     .auth-section { display: none; }
-    .category-section { display: none; }
 
     .promo-banner {
         padding: 8px 15px;
