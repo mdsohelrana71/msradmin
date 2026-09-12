@@ -1,23 +1,28 @@
 <?php
-
 namespace App\Services\Frontend\Home;
 
-use App\Models\Product;
 use App\Models\Slider;
+use App\Models\Blog;
 use App\Services\Frontend\DesignManager;
 use App\Services\Frontend\Global\CategoryService;
+use App\Services\Frontend\Global\ProductQuery;
 
 class DesignTwoHomeService
 {
     protected DesignManager $designManager;
     protected CategoryService $categoryService;
+    protected ProductQuery $productQuery;
+
     public function __construct(
         DesignManager $designManager,
-        CategoryService $categoryService
+        CategoryService $categoryService,
+        ProductQuery $productQuery
     ) {
         $this->designManager = $designManager;
         $this->categoryService = $categoryService;
+        $this->productQuery = $productQuery;
     }
+
     public function getData(): array
     {
         $sliders = Slider::query()
@@ -36,8 +41,7 @@ class DesignTwoHomeService
 
         $categories = $this->categoryService->getHomeCategories();
 
-        $baseQuery = Product::query()
-            ->where('status', true);
+        $baseQuery = $this->productQuery->frontend();
 
         $topTenProducts = (clone $baseQuery)
             ->where('is_featured', true)
@@ -47,7 +51,7 @@ class DesignTwoHomeService
 
         $trendingProducts = (clone $baseQuery)
             ->latest('created_at')
-            ->take(5)
+            ->take(6)
             ->get();
 
         $saleProducts = (clone $baseQuery)
@@ -62,6 +66,12 @@ class DesignTwoHomeService
             ->take(5)
             ->get();
 
+        $blogs = Blog::query()
+            ->where('status', true)
+            ->with(['category:id,name', 'author:id,name'])
+            ->latest()
+            ->paginate(3);
+
         return [
             'sliders' => $sliders,
             'categories' => $categories,
@@ -70,6 +80,8 @@ class DesignTwoHomeService
             'saleProducts' => $saleProducts,
             'newArrivalsProducts' => $newArrivalsProducts,
             'productCardView' => $this->designManager->getSectionView('product_card'),
+            'blogCardView' => $this->designManager->getSectionView('blog_card'),
+            'blogs' => $blogs,
         ];
     }
 }

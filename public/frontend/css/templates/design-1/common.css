@@ -1,7 +1,3 @@
-
-
-
-
 /* common css */
 .form-check-input {
     cursor: pointer;
@@ -267,9 +263,6 @@ html {
     background-color: var(--secondary);
     border-color: var(--secondary);
 }
-
-
-
 
 /* ===== MOBILE VIEW ===== */
 @media (max-width: 768px) {

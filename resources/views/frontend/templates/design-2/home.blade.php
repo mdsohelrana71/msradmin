@@ -41,8 +41,10 @@
                                     All Categories
                                     <span class="arrow_carrot-down"></span>
                                 </div>
-                                <input type="text" placeholder="What do yo u need?">
+                                <input type="text" class="search-box" id="productSearchInput"
+                                    placeholder="What do yo u need?" autocomplete="off">
                                 <button type="submit" class="site-btn">SEARCH</button>
+                                <div class="product-search-results" id="productSearchResults"></div>
                             </form>
                         </div>
                         <div class="hero__search__phone">
@@ -50,7 +52,7 @@
                                 <i class="fa fa-phone"></i>
                             </div>
                             <div class="hero__search__phone__text">
-                                <h5>+65 11.188.888</h5>
+                                <h5>{{ $settings->site_phone }}</h5>
                                 <span>support 24/7 time</span>
                             </div>
                         </div>
@@ -484,51 +486,15 @@
                 </div>
             </div>
             <div class="row">
-                <div class="col-lg-4 col-md-4 col-sm-6">
-                    <div class="blog__item">
-                        <div class="blog__item__pic">
-                            <img src="img/blog/blog-1.jpg" alt="">
-                        </div>
-                        <div class="blog__item__text">
-                            <ul>
-                                <li><i class="fa fa-calendar-o"></i> May 4,2019</li>
-                                <li><i class="fa fa-comment-o"></i> 5</li>
-                            </ul>
-                            <h5><a href="#">Cooking tips make cooking simple</a></h5>
-                            <p>Sed quia non numquam modi tempora indunt ut labore et dolore magnam aliquam quaerat </p>
-                        </div>
+                @forelse ($blogs as $blog)
+                    <div class="col-lg-4 col-md-4 col-sm-6">
+                        @include($blogCardView, ['blog' => $blog])
                     </div>
-                </div>
-                <div class="col-lg-4 col-md-4 col-sm-6">
-                    <div class="blog__item">
-                        <div class="blog__item__pic">
-                            <img src="img/blog/blog-2.jpg" alt="">
-                        </div>
-                        <div class="blog__item__text">
-                            <ul>
-                                <li><i class="fa fa-calendar-o"></i> May 4,2019</li>
-                                <li><i class="fa fa-comment-o"></i> 5</li>
-                            </ul>
-                            <h5><a href="#">6 ways to prepare breakfast for 30</a></h5>
-                            <p>Sed quia non numquam modi tempora indunt ut labore et dolore magnam aliquam quaerat </p>
-                        </div>
+                @empty
+                    <div class="col-12">
+                        <p class="text-center">No blogs found.</p>
                     </div>
-                </div>
-                <div class="col-lg-4 col-md-4 col-sm-6">
-                    <div class="blog__item">
-                        <div class="blog__item__pic">
-                            <img src="img/blog/blog-3.jpg" alt="">
-                        </div>
-                        <div class="blog__item__text">
-                            <ul>
-                                <li><i class="fa fa-calendar-o"></i> May 4,2019</li>
-                                <li><i class="fa fa-comment-o"></i> 5</li>
-                            </ul>
-                            <h5><a href="#">Visit the clean farm in the US</a></h5>
-                            <p>Sed quia non numquam modi tempora indunt ut labore et dolore magnam aliquam quaerat </p>
-                        </div>
-                    </div>
-                </div>
+                @endforelse
             </div>
         </div>
     </section>
@@ -537,4 +503,114 @@
 @endsection
 
 @push('scripts')
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+
+            const productSearchInput = document.getElementById('productSearchInput');
+            const productSearchResults = document.getElementById('productSearchResults');
+            let searchTimeout;
+
+            function escapeHtml(value) {
+                const div = document.createElement('div');
+                div.textContent = value ?? '';
+                return div.innerHTML;
+            }
+
+            if (productSearchInput && productSearchResults) {
+                productSearchInput.addEventListener('input', function() {
+                    const query = this.value.trim();
+
+                    clearTimeout(searchTimeout);
+
+                    if (query.length < 2) {
+                        productSearchResults.innerHTML = '';
+                        productSearchResults.classList.remove('active');
+                        return;
+                    }
+
+                    searchTimeout = setTimeout(async function() {
+                        try {
+                            const response = await fetch(
+                                `{{ route('products.search') }}?q=${encodeURIComponent(query)}`, {
+                                    method: 'GET',
+                                    headers: {
+                                        'X-Requested-With': 'XMLHttpRequest',
+                                        'Accept': 'application/json'
+                                    }
+                                }
+                            );
+
+                            if (!response.ok) {
+                                const errorText = await response.text();
+                                console.error('Search HTTP Error:', response.status);
+                                console.error(errorText);
+                                throw new Error(`HTTP ${response.status}`);
+                            }
+
+                            const products = await response.json();
+
+                            productSearchResults.innerHTML = '';
+
+                            if (!Array.isArray(products) || products.length === 0) {
+                                productSearchResults.innerHTML = `
+                            <div class="product-search-empty">
+                                No products found
+                            </div>
+                        `;
+                                productSearchResults.classList.add('active');
+                                return;
+                            }
+
+                            products.forEach(function(product) {
+                                const item = document.createElement('a');
+
+                                item.href = product.url;
+                                item.className = 'product-search-item';
+
+                                item.innerHTML = `
+                            <div class="product-search-image">
+                                ${product.thumbnail
+                                    ? `<img src="${product.thumbnail}" alt="${escapeHtml(product.name)}">`
+                                    : '<div class="product-search-no-image"></div>'
+                                }
+                            </div>
+                            <div class="product-search-info">
+                                <div class="product-search-name">
+                                    ${escapeHtml(product.name)}
+                                </div>
+                                <div class="product-search-sku">
+                                    SKU: ${escapeHtml(product.sku || 'N/A')}
+                                </div>
+                            </div>
+                        `;
+
+                                productSearchResults.appendChild(item);
+                            });
+
+                            productSearchResults.classList.add('active');
+                        } catch (error) {
+                            console.error('Product Search Error:', error);
+
+                            productSearchResults.innerHTML = `
+                        <div class="product-search-empty">
+                            Search failed. Please try again.
+                        </div>
+                    `;
+
+                            productSearchResults.classList.add('active');
+                        }
+                    }, 300);
+                });
+
+                document.addEventListener('click', function(event) {
+                    if (
+                        !productSearchInput.contains(event.target) &&
+                        !productSearchResults.contains(event.target)
+                    ) {
+                        productSearchResults.classList.remove('active');
+                    }
+                });
+            }
+        });
+    </script>
 @endpush
