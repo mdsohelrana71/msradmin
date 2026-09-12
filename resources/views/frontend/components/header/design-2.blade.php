@@ -194,8 +194,8 @@
                                 </a>
                             @endif
 
-                            @if (!empty($settings->linkedin))
-                                <a href="{{ $settings->linkedin }}" target="_blank" rel="noopener noreferrer">
+                            @if (!empty($settings->linkedin_url))
+                                <a href="{{ $settings->linkedin_url }}" target="_blank" rel="noopener noreferrer">
                                     <i class="fab fa-linkedin"></i>
                                 </a>
                             @endif
