@@ -54,10 +54,19 @@ class StoreDesignService
     {
         $this->getTemplate($template);
 
-        return $this->saveOption(
-            config('store_design.template.option_name', 'store_design.template'),
-            $template
-        );
+        return DB::transaction(function () use ($template) {
+            $this->saveOption(
+                config('store_design.template.option_name', 'store_design.template'),
+                $template
+            );
+
+            foreach ($this->getSections() as $config) {
+                Option::where('option_name', $config['option_name'])
+                    ->update(['option_value' => null]);
+            }
+
+            return true;
+        });
     }
 
     public function getSectionOverride(string $section): ?string
