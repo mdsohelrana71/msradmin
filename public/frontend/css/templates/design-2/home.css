@@ -574,23 +574,6 @@
 	width: 110px;
 }
 
-.latest-product__item__text {
-	overflow: hidden;
-	padding-top: 10px;
-}
-
-.latest-product__item__text h6 {
-	color: #252525;
-	margin-bottom: 8px;
-}
-
-.latest-product__item__text span {
-	font-size: 18px;
-	display: block;
-	color: #252525;
-	font-weight: 700;
-}
-
 /*--------------------------------- Home Responsive -----------------------------*/
 
 @media only screen and (min-width: 992px) and (max-width: 1199px) {

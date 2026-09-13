@@ -97,7 +97,6 @@ a:hover,
 a:focus {
 	text-decoration: none;
 	outline: none;
-	color: #ffffff;
 }
 
 ul,
@@ -179,6 +178,15 @@ ol {
 	padding: 13px 30px 12px;
 	background: var(--primary);
 	border: none;
+}
+
+/* Price */
+.product-price {
+    font-size: 15px;
+    font-weight: 600;
+    color: #222;
+    line-height: 1;
+	margin-left:5px;
 }
 
 /* Preloder */

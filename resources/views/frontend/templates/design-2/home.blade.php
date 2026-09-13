@@ -189,37 +189,15 @@
     <section class="latest-product spad">
         <div class="container">
             <div class="row">
-
-                <!-- New Arrivals -->
+                {{-- New Arrivals --}}
                 <div class="col-lg-4 col-md-6">
                     <div class="latest-product__text">
                         <h4>New Arrivals</h4>
-
                         <div class="latest-product__slider owl-carousel">
                             @forelse ($newArrivalsProducts->chunk(3) as $products)
                                 <div class="latest-prdouct__slider__item">
                                     @foreach ($products as $product)
-                                        @php
-                                            $productImage = $product->thumbnail
-                                                ? asset('storage/' . $product->thumbnail)
-                                                : ($product->images->first()?->image
-                                                    ? asset('storage/' . $product->images->first()->image)
-                                                    : asset('frontend/images/product-placeholder.jpg'));
-                                        @endphp
-
-                                        <a href="{{ route('products.show', ['product' => $product->slug]) }}"
-                                            class="latest-product__item">
-                                            <div class="latest-product__item__pic">
-                                                <img src="{{ $productImage }}" alt="{{ $product->name }}">
-                                            </div>
-
-                                            <div class="latest-product__item__text">
-                                                <h6>{{ $product->name }}</h6>
-                                                <span>
-                                                    {{ $settings->price_symbol }}{{ number_format($product->selling_price, 2) }}
-                                                </span>
-                                            </div>
-                                        </a>
+                                        @include('frontend.templates.design-2.components.product-card', ['product' => $product])
                                     @endforeach
                                 </div>
                             @empty
@@ -229,35 +207,15 @@
                     </div>
                 </div>
 
-                <!-- Featured Products -->
+                {{-- Featured Products --}}
                 <div class="col-lg-4 col-md-6">
                     <div class="latest-product__text">
                         <h4>Featured Products</h4>
-
                         <div class="latest-product__slider owl-carousel">
                             @forelse ($featuredProduct->take(3)->chunk(3) as $products)
                                 <div class="latest-prdouct__slider__item">
                                     @foreach ($products as $product)
-                                        @php
-                                            $productImage = $product->thumbnail
-                                                ? asset('storage/' . $product->thumbnail)
-                                                : ($product->images->first()?->image
-                                                    ? asset('storage/' . $product->images->first()->image)
-                                                    : asset('frontend/images/product-placeholder.jpg'));
-                                        @endphp
-
-                                        <a href="{{ route('products.show', ['product' => $product->slug]) }}"
-                                            class="latest-product__item">
-                                            <div class="latest-product__item__pic">
-                                                <img src="{{ $productImage }}" alt="{{ $product->name }}">
-                                            </div>
-                                            <div class="latest-product__item__text">
-                                                <h6>{{ $product->name }}</h6>
-                                                <span>
-                                                    {{ $settings->price_symbol }}{{ number_format($product->selling_price, 2) }}
-                                                </span>
-                                            </div>
-                                        </a>
+                                        @include('frontend.templates.design-2.components.product-card', ['product' => $product])
                                     @endforeach
                                 </div>
                             @empty
@@ -267,36 +225,15 @@
                     </div>
                 </div>
 
-                <!-- Sale Products -->
+                {{-- Sale Products --}}
                 <div class="col-lg-4 col-md-6">
                     <div class="latest-product__text">
                         <h4>Sale Products</h4>
-
                         <div class="latest-product__slider owl-carousel">
                             @forelse ($saleProducts->chunk(3) as $products)
                                 <div class="latest-prdouct__slider__item">
                                     @foreach ($products as $product)
-                                        @php
-                                            $productImage = $product->thumbnail
-                                                ? asset('storage/' . $product->thumbnail)
-                                                : ($product->images->first()?->image
-                                                    ? asset('storage/' . $product->images->first()->image)
-                                                    : asset('frontend/images/product-placeholder.jpg'));
-                                        @endphp
-
-                                        <a href="{{ route('products.show', ['product' => $product->slug]) }}"
-                                            class="latest-product__item">
-                                            <div class="latest-product__item__pic">
-                                                <img src="{{ $productImage }}" alt="{{ $product->name }}">
-                                            </div>
-
-                                            <div class="latest-product__item__text">
-                                                <h6>{{ $product->name }}</h6>
-                                                <span>
-                                                    {{ $settings->price_symbol }}{{ number_format($product->discount_price, 2) }}
-                                                </span>
-                                            </div>
-                                        </a>
+                                        @include('frontend.templates.design-2.components.product-card', ['product' => $product])
                                     @endforeach
                                 </div>
                             @empty

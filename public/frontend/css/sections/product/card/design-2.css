@@ -135,14 +135,6 @@
     line-height: 1;
 }
 
-/* Price */
-.product-price {
-    font-size: 15px;
-    font-weight: 600;
-    color: #222;
-    line-height: 1;
-}
-
 /* VAT */
 .product-vat {
     font-size: 0.8rem;
