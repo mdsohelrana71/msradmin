@@ -176,6 +176,12 @@ a{
     color: #fff;
 }
 
+.product-price-old {
+    text-decoration: line-through;
+    color: #999;
+    font-size: 14px;
+}
+
 
 /* Quick View Modal Styling */
 .quick-view-offcanvas {

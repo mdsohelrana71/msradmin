@@ -22,6 +22,7 @@
 <body>
     {!! $designManager->render('header') !!}
     @yield('content')
+    @include('frontend.partials.quick-view')
     {!! $designManager->render('footer') !!}
     <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
     <script src="{{ asset('frontend/js/bootstrap.bundle.min.js') }}"></script>

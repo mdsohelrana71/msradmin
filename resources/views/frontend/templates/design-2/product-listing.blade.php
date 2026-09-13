@@ -120,7 +120,6 @@
                     'products' => $products,
                     'productCardView' => $productCardView,
                 ])
-                @include('frontend.partials.quick-view')
             </div>
         </div>
     </div>

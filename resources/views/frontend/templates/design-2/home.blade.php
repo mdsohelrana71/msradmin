@@ -161,7 +161,6 @@
                         <p class="text-center">No featured products found.</p>
                     </div>
                 @endforelse
-                @include('frontend.partials.quick-view')
             </div>
         </div>
     </section>
