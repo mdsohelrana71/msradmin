@@ -96,7 +96,10 @@
                     </div>
 
                     <div class="footer__copyright__payment">
-                        <img src="{{ asset('frontend/images/payment-item.png') }}" alt="Payment Methods">
+                        <i class="fab fa-cc-visa fa-2x" title="Visa"></i>
+                        <i class="fab fa-paypal fa-2x" title="PayPal"></i>
+                        <i class="fab fa-cc-stripe fa-2x" title="Stripe"></i>
+                        <i class="fas fa-shield-alt fa-2x" title="Secure Payment"></i>
                     </div>
                 </div>
             </div>

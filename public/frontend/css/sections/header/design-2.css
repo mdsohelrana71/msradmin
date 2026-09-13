@@ -286,7 +286,7 @@
 	display: inline-block;
 	border-radius: 50%;
 	position: absolute;
-	top: 0;
+	top: -5;
 	right: -12px;
 }
 
