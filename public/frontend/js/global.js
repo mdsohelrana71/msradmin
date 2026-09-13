@@ -43,3 +43,71 @@ $(document).ready(function () {
         });
     });
 });
+
+document.addEventListener('DOMContentLoaded', function () {
+    const quickViewModal = document.getElementById('quickViewModal');
+
+    if (!quickViewModal) {
+        return;
+    }
+
+    const mainImage = document.getElementById('qv-main-image');
+    const productName = document.getElementById('qv-product-name');
+    const productCode = document.getElementById('qv-product-code');
+    const productPrice = document.getElementById('qv-product-price');
+    const productColor = document.getElementById('qv-product-color');
+    const productSize = document.getElementById('qv-product-size');
+    const fullDetails = document.getElementById('qv-full-details');
+
+    document.addEventListener('click', function (event) {
+        const button = event.target.closest('.quick-view-btn');
+
+        if (!button) {
+            return;
+        }
+
+        const data = button.dataset;
+
+        productName.textContent = data.productName || '';
+        productCode.textContent = data.productCode || 'N/A';
+        productPrice.textContent = data.productPrice
+            ? data.productPrice
+            : 'N/A';
+
+        fullDetails.href = data.productUrl || '#';
+
+        mainImage.src = data.productImage || '';
+        mainImage.alt = data.productName || 'Product';
+
+        thumbnails.innerHTML = '';
+
+        if (data.productImage) {
+            const thumb = document.createElement('img');
+            thumb.src = data.productImage;
+            thumb.alt = data.productName || 'Product';
+            thumb.className = 'thumb-img active';
+
+            thumb.addEventListener('click', function () {
+                changeQuickViewImage(this);
+            });
+
+            thumbnails.appendChild(thumb);
+        }
+
+        productColor.innerHTML =
+            '<span class="text-muted">Available on product page</span>';
+
+        productSize.innerHTML =
+            '<span class="text-muted">Available on product page</span>';
+    });
+
+    window.changeQuickViewImage = function (image) {
+        mainImage.src = image.src;
+
+        document.querySelectorAll('#qv-thumbnails .thumb-img').forEach(function (thumb) {
+            thumb.classList.remove('active');
+        });
+
+        image.classList.add('active');
+    };
+});

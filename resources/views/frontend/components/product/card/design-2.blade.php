@@ -1,4 +1,3 @@
-
 @php
     $hasDiscount = $product->discount_price !== null && $product->discount_price < $product->selling_price;
     $currentPrice = $hasDiscount ? $product->discount_price : $product->selling_price;
@@ -23,12 +22,23 @@
                     <i class="fas fa-image"></i>
                 </span>
             @endif
-
-            <!-- Quick View Button -->
-            <button class="quick-view-btn">
-                <i class="fa-regular fa-eye"></i>Quick View
-            </button>
         </a>
+
+        <!-- Quick View Button -->
+        <button
+            type="button"
+            class="quick-view-btn"
+            data-bs-toggle="offcanvas"
+            data-bs-target="#quickViewModal"
+            data-product-id="{{ $product->id }}"
+            data-product-name="{{ $product->name }}"
+            data-product-code="{{ $product->sku }}"
+            data-product-price="{{ number_format($currentPrice, 2) }}"
+            data-product-image="{{ $product->thumbnail ? asset('storage/' . ltrim($product->thumbnail, '/')) : '' }}"
+            data-product-url="{{ route('products.show', $product->slug) }}">
+            <i class="fa-regular fa-eye"></i>
+            Quick View
+        </button>
 
         <div class="product-info">
             <div>
@@ -37,7 +47,7 @@
                     {{ $product->name }}
                 </a>
 
-                <div class="product-price-container">                    
+                <div class="product-price-container">
                     <span class="product-price">
                         <span class="currency">{{ $settings->price_symbol }}</span>
                         {{ number_format($currentPrice, 2) }}

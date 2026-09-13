@@ -1,4 +1,4 @@
-<div class="row g-3 g-lg-4">
+<div class="row lg-4">
     @forelse ($products as $product)
         <div class="col-6 col-lg-3">
             @include($productCardView, ['product' => $product])
