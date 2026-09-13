@@ -181,7 +181,7 @@
 .blog__sidebar__item__tags a {
 	font-size: 14px;
 	color: #6f6f6f;
-	background: #f5f5f5;
+	background: var(--brand-light);
 	display: inline-block;
 	padding: 7px 16px;
 	margin: 0;

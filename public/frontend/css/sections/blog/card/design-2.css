@@ -2,10 +2,6 @@
   Blog
 -----------------------*/
 
-.blog__item {
-	margin-bottom: 60px;
-}
-
 .blog__item__pic img {
 	min-width: 100%;
 }
