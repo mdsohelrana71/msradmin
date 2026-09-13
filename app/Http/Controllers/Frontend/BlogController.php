@@ -23,11 +23,14 @@ class BlogController extends Controller
     public function index()
     {
         $blogs = $this->blogService->getBlogs();
+        $blogCategories = $this->blogService->getBlogCategories();
+        $recentBlogs = $this->blogService->getLatestBlogs(3);
+        $blogTags = $this->blogService->getBlogTags();
         $blogCardView = $this->designManager->getSectionView('blog_card');
 
         return view(
             $this->designManager->getPageView('blog_listing'),
-            compact('blogs', 'blogCardView')
+            compact('blogs', 'blogCategories', 'recentBlogs', 'blogTags', 'blogCardView')
         );
     }
 

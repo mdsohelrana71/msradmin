@@ -26,12 +26,17 @@ class BlogService
 
     public function getLatestBlogs(int $limit = 3)
     {
-        return $this->blogQuery
-            ->frontend()
-            ->with(['category:id,name', 'author:id,name'])
-            ->latest('created_at')
-            ->take($limit)
-            ->get();
+        return $this->blogQuery->recent($limit);
+    }
+
+    public function getBlogCategories()
+    {
+        return $this->blogQuery->categories();
+    }
+
+    public function getBlogTags()
+    {
+        return $this->blogQuery->tags();
     }
 
     public function getBlog(Blog $blog): Blog
@@ -41,7 +46,7 @@ class BlogService
         return $blog->load([
             'category:id,name',
             'author:id,name',
-            'tags:id,name',
+            'tags:id,name,slug',
         ]);
     }
 }
