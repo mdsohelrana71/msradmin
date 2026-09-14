@@ -18,6 +18,27 @@
 }
 
 .footer__about ul li {
+    font-size: 16px;
+    color: #1c1c1c;
+    line-height: 36px;
+    list-style: none;
+}
+
+.footer__about ul li {
+    display: flex;
+    align-items: flex-start;
+    font-size: 16px;
+    color: #1c1c1c;
+    line-height: 36px;
+    list-style: none;
+}
+
+.footer__about ul li .footer-label {
+    flex: 0 0 65px;
+    width: 65px;
+}
+
+.footer__about ul li {
 	font-size: 16px;
 	color: #1c1c1c;
 	line-height: 36px;
