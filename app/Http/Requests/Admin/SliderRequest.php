@@ -22,6 +22,7 @@ class SliderRequest extends FormRequest
             'mobile_image' => ['nullable', 'image', 'mimes:jpg,jpeg,png,webp', 'max:5120'],
             'button_text' => ['nullable', 'string', 'max:100'],
             'button_url' => ['nullable', 'string', 'max:500'],
+            'type' => ['nullable', 'string', 'max:255'],
             'sort_order' => ['nullable', 'integer', 'min:0'],
             'status' => ['nullable', 'boolean'],
             'start_at' => ['nullable', 'date'],
