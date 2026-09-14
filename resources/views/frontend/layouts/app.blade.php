@@ -23,8 +23,9 @@
     @yield('content')
     @include('frontend.partials.quick-view')
     {!! $designManager->render('footer') !!}
-    <script src="{{ asset('frontend/js/bootstrap.bundle.min.js') }}"></script>
+    
     <script src="{{ asset('frontend/js/jquery-3.7.1.min.js') }}"></script>
+    <script src="{{ asset('frontend/js/bootstrap.bundle.min.js') }}"></script>
     <script src="{{ asset('frontend/js/slick.min.js') }}"></script>
     <script src="{{ asset('frontend/js/global.js') }}"></script>
     @stack('scripts')

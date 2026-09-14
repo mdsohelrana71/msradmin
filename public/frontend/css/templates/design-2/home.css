@@ -335,8 +335,8 @@
     width: 40px;
     height: 40px;
     z-index: 5;
-    background: #fff;
-    border: 1px solid #ddd;
+    background: rgba(var(--secondary-rgb), 0.5);
+    border: none;
 	border-radius: 50%;
 }
 

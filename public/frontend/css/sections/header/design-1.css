@@ -172,11 +172,6 @@
     color: #666;
 }
 
-.desktop-flag {
-    width: 20px;
-    height: 14px;
-}
-
 .mobile-flag {
     width: 16px;
     height: 12px;
@@ -566,20 +561,6 @@
 /* Dark backdrop */
 .offcanvas-backdrop.show{
     opacity: .5;
-}
-
-
-/* Flag icon */
-.flag-icon {
-    width: 16px;
-    height: 16px;
-    background-size: contain;
-    background-repeat: no-repeat;
-    display: inline-block;
-}
-
-.us-flag {
-    background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 480"><g><path d="M0 0h640v37H0z" fill="%23B22234"/><path d="M0 74h640v37H0z" fill="%23B22234"/><path d="M0 148h640v37H0z" fill="%23B22234"/><path d="M0 222h640v37H0z" fill="%23B22234"/><path d="M0 296h640v37H0z" fill="%23B22234"/><path d="M0 370h640v37H0z" fill="%23B22234"/><path d="M0 37h640v37H0z"/><path d="M0 111h640v37H0z"/><path d="M0 185h640v37H0z"/><path d="M0 259h640v37H0z"/><path d="M0 333h640v37H0z"/><path d="M0 407h640v73H0z" fill="%23B22234"/><path d="M0 0h254v360H0z" fill="%23282B6E"/></g></svg>');
 }
 
 .header-left {

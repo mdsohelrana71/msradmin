@@ -34,7 +34,7 @@
 
     <div class="humberger__menu__widget">
         <div class="header__top__right__language">
-            <img src="{{ asset('frontend/images/language.png') }}" alt="Language">
+            <span class="flag-icon us-flag desktop-flag"></span>
             <div>English</div>
             <span class="arrow_carrot-down"></span>
             <ul>
