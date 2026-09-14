@@ -62,7 +62,7 @@
 
                     @if ($sliders->isNotEmpty())
                         <div class="hero__slider">
-                            @foreach ($sliders as $slider)
+                            @foreach ($sliders->whereIn('type', ['slider', 'both']) as $slider)
                                 <div class="hero__item">
                                     <img src="{{ asset('storage/' . $slider->image) }}"
                                         alt="{{ $slider->title ?? $settings->site_name }}">
@@ -170,16 +170,14 @@
     <div class="banner">
         <div class="container">
             <div class="row">
-                <div class="col-lg-6 col-md-6 col-sm-6">
-                    <div class="banner__pic">
-                        <img src="{{ asset('frontend/images/banner/banner-1.jpg') }}" alt="">
+                @foreach ($sliders->whereIn('type', ['both', 'card']) as $slider)
+                    <div class="col-lg-6 col-md-6 col-sm-6">
+                        <a href="{{ $slider->button_url }}" class="banner__pic d-block">
+                            <img src="{{ asset('storage/' . ltrim($slider->image, '/')) }}"
+                                alt="{{ $slider->title ?? $settings->site_name }}">
+                        </a>
                     </div>
-                </div>
-                <div class="col-lg-6 col-md-6 col-sm-6">
-                    <div class="banner__pic">
-                        <img src="{{ asset('frontend/images/banner/banner-2.jpg') }}" alt="">
-                    </div>
-                </div>
+                @endforeach
             </div>
         </div>
     </div>
