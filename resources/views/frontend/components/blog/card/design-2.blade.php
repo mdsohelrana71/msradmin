@@ -4,8 +4,8 @@
     </div>
     <div class="blog__item__text">
         <ul>
-            <li><i class="fa fa-calendar-o"></i> {{ $blog->published_at?->format('M d,Y') ?? $blog->created_at->format('M d,Y') }}</li>
-            <li><i class="fa fa-comment-o"></i> {{ $blog->category->name ?? 0 }}</li>
+            <li><i class="fa-regular fa-calendar"></i> {{ $blog->published_at?->format('M d,Y') ?? $blog->created_at->format('M d,Y') }}</li>
+            <li><i class="fa-solid fa-tag"></i> {{ $blog->category->name ?? 0 }}</li>
         </ul>
         <h5>
             <a href="{{ route('blog.show', $blog->slug) }}">{{ $blog->title }}</a>

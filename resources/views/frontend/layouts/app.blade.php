@@ -9,8 +9,7 @@
         $designManager = app(\App\Services\Frontend\DesignManager::class);
     @endphp
     <link rel="stylesheet" href="{{ asset('frontend/css/bootstrap.min.css') }}">
-    {{-- <link rel="stylesheet" href="{{ asset('frontend/css/font-awesome.min.css') }}"> --}}
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
+    <link rel="stylesheet" href="{{ asset('frontend/css/all.min.css') }}">
     <link rel="stylesheet" href="{{ asset('frontend/css/slick.min.css') }}">
     <link rel="stylesheet" href="{{ asset('frontend/css/slick-theme.min.css') }}">
     <link rel="stylesheet" href="{{ asset('frontend/css/global.css') }}">
