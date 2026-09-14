@@ -19,6 +19,7 @@ return new class extends Migration
             $table->string('mobile_image')->nullable();
             $table->string('button_text')->nullable();
             $table->string('button_url')->nullable();
+            $table->string('type')->nullable();
             $table->unsignedInteger('sort_order')->default(0);
             $table->boolean('status')->default(true);
             $table->timestamp('start_at')->nullable();

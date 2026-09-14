@@ -14,6 +14,7 @@ class Slider extends Model
         'mobile_image',
         'button_text',
         'button_url',
+        'type',
         'sort_order',
         'status',
         'start_at',

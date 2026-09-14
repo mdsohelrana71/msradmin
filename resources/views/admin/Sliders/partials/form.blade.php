@@ -49,7 +49,7 @@
                 </div>
             </div>
 
-            <div class="col-md-8">
+            <div class="col-md-4">
                 <div class="mb-3">
                     <label class="form-label d-block">Status</label>
                     <div class="form-check form-switch">
@@ -57,6 +57,25 @@
                         <input type="checkbox" name="status" value="1" class="form-check-input" id="status" {{ old('status', $slider->status ?? true) ? 'checked' : '' }}>
                         <label class="form-check-label" for="status">Active</label>
                     </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="form-group mb-1">
+                    <label for="type">Type</label>
+                    <select name="type" id="type" class="form-select @error('type') is-invalid @enderror">
+                        <option value="both" @selected(old('type', $blog->type ?? 'both') === 'both')>
+                            Both
+                        </option>
+                        <option value="slider" @selected(old('type', $blog->type ?? 'both') === 'slider')>
+                            Slider
+                        </option>
+                        <option value="card" @selected(old('type', $blog->type ?? 'both') === 'card')>
+                            Card
+                        </option>
+                    </select>
+                    @error('type')
+                        <div class="invalid-feedback">{{ $message }}</div>
+                    @enderror
                 </div>
             </div>
         </div>

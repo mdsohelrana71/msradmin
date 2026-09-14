@@ -6,6 +6,7 @@
                 <th width="90">Image</th>
                 <th>Title</th>
                 <th>Button</th>
+                <th>Type</th>
                 <th>Sort Order</th>
                 <th>Status</th>
                 <th>Created</th>
@@ -51,6 +52,12 @@
                     @else
                     <span class="text-muted">—</span>
                     @endif
+                </td>
+
+                <td>
+                    <span class="badge bg-info text-dark">
+                        {{ ucfirst($slider->type) }}
+                    </span>
                 </td>
 
                 <td>
