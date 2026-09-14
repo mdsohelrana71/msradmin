@@ -80,6 +80,21 @@
 
                 <div class="col-md-12">
                     <div class="form-group">
+                        <label for="site_address">
+                            Site Address
+                        </label>
+                        <textarea 
+                            name="site_address"
+                            id="site_address"
+                            rows="2"
+                            class="form-control"
+                            placeholder="Enter site address">{{ old('site_address', $settings->site_address ?? '') }}
+                        </textarea>
+                    </div>
+                </div>
+
+                <div class="col-md-12">
+                    <div class="form-group">
                         <label for="site_description">
                             Site Description
                         </label>

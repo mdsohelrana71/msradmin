@@ -28,7 +28,7 @@ class SettingsController extends Controller implements HasMiddleware
     public function index()
     {
         $names = [
-            'site_name', 'site_email', 'site_phone', 'site_description', 'timezone',
+            'site_name', 'site_email', 'site_phone', 'site_address', 'site_description', 'timezone',
             'site_logo', 'site_favicon',
             'mail_host', 'mail_port', 'mail_username', 'mail_password', 'mail_encryption', 'mail_from_name', 'mail_from_address',
             'email_notifications', 'login_notifications', 'system_notifications',
@@ -44,6 +44,7 @@ class SettingsController extends Controller implements HasMiddleware
             'site_name' => config('app.name'),
             'site_email' => '',
             'site_phone' => '',
+            'site_address' => '',
             'site_description' => '',
             'timezone' => config('app.timezone', 'Asia/Dhaka'),
             'site_logo' => '',
@@ -90,6 +91,7 @@ class SettingsController extends Controller implements HasMiddleware
             'site_name' => 'required|string|max:255',
             'site_email' => 'required|email|max:255',
             'site_phone' => 'nullable|string|max:50',
+            'site_address' => 'nullable|string',
             'site_description' => 'nullable|string',
             'timezone' => 'nullable|string|max:100',
             'site_logo' => 'nullable|image|mimes:jpg,jpeg,png,gif,webp|max:2048',
