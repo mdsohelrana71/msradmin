@@ -170,7 +170,7 @@
     <div class="banner">
         <div class="container">
             <div class="row">
-                @foreach ($sliders->whereIn('type', ['both', 'card']) as $slider)
+                @foreach ($sliders->whereIn('type', ['both', 'card'])->take(2) as $slider)
                     <div class="col-lg-6 col-md-6 col-sm-6">
                         <a href="{{ $slider->button_url }}" class="banner__pic d-block">
                             <img src="{{ asset('storage/' . ltrim($slider->image, '/')) }}"

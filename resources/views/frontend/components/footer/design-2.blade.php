@@ -9,14 +9,23 @@
                         </a>
                     </div>
                     <ul>
-                        {{-- @if ($settings->site_address)
-                            <li>Address: {{ $settings->site_address }}</li>
-                        @endif --}}
+                        @if ($settings->site_address)
+                            <li>
+                                <span class="footer-label">Address:</span>
+                                {{ $settings->site_address }}
+                            </li>
+                        @endif
                         @if ($settings->site_phone)
-                            <li>Phone: {{ $settings->site_phone }}</li>
+                            <li>
+                                <span class="footer-label">Phone:</span>
+                                {{ $settings->site_phone }}
+                            </li>
                         @endif
                         @if ($settings->site_email)
-                            <li>Email: {{ $settings->site_email }}</li>
+                            <li>
+                                <span class="footer-label">Email:</span>
+                                {{ $settings->site_email }}
+                            </li>
                         @endif
                     </ul>
                 </div>
