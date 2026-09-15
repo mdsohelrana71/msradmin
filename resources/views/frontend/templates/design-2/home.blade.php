@@ -46,8 +46,9 @@
                                     placeholder="What do you need?" autocomplete="off">
                                 <button type="submit" class="site-btn">SEARCH</button>
                             </form>
-                            <div class="product-search-results" id="productSearchResults"></div>
                         </div>
+
+                        <div class="product-search-results" id="productSearchResults"></div>
 
                         <div class="hero__search__phone">
                             <div class="hero__search__phone__icon">
