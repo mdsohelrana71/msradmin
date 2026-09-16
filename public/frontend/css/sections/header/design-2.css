@@ -119,7 +119,7 @@
 }
 
 .header__top__right__language ul {
-	background: #222222;
+	background: var(--primary);
 	width: 100px;
 	text-align: left;
 	padding: 5px 0;
