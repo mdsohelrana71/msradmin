@@ -48,13 +48,12 @@
                 <div class="product-price-container">
                     @if ($hasDiscount)
                         <span class="product-price-old">
-                            {{ $settings->price_symbol }}{{ number_format($product->selling_price, 2) }}
+                            {{ $settings->price_symbol }}{{ number_format($product->selling_price, 0) }}
                         </span>
                     @endif
 
                     <span class="product-price">
-                        <span class="currency">{{ $settings->price_symbol }}</span>
-                        {{ number_format($currentPrice, 2) }}
+                        <span class="currency">{{ $settings->price_symbol }}{{ number_format($currentPrice, 0) }}</span>
                     </span>
                     <span class="product-vat">+ VAT</span>
                 </div>

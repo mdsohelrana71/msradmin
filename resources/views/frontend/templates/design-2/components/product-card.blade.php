@@ -23,12 +23,13 @@
 
         @if ($hasDiscount)
             <span class="product-price-old">
-                {{ $settings->price_symbol }}{{ number_format($product->selling_price, 2) }}
+                {{ $settings->price_symbol }}{{ number_format($product->selling_price, 0) }}
             </span>
         @endif
 
         <span class="product-price">
-            {{ $settings->price_symbol }}{{ number_format($currentPrice, 2) }}
+            {{ $settings->price_symbol }}{{ number_format($currentPrice, 0) }}
         </span>
+        <span class="product-vat">+ VAT</span>
     </div>
 </a>

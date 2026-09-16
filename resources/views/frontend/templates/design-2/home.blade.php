@@ -46,9 +46,8 @@
                                     placeholder="What do you need?" autocomplete="off">
                                 <button type="submit" class="site-btn">SEARCH</button>
                             </form>
+                            <div class="product-search-results" id="productSearchResults"></div>
                         </div>
-
-                        <div class="product-search-results" id="productSearchResults"></div>
 
                         <div class="hero__search__phone">
                             <div class="hero__search__phone__icon">
@@ -154,7 +153,7 @@
 
             <div class="row featured__filter">
                 @forelse ($featuredProduct as $product)
-                    <div class="col-lg-3 col-md-3 col-sm-6">
+                    <div class="col-lg-2 col-md-2 col-sm-6">
                         @include($productCardView, ['product' => $product])
                     </div>
                 @empty
