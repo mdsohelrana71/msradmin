@@ -719,3 +719,26 @@
         </div>
     </div>
 </div>
+
+@push('scripts')
+    <script>
+        $(function () {
+            const sidebarWrapper = document.querySelector('.sidebar-wrapper');
+            const activeMenu = sidebarWrapper?.querySelector('.nav-collapse > li.active, .nav > .nav-item.active');
+
+            if (!sidebarWrapper || !activeMenu) {
+                return;
+            }
+
+            setTimeout(function () {
+                const scrollContent = sidebarWrapper.querySelector('.scroll-content') || sidebarWrapper;
+                const wrapperRect = scrollContent.getBoundingClientRect();
+                const menuRect = activeMenu.getBoundingClientRect();
+
+                if (menuRect.top < wrapperRect.top || menuRect.bottom > wrapperRect.bottom) {
+                    activeMenu.scrollIntoView({ block: 'center' });
+                }
+            }, 100);
+        });
+    </script>
+@endpush
