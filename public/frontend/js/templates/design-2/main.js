@@ -94,6 +94,12 @@ document.addEventListener('DOMContentLoaded', function () {
         }
     }
 
+    /*
+    |--------------------------------------------------------------------------
+    | Latest product Slider
+    |--------------------------------------------------------------------------
+    */
+
     $('.latest-product__slider').each(function() {
         const slider = $(this);
         const parent = slider.closest('.latest-product__text');
