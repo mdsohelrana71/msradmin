@@ -351,6 +351,39 @@ a{
 }
 
 
+#backToTop {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    width: 45px;
+    height: 45px;
+    border: none;
+    border-radius: 50%;
+    background: var(--primary);
+    color: #fff;
+    font-size: 18px;
+    cursor: pointer;
+    opacity: 0;
+    visibility: hidden;
+    transition: all 0.3s ease;
+    z-index: 9999;
+    box-shadow: 0 4px 10px rgba(0,0,0,.2);
+}
+
+#backToTop.show {
+    opacity: 1;
+    visibility: visible;
+}
+
+#backToTop:hover {
+    background: var(--secondary);
+    color: #fff;
+}
+
+#backToTop{
+    transition: all 0.3s ease;
+}
+
 /* Responsive Logo */
 @media (max-width: 992px) {
     .logo img {
