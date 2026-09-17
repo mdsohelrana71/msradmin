@@ -32,13 +32,24 @@
                                 </p>
                             </div>
 
-                            <a
-                                href="{{ route('admin.store-designs.index') }}"
-                                class="btn btn-secondary btn-round ms-auto"
-                            >
-                                <i class="fa fa-arrow-left me-1"></i>
-                                Back
-                            </a>
+                            <div class="d-flex align-items-center gap-2 ms-auto">
+                                <button
+                                    type="button"
+                                    class="btn btn-warning btn-round"
+                                    onclick="confirmResetColors()"
+                                >
+                                    <i class="fa fa-refresh me-1"></i>
+                                    Reset Colors
+                                </button>
+
+                                <a
+                                    href="{{ route('admin.store-designs.index') }}"
+                                    class="btn btn-secondary btn-round"
+                                >
+                                    <i class="fa fa-arrow-left me-1"></i>
+                                    Back
+                                </a>
+                            </div>
                         </div>
                     </div>
 
@@ -159,6 +170,15 @@
     </div>
 </div>
 
+<x-confirm-modal
+    id="resetThemeColorsModal"
+    title="Reset Theme Colors"
+    message="Are you sure you want to reset all colors to their default values?"
+    confirmText="Reset"
+    confirmClass="btn-warning"
+    confirmAction="resetThemeColors()"
+/>
+
 @endsection
 
 @push('styles')
@@ -234,5 +254,43 @@
             colorInput.click();
         });
     });
+
+    function confirmResetColors() {
+        const modal = document.getElementById('resetThemeColorsModal');
+
+        if (!modal) {
+            return;
+        }
+
+        new bootstrap.Modal(modal).show();
+    }
+
+    function resetThemeColors() {
+        const defaults = {
+            theme_primary_color: '#ff6600',
+            theme_secondary_color: '#ff2200',
+            theme_light_color: '#ffe6cc'
+        };
+
+        document.querySelectorAll('.theme-color-picker').forEach(function (picker) {
+            const colorInput = picker.querySelector('input[type="color"]');
+            const hexInput = picker.querySelector('.hex-value');
+            const swatch = picker.querySelector('.color-swatch');
+            const name = colorInput.name;
+
+            if (defaults[name]) {
+                colorInput.value = defaults[name];
+                hexInput.value = defaults[name];
+                swatch.style.backgroundColor = defaults[name];
+            }
+        });
+
+        const modal = document.getElementById('resetThemeColorsModal');
+        const modalInstance = bootstrap.Modal.getInstance(modal);
+
+        if (modalInstance) {
+            modalInstance.hide();
+        }
+    }
 </script>
 @endpush
