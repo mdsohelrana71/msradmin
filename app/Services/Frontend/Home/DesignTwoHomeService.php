@@ -51,7 +51,7 @@ class DesignTwoHomeService
             ->where('is_featured', true)
             ->with(['images', 'category'])
             ->latest('created_at')
-            ->take(4)
+            ->take(9)
             ->get();
 
         $saleProducts = (clone $baseQuery)
@@ -59,14 +59,14 @@ class DesignTwoHomeService
             ->whereColumn('discount_price', '<', 'selling_price')
             ->with(['images', 'category'])
             ->latest('created_at')
-            ->take(3)
+            ->take(9)
             ->get();
         
 
         $newArrivalsProducts = (clone $baseQuery)
             ->with(['images', 'category'])
             ->latest('created_at')
-            ->take(3)
+            ->take(9)
             ->get();
 
         $blogs = $this->blogService->getLatestBlogs(3);

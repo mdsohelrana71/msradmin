@@ -581,6 +581,41 @@
 	width: 110px;
 }
 
+.latest-product__heading {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 20px;
+}
+
+.latest-product__heading h4 {
+    margin: 0;
+}
+
+.latest-product__controls {
+    display: flex;
+    gap: 5px;
+}
+
+.latest-product__controls button {
+    width: 30px;
+    height: 30px;
+    padding: 0;
+    border: 1px solid #e5e5e5;
+    background: #fff;
+    color: #1c1c1c;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+}
+
+.latest-product__controls button:hover {
+    background: var(--primary);
+    border-color: var(--primary);
+    color: #fff;
+}
+
 /*--------------------------------- Home Responsive -----------------------------*/
 
 @media only screen and (min-width: 992px) and (max-width: 1199px) {

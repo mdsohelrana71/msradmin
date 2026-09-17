@@ -152,7 +152,7 @@
             </div>
 
             <div class="row featured__filter">
-                @forelse ($featuredProduct as $product)
+                @forelse ($featuredProduct->take(6) as $product)
                     <div class="col-lg-2 col-md-2 col-sm-6">
                         @include($productCardView, ['product' => $product])
                     </div>
@@ -190,8 +190,19 @@
                 {{-- New Arrivals --}}
                 <div class="col-lg-4 col-md-6">
                     <div class="latest-product__text">
-                        <h4>New Arrivals</h4>
-                        <div class="latest-product__slider owl-carousel">
+                        <div class="latest-product__heading">
+                            <h4>New Arrivals</h4>
+                            <div class="latest-product__controls">
+                                <button type="button" class="latest-product-prev">
+                                    <i class="fa fa-angle-left"></i>
+                                </button>
+                                <button type="button" class="latest-product-next">
+                                    <i class="fa fa-angle-right"></i>
+                                </button>
+                            </div>
+                        </div>
+
+                        <div class="latest-product__slider">
                             @forelse ($newArrivalsProducts->chunk(3) as $products)
                                 <div class="latest-prdouct__slider__item">
                                     @foreach ($products as $product)
@@ -208,9 +219,20 @@
                 {{-- Featured Products --}}
                 <div class="col-lg-4 col-md-6">
                     <div class="latest-product__text">
-                        <h4>Featured Products</h4>
-                        <div class="latest-product__slider owl-carousel">
-                            @forelse ($featuredProduct->take(3)->chunk(3) as $products)
+                        <div class="latest-product__heading">
+                            <h4>Featured Products</h4>
+                            <div class="latest-product__controls">
+                                <button type="button" class="latest-product-prev">
+                                    <i class="fa fa-angle-left"></i>
+                                </button>
+                                <button type="button" class="latest-product-next">
+                                    <i class="fa fa-angle-right"></i>
+                                </button>
+                            </div>
+                        </div>
+
+                        <div class="latest-product__slider">
+                            @forelse ($featuredProduct->chunk(3) as $products)
                                 <div class="latest-prdouct__slider__item">
                                     @foreach ($products as $product)
                                         @include('frontend.templates.design-2.components.product-card', ['product' => $product])
@@ -226,8 +248,19 @@
                 {{-- Sale Products --}}
                 <div class="col-lg-4 col-md-6">
                     <div class="latest-product__text">
-                        <h4>Sale Products</h4>
-                        <div class="latest-product__slider owl-carousel">
+                        <div class="latest-product__heading">
+                            <h4>Sale Products</h4>
+                            <div class="latest-product__controls">
+                                <button type="button" class="latest-product-prev">
+                                    <i class="fa fa-angle-left"></i>
+                                </button>
+                                <button type="button" class="latest-product-next">
+                                    <i class="fa fa-angle-right"></i>
+                                </button>
+                            </div>
+                        </div>
+
+                        <div class="latest-product__slider">
                             @forelse ($saleProducts->chunk(3) as $products)
                                 <div class="latest-prdouct__slider__item">
                                     @foreach ($products as $product)

@@ -93,4 +93,27 @@ document.addEventListener('DOMContentLoaded', function () {
             });
         }
     }
+
+    $('.latest-product__slider').each(function() {
+        const slider = $(this);
+        const parent = slider.closest('.latest-product__text');
+
+        slider.slick({
+            slidesToShow: 1,
+            slidesToScroll: 1,
+            arrows: false,
+            dots: false,
+            infinite: false,
+            autoplay: true,
+            speed: 500
+        });
+
+        parent.find('.latest-product-prev').on('click', function() {
+            slider.slick('slickPrev');
+        });
+
+        parent.find('.latest-product-next').on('click', function() {
+            slider.slick('slickNext');
+        });
+    });
 });
