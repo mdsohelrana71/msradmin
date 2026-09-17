@@ -17,6 +17,7 @@ use App\Http\Controllers\Admin\DiscountController;
 use App\Http\Controllers\Admin\SettingsController;
 use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\ProductFaqController;
+use App\Http\Controllers\Admin\ThemeColorController;
 use App\Http\Controllers\Admin\StoreDesignController;
 use App\Http\Controllers\Admin\StoreSettingController;
 use App\Http\Controllers\Admin\BlogCategoryController;
@@ -77,6 +78,7 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
     Route::resource('sliders', SliderController::class);
     Route::resource('promos', PromoController::class);
     Route::resource('store-designs', StoreDesignController::class)->only(['index', 'edit', 'update']);
+    Route::resource('store-designs/theme-colors', ThemeColorController::class)->only(['edit', 'update'])->names('theme-colors');
     Route::resource('newsletter-subscribers', NewsletterSubscriberController::class)->except(['create', 'store']);
     
     Route::post('/cache/clear', function () {
