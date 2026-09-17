@@ -49,9 +49,18 @@ class DesignManager
         $config = config('store_design.template', []);
         $optionName = $config['option_name'] ?? 'store_design.template';
         $default = $config['default'] ?? array_key_first($this->getTemplates());
+
         $option = Option::where('option_name', $optionName)->first();
 
         return $option?->option_value ?: $default;
+    }
+
+    public function getPageDesign(string $page): string
+    {
+        $optionName = "store_design.{$page}";
+        $option = Option::where('option_name', $optionName)->first();
+
+        return $option?->option_value ?: $this->getActiveTemplate();
     }
 
     public function getSectionDesign(string $section): string
@@ -64,7 +73,7 @@ class DesignManager
 
     public function getPageView(string $page): string
     {
-        $template = $this->getTemplate($this->getActiveTemplate());
+        $template = $this->getTemplate($this->getPageDesign($page));
 
         if (!isset($template['pages'][$page])) {
             throw new InvalidArgumentException('Store design page view not found.');
@@ -103,18 +112,23 @@ class DesignManager
 
     public function getTemplateCss(string $file): string
     {
-        return asset("frontend/css/templates/{$this->getActiveTemplate()}/{$file}.css");
+        return asset(
+            "frontend/css/templates/{$this->getActiveTemplate()}/{$file}.css"
+        );
     }
 
     public function getSectionCss(string $section): string
     {
         $design = $this->getSectionDesign($section);
+
         $group = match ($section) {
             'product_card' => 'product/card',
             'blog_card' => 'blog/card',
             default => $section,
         };
-        return asset("frontend/css/sections/{$group}/{$design}.css");
-    }
 
+        return asset(
+            "frontend/css/sections/{$group}/{$design}.css"
+        );
+    }
 }
