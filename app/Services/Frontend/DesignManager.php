@@ -112,8 +112,11 @@ class DesignManager
 
     public function getTemplateCss(string $file): string
     {
+        $page = str_replace('-', '_', $file);
+        $design = $this->getPageDesign($page);
+
         return asset(
-            "frontend/css/templates/{$this->getActiveTemplate()}/{$file}.css"
+            "frontend/css/templates/{$design}/{$file}.css"
         );
     }
 
