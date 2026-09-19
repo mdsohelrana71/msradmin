@@ -141,3 +141,48 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     }
 });
+
+/*-------------------
+    Wishlist Toggle
+--------------------- */
+
+$(document).on('click', '.wishlist-btn', function (e) {
+    e.preventDefault();
+    e.stopPropagation();
+
+    const button = $(this);
+    const productId = button.data('product-id');
+
+    $.ajax({
+        url: `/wishlist/${productId}/toggle`,
+        type: 'POST',
+        data: {
+            _token: $('meta[name="csrf-token"]').attr('content')
+        },
+        success: function (response) {
+            if (response.added) {
+                button.addClass('active');
+                button.find('i')
+                    .removeClass('fa-regular')
+                    .addClass('fa-solid');
+
+                button.attr('aria-label', 'Remove from wishlist');
+            } else {
+                button.removeClass('active');
+                button.find('i')
+                    .removeClass('fa-solid')
+                    .addClass('fa-regular');
+
+                button.attr('aria-label', 'Add to wishlist');
+            }
+        },
+        error: function (xhr) {
+            if (xhr.status === 401 && xhr.responseJSON?.redirect) {
+                window.location.href = xhr.responseJSON.redirect;
+                return;
+            }
+
+            console.log(xhr.responseText);
+        }
+    });
+});

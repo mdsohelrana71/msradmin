@@ -384,6 +384,14 @@ a{
     transition: all 0.3s ease;
 }
 
+.wishlist-btn.active i {
+    color: var(--primary);
+}
+
+.wishlist-btn.active:hover i {
+    color: #fff;
+}
+
 /* Responsive Logo */
 @media (max-width: 992px) {
     .logo img {
