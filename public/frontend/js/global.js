@@ -44,6 +44,11 @@ $(document).ready(function () {
     });
 });
 
+
+/*-------------------
+    Quick View Modal
+--------------------- */
+
 document.addEventListener('DOMContentLoaded', function () {
     const quickViewModal = document.getElementById('quickViewModal');
 
@@ -111,6 +116,10 @@ document.addEventListener('DOMContentLoaded', function () {
         image.classList.add('active');
     };
 });
+
+/*-------------------
+    Back to Top
+--------------------- */
 
 document.addEventListener('DOMContentLoaded', function () {
     const backToTop = document.getElementById("backToTop");
