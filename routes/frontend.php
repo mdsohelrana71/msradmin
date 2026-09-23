@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Frontend\BlogController;
 use App\Http\Controllers\Frontend\HomeController;
+use App\Http\Controllers\Frontend\CartController;
 use App\Http\Controllers\Frontend\ProductController;
 use App\Http\Controllers\Frontend\WishlistController;
 use App\Http\Controllers\Frontend\NewsletterController;
@@ -33,6 +34,10 @@ Route::get('/products', [ProductController::class, 'index'])->name('products.ind
 Route::get('/products/search', [ProductController::class, 'search'])->name('products.search');
 Route::get('/products/{product:slug}', [ProductController::class, 'show'])->name('products.show');
 Route::post('/wishlist/{productId}/toggle', [WishlistController::class, 'toggle'])->name('wishlist.toggle');
+
+Route::post('/cart/{product}/add', [CartController::class, 'add'])->name('cart.add');
+Route::patch('/cart/item/{cartItem}', [CartController::class, 'update'])->name('cart.update');
+Route::delete('/cart/item/{cartItem}', [CartController::class, 'remove'])->name('cart.remove');
 
 Route::get('/blog', [BlogController::class, 'index'])->name('blog.index');
 Route::get('/blog/{blog:slug}', [BlogController::class, 'show'])->name('blog.show');

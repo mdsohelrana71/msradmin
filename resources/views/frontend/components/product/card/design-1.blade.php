@@ -48,9 +48,12 @@
                 <i class="fas fa-heart"></i>
             </a>
 
-            <a href="#" class="product-action-btn">
+            <button type="button"
+                class="product-action-btn add-to-cart-btn"
+                data-url="{{ route('cart.add', $product->id) }}"
+                title="Add to Cart">
                 <i class="fas fa-shopping-cart"></i>
-            </a>
+            </button>
 
             <a href="{{ route('products.show', $product->slug) }}" class="product-action-btn">
                 <i class="fas fa-eye"></i>

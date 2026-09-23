@@ -186,3 +186,127 @@ $(document).on('click', '.wishlist-btn', function (e) {
         }
     });
 });
+
+/*-------------------
+    Add to Cart
+--------------------- */
+
+$(document).on('click', '.add-to-cart-btn', function (e) {
+    e.preventDefault();
+
+    const button = $(this);
+    const url = button.data('url');
+
+    if (button.hasClass('loading')) {
+        return;
+    }
+
+    button.addClass('loading').prop('disabled', true);
+
+    $.ajax({
+        url: url,
+        type: 'POST',
+        data: {
+            _token: $('meta[name="csrf-token"]').attr('content'),
+            quantity: 1
+        },
+        success: function (response) {
+            if (response.success) {
+                $('.cart-badge').text(response.cart_count);
+
+                const alert = $(`
+                    <div
+                        class="alert alert-success alert-dismissible fade show position-fixed top-0 end-0 m-3 shadow"
+                        id="cartSuccessAlert"
+                        style="z-index: 9999;"
+                        role="alert"
+                    >
+                        <i class="fas fa-check-circle me-2"></i>
+                        ${response.message}
+                        <button
+                            type="button"
+                            class="btn-close"
+                            data-bs-dismiss="alert"
+                            aria-label="Close"
+                        ></button>
+                    </div>
+                `);
+
+                $('#ajaxAlertContainer').html(alert);
+
+                setTimeout(function () {
+                    alert.alert('close');
+                }, 2000);
+            }
+        },
+        error: function (xhr) {
+            const message = xhr.responseJSON?.message || 'Something went wrong.';
+
+            const alert = $(`
+                <div
+                    class="alert alert-danger alert-dismissible fade show position-fixed top-0 end-0 m-3 shadow"
+                    id="cartErrorAlert"
+                    style="z-index: 9999; min-width: 300px;"
+                    role="alert"
+                >
+                    <i class="fas fa-exclamation-circle me-2"></i>
+                    ${message}
+                    <button
+                        type="button"
+                        class="btn-close"
+                        data-bs-dismiss="alert"
+                        aria-label="Close"
+                    ></button>
+                </div>
+            `);
+
+            $('#ajaxAlertContainer').html(alert);
+
+            setTimeout(function () {
+                alert.alert('close');
+            }, 3000);
+        },
+        complete: function () {
+            button.removeClass('loading').prop('disabled', false);
+        }
+    });
+});
+
+
+$(document).on('click', '.cart-quantity-btn', function (e) {
+    e.preventDefault();
+
+    const button = $(this);
+    const url = button.data('url');
+    const action = button.data('action');
+
+    if (button.hasClass('loading')) {
+        return;
+    }
+
+    button.addClass('loading').prop('disabled', true);
+
+    $.ajax({
+        url: url,
+        type: 'PATCH',
+        data: {
+            _token: $('meta[name="csrf-token"]').attr('content'),
+            action: action
+        },
+        success: function (response) {
+            if (response.success) {
+                $('.cart-badge').text(response.cart_count);
+
+                location.reload();
+            }
+        },
+        error: function (xhr) {
+            console.error(
+                xhr.responseJSON?.message || 'Something went wrong.'
+            );
+        },
+        complete: function () {
+            button.removeClass('loading').prop('disabled', false);
+        }
+    });
+});

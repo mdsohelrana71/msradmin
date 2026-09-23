@@ -34,12 +34,14 @@
 
     @stack('styles')
 </head>
+
 <body>
     {!! $designManager->render('header') !!}
-
+    <div id="ajaxAlertContainer"></div>
     @yield('content')
 
     @include('frontend.partials.quick-view')
+    @include('frontend.partials.cart')
 
     {!! $designManager->render('footer') !!}
 

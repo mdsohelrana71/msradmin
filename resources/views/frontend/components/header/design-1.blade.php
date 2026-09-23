@@ -122,10 +122,16 @@
                     <i class="fa-regular fa-heart"></i>
                 </a>
 
-                <div class="action-icon cart-icon">
+                <button
+                    type="button"
+                    class="action-icon cart-icon border-0 bg-transparent p-0"
+                    data-bs-toggle="offcanvas"
+                    data-bs-target="#cartModal"
+                    aria-controls="cartModal"
+                >
                     <i class="fas fa-shopping-cart"></i>
-                    <span class="cart-badge">0</span>
-                </div>
+                    <span class="cart-badge">{{ $cartCount }}</span>
+                </button>
             </div>
         </div>
     </div>

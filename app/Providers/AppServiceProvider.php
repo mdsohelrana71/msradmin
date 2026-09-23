@@ -4,6 +4,7 @@ namespace App\Providers;
 
 use App\Http\Middleware\EnsurePermission;
 use App\Models\Option;
+use App\Services\Frontend\Global\CartService;
 use Illuminate\Database\QueryException;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Route;
@@ -83,5 +84,25 @@ class AppServiceProvider extends ServiceProvider
         }
 
         View::share('settings', $settings);
+
+        View::composer('frontend.components.header.design-1', function ($view) {
+            $cartService = app(CartService::class);
+
+            $view->with('cartCount', $cartService->count());
+        });
+
+        View::composer('frontend.partials.cart', function ($view) {
+            $cartService = app(CartService::class);
+            $cart = $cartService->getCart();
+            $totals = $cartService->totals();
+
+            $view->with([
+                'cartItems' => $cart?->items ?? collect(),
+                'cartCount' => $cartService->count(),
+                'cartTotal' => $totals['total'],
+                'cartDiscount' => $totals['discount'],
+                'cartSubtotal' => $totals['subtotal'],
+            ]);
+        });
     }
 }
