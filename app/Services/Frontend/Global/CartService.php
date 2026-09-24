@@ -5,6 +5,7 @@ namespace App\Services\Frontend\Global;
 use App\Models\Cart;
 use App\Models\CartItem;
 use App\Models\Product;
+use App\Models\ProductInventory;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 
@@ -31,8 +32,15 @@ class CartService
                 ->whereNull('product_variant_id')
                 ->first();
 
+            $currentQuantity = $cartItem?->quantity ?? 0;
+            $newQuantity = $currentQuantity + $quantity;
+
+            $this->validateStock($product->id, null, $newQuantity);
+
             if ($cartItem) {
-                $cartItem->increment('quantity', $quantity);
+                $cartItem->update([
+                    'quantity' => $newQuantity,
+                ]);
             } else {
                 $cartItem = $cart->items()->create([
                     'product_id' => $product->id,
@@ -49,21 +57,52 @@ class CartService
     {
         $this->validateOwnership($cartItem);
 
-        if ($action === 'increase') {
-            $cartItem->increment('quantity');
-
-            return;
-        }
+        $quantity = $cartItem->quantity;
 
         if ($action === 'decrease') {
-            if ($cartItem->quantity <= 1) {
+            if ($quantity <= 1) {
                 $cartItem->delete();
 
                 return;
             }
 
-            $cartItem->decrement('quantity');
+            $quantity--;
         }
+
+        if ($action === 'increase') {
+            $quantity++;
+        }
+
+        if (!in_array($action, ['increase', 'decrease'], true)) {
+            return;
+        }
+
+        $this->validateStock(
+            $cartItem->product_id,
+            $cartItem->product_variant_id,
+            $quantity
+        );
+
+        $cartItem->update([
+            'quantity' => $quantity,
+        ]);
+    }
+
+    public function updateQuantityDirectly(CartItem $cartItem, int $quantity): void
+    {
+        $this->validateOwnership($cartItem);
+
+        $quantity = max(1, $quantity);
+
+        $this->validateStock(
+            $cartItem->product_id,
+            $cartItem->product_variant_id,
+            $quantity
+        );
+
+        $cartItem->update([
+            'quantity' => $quantity,
+        ]);
     }
 
     public function remove(CartItem $cartItem): void
@@ -114,6 +153,54 @@ class CartService
             'discount' => $discount,
             'subtotal' => $total - $discount,
         ];
+    }
+
+    public function availableStock(CartItem $cartItem): int
+    {
+        $inventory = ProductInventory::query()
+            ->where('product_id', $cartItem->product_id)
+            ->when(
+                $cartItem->product_variant_id,
+                fn ($query) => $query->where(
+                    'product_variant_id',
+                    $cartItem->product_variant_id
+                ),
+                fn ($query) => $query->whereNull('product_variant_id')
+            )
+            ->first();
+
+        return $inventory?->available_stock ?? 0;
+    }
+
+    private function validateStock(
+        int $productId,
+        ?int $variantId,
+        int $quantity
+    ): void {
+        $inventory = ProductInventory::query()
+            ->where('product_id', $productId)
+            ->when(
+                $variantId,
+                fn ($query) => $query->where('product_variant_id', $variantId),
+                fn ($query) => $query->whereNull('product_variant_id')
+            )
+            ->first();
+
+        $availableStock = $inventory?->available_stock ?? 0;
+
+        if ($availableStock <= 0) {
+            abort(
+                422,
+                'This product is currently out of stock.'
+            );
+        }
+
+        if ($quantity > $availableStock) {
+            abort(
+                422,
+                "Only {$availableStock} item(s) available in stock."
+            );
+        }
     }
 
     private function getOrCreateCart(): Cart

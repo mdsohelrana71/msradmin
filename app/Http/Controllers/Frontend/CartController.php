@@ -26,10 +26,17 @@ class CartController extends Controller
 
     public function update(Request $request, CartItem $cartItem): JsonResponse
     {
-        $this->cartService->updateQuantity(
-            $cartItem,
-            $request->input('action')
-        );
+        if ($request->filled('quantity')) {
+            $this->cartService->updateQuantityDirectly(
+                $cartItem,
+                (int) $request->input('quantity')
+            );
+        } else {
+            $this->cartService->updateQuantity(
+                $cartItem,
+                $request->input('action')
+            );
+        }
 
         return $this->cartResponse();
     }

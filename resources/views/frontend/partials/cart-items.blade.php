@@ -6,9 +6,16 @@
             && $product->discount_price < $product->selling_price
                 ? $product->discount_price
                 : $product->selling_price;
+
+        $availableStock = app(\App\Services\Frontend\Global\CartService::class)
+            ->availableStock($item);
     @endphp
 
-    <div class="cart-item" data-cart-item="{{ $item->id }}">
+    <div
+        class="cart-item"
+        data-cart-item="{{ $item->id }}"
+        data-max-stock="{{ $availableStock }}"
+    >
         <button
             type="button"
             class="delete-btn remove-cart-item"
@@ -58,15 +65,18 @@
                     class="cart-quantity-btn"
                     data-url="{{ route('cart.update', $item->id) }}"
                     data-action="decrease"
+                    @disabled($item->quantity <= 1)
                 >
                     <i class="fas fa-minus"></i>
                 </button>
 
                 <input
-                    type="text"
+                    type="number"
                     class="cart-quantity-input"
                     value="{{ $item->quantity }}"
-                    readonly
+                    min="1"
+                    max="{{ $availableStock }}"
+                    data-url="{{ route('cart.update', $item->id) }}"
                 >
 
                 <button
@@ -74,6 +84,7 @@
                     class="cart-quantity-btn"
                     data-url="{{ route('cart.update', $item->id) }}"
                     data-action="increase"
+                    @disabled($item->quantity >= $availableStock)
                 >
                     <i class="fas fa-plus"></i>
                 </button>

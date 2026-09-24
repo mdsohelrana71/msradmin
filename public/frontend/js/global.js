@@ -242,38 +242,75 @@ $(document).on('click', '.cart-quantity-btn', function (e) {
     e.preventDefault();
 
     const button = $(this);
+    const cartItem = button.closest('.cart-item');
+    const input = cartItem.find('.cart-quantity-input');
+
     const url = button.data('url');
     const action = button.data('action');
 
-    if (button.hasClass('loading')) {
+    const currentQuantity = parseInt(input.val(), 10) || 1;
+    const maxStock = parseInt(cartItem.data('max-stock'), 10) || 0;
+
+    let newQuantity = currentQuantity;
+
+    if (action === 'increase') {
+        newQuantity = currentQuantity + 1;
+    }
+
+    if (action === 'decrease') {
+        newQuantity = currentQuantity - 1;
+    }
+
+    if (newQuantity < 1) {
+        newQuantity = 1;
+    }
+
+    if (newQuantity > maxStock) {
+        showCartAlert(
+            'danger',
+            `Only ${maxStock} item(s) available in stock.`
+        );
+
         return;
     }
 
-    button.addClass('loading').prop('disabled', true);
+    updateCartItemQuantity(button, url, newQuantity);
+});
 
-    $.ajax({
-        url: url,
-        type: 'PATCH',
-        data: {
-            _token: $('meta[name="csrf-token"]').attr('content'),
-            action: action
-        },
-        success: function (response) {
-            if (!response.success) {
-                return;
-            }
 
-            updateCart(response);
-        },
-        error: function (xhr) {
-            const message = xhr.responseJSON?.message || 'Something went wrong.';
+/*-------------------
+    Cart Quantity Input
+--------------------- */
 
-            showCartAlert('danger', message);
-        },
-        complete: function () {
-            button.removeClass('loading').prop('disabled', false);
-        }
-    });
+$(document).on('change', '.cart-quantity-input', function () {
+    const input = $(this);
+    const cartItem = input.closest('.cart-item');
+
+    const url = input.data('url');
+
+    const maxStock = parseInt(
+        cartItem.data('max-stock'),
+        10
+    ) || 0;
+
+    let quantity = parseInt(input.val(), 10) || 1;
+
+    if (quantity < 1) {
+        quantity = 1;
+    }
+
+    if (quantity > maxStock) {
+        quantity = maxStock;
+
+        showCartAlert(
+            'danger',
+            `Only ${maxStock} item(s) available in stock.`
+        );
+    }
+
+    input.val(quantity);
+
+    updateCartItemQuantity(input, url, quantity);
 });
 
 
@@ -321,6 +358,44 @@ $(document).on('click', '.remove-cart-item', function (e) {
         }
     });
 });
+
+
+/*-------------------
+    Update Cart Item
+--------------------- */
+
+function updateCartItemQuantity(element, url, quantity) {
+    if (element.hasClass('loading')) {
+        return;
+    }
+
+    element.addClass('loading').prop('disabled', true);
+
+    $.ajax({
+        url: url,
+        type: 'PATCH',
+        data: {
+            _token: $('meta[name="csrf-token"]').attr('content'),
+            quantity: quantity
+        },
+        success: function (response) {
+            if (!response.success) {
+                return;
+            }
+
+            updateCart(response);
+        },
+        error: function (xhr) {
+            const message = xhr.responseJSON?.message
+                || 'Something went wrong.';
+
+            showCartAlert('danger', message);
+        },
+        complete: function () {
+            element.removeClass('loading').prop('disabled', false);
+        }
+    });
+}
 
 
 /*-------------------
