@@ -211,60 +211,21 @@ $(document).on('click', '.add-to-cart-btn', function (e) {
             quantity: 1
         },
         success: function (response) {
-            if (response.success) {
-                $('.cart-badge').text(response.cart_count);
-
-                const alert = $(`
-                    <div
-                        class="alert alert-success alert-dismissible fade show position-fixed top-0 end-0 m-3 shadow"
-                        id="cartSuccessAlert"
-                        style="z-index: 9999;"
-                        role="alert"
-                    >
-                        <i class="fas fa-check-circle me-2"></i>
-                        ${response.message}
-                        <button
-                            type="button"
-                            class="btn-close"
-                            data-bs-dismiss="alert"
-                            aria-label="Close"
-                        ></button>
-                    </div>
-                `);
-
-                $('#ajaxAlertContainer').html(alert);
-
-                setTimeout(function () {
-                    alert.alert('close');
-                }, 2000);
+            if (!response.success) {
+                return;
             }
+
+            updateCart(response);
+
+            showCartAlert(
+                'success',
+                response.message || 'Product added to cart.'
+            );
         },
         error: function (xhr) {
             const message = xhr.responseJSON?.message || 'Something went wrong.';
 
-            const alert = $(`
-                <div
-                    class="alert alert-danger alert-dismissible fade show position-fixed top-0 end-0 m-3 shadow"
-                    id="cartErrorAlert"
-                    style="z-index: 9999; min-width: 300px;"
-                    role="alert"
-                >
-                    <i class="fas fa-exclamation-circle me-2"></i>
-                    ${message}
-                    <button
-                        type="button"
-                        class="btn-close"
-                        data-bs-dismiss="alert"
-                        aria-label="Close"
-                    ></button>
-                </div>
-            `);
-
-            $('#ajaxAlertContainer').html(alert);
-
-            setTimeout(function () {
-                alert.alert('close');
-            }, 3000);
+            showCartAlert('danger', message);
         },
         complete: function () {
             button.removeClass('loading').prop('disabled', false);
@@ -272,6 +233,10 @@ $(document).on('click', '.add-to-cart-btn', function (e) {
     });
 });
 
+
+/*-------------------
+    Update Cart Quantity
+--------------------- */
 
 $(document).on('click', '.cart-quantity-btn', function (e) {
     e.preventDefault();
@@ -294,19 +259,142 @@ $(document).on('click', '.cart-quantity-btn', function (e) {
             action: action
         },
         success: function (response) {
-            if (response.success) {
-                $('.cart-badge').text(response.cart_count);
-
-                location.reload();
+            if (!response.success) {
+                return;
             }
+
+            updateCart(response);
         },
         error: function (xhr) {
-            console.error(
-                xhr.responseJSON?.message || 'Something went wrong.'
-            );
+            const message = xhr.responseJSON?.message || 'Something went wrong.';
+
+            showCartAlert('danger', message);
         },
         complete: function () {
             button.removeClass('loading').prop('disabled', false);
         }
     });
 });
+
+
+/*-------------------
+    Remove Cart Item
+--------------------- */
+
+$(document).on('click', '.remove-cart-item', function (e) {
+    e.preventDefault();
+
+    const button = $(this);
+    const url = button.data('url');
+
+    if (button.hasClass('loading')) {
+        return;
+    }
+
+    button.addClass('loading').prop('disabled', true);
+
+    $.ajax({
+        url: url,
+        type: 'DELETE',
+        data: {
+            _token: $('meta[name="csrf-token"]').attr('content')
+        },
+        success: function (response) {
+            if (!response.success) {
+                return;
+            }
+
+            updateCart(response);
+
+            showCartAlert(
+                'success',
+                response.message || 'Product removed from cart.'
+            );
+        },
+        error: function (xhr) {
+            const message = xhr.responseJSON?.message || 'Something went wrong.';
+
+            showCartAlert('danger', message);
+        },
+        complete: function () {
+            button.removeClass('loading').prop('disabled', false);
+        }
+    });
+});
+
+
+/*-------------------
+    Update Cart UI
+--------------------- */
+
+function updateCart(response) {
+    $('.cart-badge').text(response.cart_count);
+
+    $('.cart-items').html(response.cart_html);
+
+    updateCartTotals(response.totals);
+}
+
+
+/*-------------------
+    Update Cart Totals
+--------------------- */
+
+function updateCartTotals(totals) {
+    $('.cart-total .total-row').eq(0).find('.total-price')
+        .text(formatPrice(totals.total));
+
+    $('.cart-total .total-row').eq(1).find('.total-price')
+        .text(formatPrice(totals.discount));
+
+    $('.cart-total .total-row').eq(2).find('.total-price')
+        .text(formatPrice(totals.subtotal));
+}
+
+
+/*-------------------
+    Format Price
+--------------------- */
+
+function formatPrice(amount) {
+    return '৳' + Number(amount).toLocaleString('en-BD', {
+        minimumFractionDigits: 2,
+        maximumFractionDigits: 2
+    });
+}
+
+
+/*-------------------
+    Cart Alert
+--------------------- */
+
+function showCartAlert(type, message) {
+    const icon = type === 'success'
+        ? 'fa-check-circle'
+        : 'fa-exclamation-circle';
+
+    const alert = $(`
+        <div
+            class="alert alert-${type} alert-dismissible fade show position-fixed top-0 end-0 m-3 shadow"
+            id="cartAlert"
+            style="z-index: 9999;"
+            role="alert"
+        >
+            <i class="fas ${icon} me-2"></i>
+            ${message}
+
+            <button
+                type="button"
+                class="btn-close"
+                data-bs-dismiss="alert"
+                aria-label="Close"
+            ></button>
+        </div>
+    `);
+
+    $('#ajaxAlertContainer').html(alert);
+
+    setTimeout(function () {
+        alert.alert('close');
+    }, 2000);
+}

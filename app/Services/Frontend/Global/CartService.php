@@ -13,8 +13,12 @@ class CartService
     public function getCart(): ?Cart
     {
         return Auth::check()
-            ? Cart::with('items.product', 'items.variant')->where('user_id', Auth::id())->first()
-            : Cart::with('items.product', 'items.variant')->where('session_id', session()->getId())->first();
+            ? Cart::with('items.product', 'items.variant')
+                ->where('user_id', Auth::id())
+                ->first()
+            : Cart::with('items.product', 'items.variant')
+                ->where('session_id', session()->getId())
+                ->first();
     }
 
     public function add(Product $product, int $quantity = 1): CartItem
@@ -43,13 +47,18 @@ class CartService
 
     public function updateQuantity(CartItem $cartItem, string $action): void
     {
+        $this->validateOwnership($cartItem);
+
         if ($action === 'increase') {
             $cartItem->increment('quantity');
+
+            return;
         }
 
         if ($action === 'decrease') {
             if ($cartItem->quantity <= 1) {
                 $cartItem->delete();
+
                 return;
             }
 
@@ -59,6 +68,8 @@ class CartService
 
     public function remove(CartItem $cartItem): void
     {
+        $this->validateOwnership($cartItem);
+
         $cartItem->delete();
     }
 
@@ -87,11 +98,12 @@ class CartService
         foreach ($cart->items as $item) {
             $product = $item->product;
 
-            $sellingPrice = $item->variant?->price ?? $product->selling_price;
-            $currentPrice = $item->variant?->price
-                ?? ($product->discount_price !== null && $product->discount_price < $product->selling_price
+            $sellingPrice = $product->selling_price;
+
+            $currentPrice = $product->discount_price !== null
+                && $product->discount_price < $product->selling_price
                     ? $product->discount_price
-                    : $product->selling_price);
+                    : $product->selling_price;
 
             $total += $sellingPrice * $item->quantity;
             $discount += ($sellingPrice - $currentPrice) * $item->quantity;
@@ -113,5 +125,15 @@ class CartService
             : Cart::firstOrCreate([
                 'session_id' => session()->getId(),
             ]);
+    }
+
+    private function validateOwnership(CartItem $cartItem): void
+    {
+        $cart = $this->getCart();
+
+        abort_unless(
+            $cart && $cart->id === $cartItem->cart_id,
+            403
+        );
     }
 }

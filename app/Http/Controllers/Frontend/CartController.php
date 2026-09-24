@@ -21,11 +21,7 @@ class CartController extends Controller
 
         $this->cartService->add($product, $quantity);
 
-        return response()->json([
-            'success' => true,
-            'message' => 'Product added to cart.',
-            'cart_count' => $this->cartService->count(),
-        ]);
+        return $this->cartResponse('Product added to cart.');
     }
 
     public function update(Request $request, CartItem $cartItem): JsonResponse
@@ -42,16 +38,25 @@ class CartController extends Controller
     {
         $this->cartService->remove($cartItem);
 
-        return $this->cartResponse();
+        return $this->cartResponse('Product removed from cart.');
     }
 
-    private function cartResponse(): JsonResponse
+    private function cartResponse(?string $message = null): JsonResponse
     {
+        $cart = $this->cartService->getCart();
         $totals = $this->cartService->totals();
+
+        $cartItems = $cart?->items ?? collect();
+
+        $cartHtml = view('frontend.partials.cart-items', [
+            'cartItems' => $cartItems,
+        ])->render();
 
         return response()->json([
             'success' => true,
+            'message' => $message,
             'cart_count' => $this->cartService->count(),
+            'cart_html' => $cartHtml,
             'totals' => $totals,
         ]);
     }

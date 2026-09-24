@@ -208,9 +208,12 @@
                                         <div class="d-flex align-items-center gap-3">
                                             <strong>{{ $settings->price_symbol }}{{ number_format($currentPrice, 2) }}</strong>
 
-                                            <a href="#" class="btn trending-add-cart-btn">
+                                            <button type="button"
+                                                class="add-to-cart-btn btn trending-add-cart-btn"
+                                                data-url="{{ route('cart.add', $product->id) }}"
+                                                title="Add to Cart">
                                                 <i class="fas fa-shopping-cart"></i>
-                                            </a>
+                                            </button>
                                         </div>
                                     </li>
                                 @endforeach
