@@ -43,6 +43,17 @@
     @include('frontend.partials.quick-view')
     @include('frontend.partials.cart')
 
+    <button id="backToTop" class="back-to-top" type="button">
+        <i class="fas fa-arrow-up"></i>
+    </button>
+
+    <div class="cart-floating-btn">
+        <button class="cart-btn" data-bs-toggle="offcanvas" data-bs-target="#cartModal">
+            <i class="fas fa-shopping-cart"></i>
+            <span class="cart-badge">0</span>
+        </button>
+    </div>
+
     {!! $designManager->render('footer') !!}
 
     <script src="{{ asset('frontend/js/jquery-3.7.1.min.js') }}"></script>

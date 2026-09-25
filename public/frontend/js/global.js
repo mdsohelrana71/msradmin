@@ -140,6 +140,19 @@ document.addEventListener('DOMContentLoaded', function () {
             });
         });
     }
+
+    const cartModal = document.getElementById('cartModal');
+    const cartBtn = document.querySelector('.cart-floating-btn');
+
+    cartModal.addEventListener('shown.bs.offcanvas', function () {
+        backToTop.classList.add('hide-floating-btns');
+        cartBtn.classList.add('hide-floating-btns');
+    });
+
+    cartModal.addEventListener('hidden.bs.offcanvas', function () {
+        backToTop.classList.remove('hide-floating-btns');
+        cartBtn.classList.remove('hide-floating-btns');
+    });
 });
 
 /*-------------------

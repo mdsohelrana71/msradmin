@@ -286,9 +286,6 @@
         </section>
     @endif
 
-    <button id="backToTop" class="back-to-top" type="button">
-        <i class="fas fa-arrow-up"></i>
-    </button>
 @endsection
 
 @push('scripts')
