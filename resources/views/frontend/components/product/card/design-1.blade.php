@@ -5,6 +5,12 @@
         $discountPercentage = $hasDiscount && $product->selling_price > 0
             ? round((($product->selling_price - $product->discount_price) / $product->selling_price) * 100)
             : 0;
+        
+        $isWishlisted = auth()->check()
+        ? \App\Models\ProductWishlist::where('user_id', \Illuminate\Support\Facades\Auth::id())
+            ->where('product_id', $product->id)
+            ->exists()
+        : false;
     @endphp
 
     @if ($hasDiscount)
@@ -44,9 +50,15 @@
         </div>
 
         <div class="product-actions">
-            <a href="#" class="product-action-btn">
-                <i class="fas fa-heart"></i>
-            </a>
+            <button
+                type="button"
+                class="product-action-btn wishlist-btn {{ $isWishlisted ? 'active' : '' }}"
+                data-product-id="{{ $product->id }}"
+                aria-label="{{ $isWishlisted ? 'Remove from wishlist' : 'Add to wishlist' }}"
+                title="{{ $isWishlisted ? 'Remove from wishlist' : 'Add to wishlist' }}"
+            >
+                <i class="{{ $isWishlisted ? 'fa-solid' : 'fa-regular' }} fa-heart"></i>
+            </button>
 
             <button type="button"
                 class="product-action-btn add-to-cart-btn"

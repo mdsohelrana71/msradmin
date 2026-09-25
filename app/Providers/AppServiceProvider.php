@@ -85,11 +85,40 @@ class AppServiceProvider extends ServiceProvider
 
         View::share('settings', $settings);
 
+        /*
+        |--------------------------------------------------------------------------
+        | Frontend Layout
+        |--------------------------------------------------------------------------
+        */
+
+        View::composer('frontend.layouts.app', function ($view) {
+            $cartService = app(CartService::class);
+
+            $view->with([
+                'cartTotal' => $cartService->totals()['total'],
+                'cartCount' => $cartService->count(),
+            ]);
+        });
+
+        /*
+        |--------------------------------------------------------------------------
+        | Header Cart
+        |--------------------------------------------------------------------------
+        */
+
         View::composer('frontend.components.header.design-1', function ($view) {
             $cartService = app(CartService::class);
 
-            $view->with('cartCount', $cartService->count());
+            $view->with([
+                'cartCount' => $cartService->count(),
+            ]);
         });
+
+        /*
+        |--------------------------------------------------------------------------
+        | Cart Partial
+        |--------------------------------------------------------------------------
+        */
 
         View::composer('frontend.partials.cart', function ($view) {
             $cartService = app(CartService::class);

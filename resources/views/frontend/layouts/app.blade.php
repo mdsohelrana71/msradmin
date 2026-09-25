@@ -50,7 +50,7 @@
     <div class="cart-floating-btn">
         <button class="cart-btn" data-bs-toggle="offcanvas" data-bs-target="#cartModal">
             <i class="fas fa-shopping-cart"></i>
-            <span class="cart-badge">0</span>
+            <span class="cart-badge">{{ $cartCount }}</span>
         </button>
     </div>
 
