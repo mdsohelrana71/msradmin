@@ -5,6 +5,7 @@ namespace App\Providers;
 use App\Http\Middleware\EnsurePermission;
 use App\Models\Option;
 use App\Services\Frontend\Global\CartService;
+use App\Services\Frontend\Global\WishlistService;
 use Illuminate\Database\QueryException;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Route;
@@ -91,17 +92,20 @@ class AppServiceProvider extends ServiceProvider
 
         /*
         |--------------------------------------------------------------------------
-        | Cart Data
+        | Frontend Header Data
         |--------------------------------------------------------------------------
         */
 
-        $cartData = function () {
+        $headerData = function () {
             $cartService = app(CartService::class);
+            $wishlistService = app(WishlistService::class);
+
             $totals = $cartService->totals();
 
             return [
                 'cartCount' => $cartService->count(),
                 'cartSubtotal' => $totals['subtotal'],
+                'wishlistCount' => $wishlistService->count(),
             ];
         };
 
@@ -111,8 +115,8 @@ class AppServiceProvider extends ServiceProvider
         |--------------------------------------------------------------------------
         */
 
-        View::composer('frontend.layouts.app', function ($view) use ($cartData) {
-            $view->with($cartData());
+        View::composer('frontend.layouts.app', function ($view) use ($headerData) {
+            $view->with($headerData());
         });
 
         /*
@@ -121,8 +125,8 @@ class AppServiceProvider extends ServiceProvider
         |--------------------------------------------------------------------------
         */
 
-        View::composer('frontend.components.header.*', function ($view) use ($cartData) {
-            $view->with($cartData());
+        View::composer('frontend.components.header.*', function ($view) use ($headerData) {
+            $view->with($headerData());
         });
 
         /*

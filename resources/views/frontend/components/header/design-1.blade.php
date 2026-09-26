@@ -120,6 +120,7 @@
 
                 <a href="#" class="action-icon wishlist-icon text-decoration-none" title="Wishlist">
                     <i class="fa-regular fa-heart"></i>
+                    <span class="cart-badge">{{ $wishlistCount }}</span>
                 </a>
 
                 <button

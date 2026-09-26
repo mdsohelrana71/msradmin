@@ -28,6 +28,7 @@ class WishlistController extends Controller
         return response()->json([
             'status' => true,
             'added' => $added,
+            'wishlist_count' => $this->wishlistService->count(),
             'message' => $added
                 ? 'Product added to wishlist.'
                 : 'Product removed from wishlist.',

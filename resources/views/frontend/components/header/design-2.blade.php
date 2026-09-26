@@ -295,7 +295,7 @@
                         <li>
                             <a href="#">
                                 <i class="fa fa-heart"></i>
-                                <span class="cart-badge">0</span>
+                                <span class="cart-badge">{{ $wishlistCount }}</span>
                             </a>
                         </li>
                         <li>

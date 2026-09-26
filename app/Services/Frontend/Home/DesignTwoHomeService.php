@@ -47,9 +47,17 @@ class DesignTwoHomeService
 
         $baseQuery = $this->productQuery->frontend();
 
+        $relations = [
+            'images',
+            'category',
+            'variants.values.attribute',
+            'variants.values.attributeValue',
+            'variants.inventory',
+        ];
+
         $featuredProduct = (clone $baseQuery)
             ->where('is_featured', true)
-            ->with(['images', 'category'])
+            ->with($relations)
             ->latest('created_at')
             ->take(9)
             ->get();
@@ -57,14 +65,13 @@ class DesignTwoHomeService
         $saleProducts = (clone $baseQuery)
             ->whereNotNull('discount_price')
             ->whereColumn('discount_price', '<', 'selling_price')
-            ->with(['images', 'category'])
+            ->with($relations)
             ->latest('created_at')
             ->take(9)
             ->get();
-        
 
         $newArrivalsProducts = (clone $baseQuery)
-            ->with(['images', 'category'])
+            ->with($relations)
             ->latest('created_at')
             ->take(9)
             ->get();

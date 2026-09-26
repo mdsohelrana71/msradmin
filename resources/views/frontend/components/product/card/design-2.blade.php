@@ -34,20 +34,7 @@
             @endif
         </a>
 
-        <button
-            type="button"
-            class="quick-view-btn"
-            data-bs-toggle="offcanvas"
-            data-bs-target="#quickViewModal"
-            data-product-id="{{ $product->id }}"
-            data-product-name="{{ $product->name }}"
-            data-product-code="{{ $product->sku }}"
-            data-product-price="{{ number_format($currentPrice, 2) }}"
-            data-product-image="{{ $product->thumbnail ? asset('storage/' . ltrim($product->thumbnail, '/')) : '' }}"
-            data-product-url="{{ route('products.show', $product->slug) }}">
-            <i class="fa-regular fa-eye"></i>
-            Quick View
-        </button>
+        @include('frontend.partials.quick-view-button')
 
         <div class="product-info">
             <div>

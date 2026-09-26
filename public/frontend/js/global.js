@@ -56,13 +56,16 @@ document.addEventListener('DOMContentLoaded', function () {
         return;
     }
 
-    const mainImage = document.getElementById('qv-main-image');
+    const mainSlider = $('#qv-main-slider');
+    const thumbSlider = $('#qv-thumb-slider');
+
     const productName = document.getElementById('qv-product-name');
     const productCode = document.getElementById('qv-product-code');
     const productPrice = document.getElementById('qv-product-price');
     const productColor = document.getElementById('qv-product-color');
     const productSize = document.getElementById('qv-product-size');
     const fullDetails = document.getElementById('qv-full-details');
+    const addToCartButton = document.getElementById('qv-add-to-cart');
 
     document.addEventListener('click', function (event) {
         const button = event.target.closest('.quick-view-btn');
@@ -75,46 +78,229 @@ document.addEventListener('DOMContentLoaded', function () {
 
         productName.textContent = data.productName || '';
         productCode.textContent = data.productCode || 'N/A';
-        productPrice.textContent = data.productPrice
-            ? data.productPrice
-            : 'N/A';
+        productPrice.textContent = data.productPrice || 'N/A';
 
         fullDetails.href = data.productUrl || '#';
 
-        mainImage.src = data.productImage || '';
-        mainImage.alt = data.productName || 'Product';
-
-        thumbnails.innerHTML = '';
-
-        if (data.productImage) {
-            const thumb = document.createElement('img');
-            thumb.src = data.productImage;
-            thumb.alt = data.productName || 'Product';
-            thumb.className = 'thumb-img active';
-
-            thumb.addEventListener('click', function () {
-                changeQuickViewImage(this);
-            });
-
-            thumbnails.appendChild(thumb);
-        }
+        addToCartButton.dataset.url = data.cartUrl || '';
+        addToCartButton.dataset.productId = data.productId || '';
 
         productColor.innerHTML =
             '<span class="text-muted">Available on product page</span>';
 
         productSize.innerHTML =
             '<span class="text-muted">Available on product page</span>';
+
+        loadQuickViewImages(data);
+        loadQuickViewVariants(data);
     });
 
-    window.changeQuickViewImage = function (image) {
-        mainImage.src = image.src;
+    function loadQuickViewImages(data) {
+        destroySliders();
 
-        document.querySelectorAll('#qv-thumbnails .thumb-img').forEach(function (thumb) {
-            thumb.classList.remove('active');
+        let images = [];
+
+        try {
+            images = JSON.parse(data.productImages || '[]');
+        } catch (error) {
+            images = [];
+        }
+
+        if (!Array.isArray(images)) {
+            images = [];
+        }
+
+        if (!images.length && data.productImage) {
+            images.push(data.productImage);
+        }
+
+        images = images.filter(function (image) {
+            return image && image.trim() !== '';
         });
 
-        image.classList.add('active');
-    };
+        if (!images.length) {
+            mainSlider.html(`
+                <div class="qv-main-slide">
+                    <div class="d-flex align-items-center justify-content-center h-100">
+                        <span class="text-muted">
+                            No image available
+                        </span>
+                    </div>
+                </div>
+            `);
+
+            thumbSlider.empty();
+
+            return;
+        }
+
+        let mainHtml = '';
+        let thumbHtml = '';
+
+        images.forEach(function (image, index) {
+            mainHtml += `
+                <div class="qv-main-slide">
+                    <img
+                        src="${image}"
+                        alt="${escapeHtml(data.productName || 'Product')}"
+                    >
+                </div>
+            `;
+
+            thumbHtml += `
+                <div class="qv-thumb-slide">
+                    <div class="qv-thumb ${index === 0 ? 'active' : ''}">
+                        <img
+                            src="${image}"
+                            alt="${escapeHtml(data.productName || 'Product')}"
+                        >
+                    </div>
+                </div>
+            `;
+        });
+
+        mainSlider.html(mainHtml);
+        thumbSlider.html(thumbHtml);
+
+        mainSlider.slick({
+            slidesToShow: 1,
+            slidesToScroll: 1,
+            arrows: true,
+            fade: true,
+            adaptiveHeight: false,
+            asNavFor: '#qv-thumb-slider'
+        });
+
+        thumbSlider.slick({
+            slidesToShow: Math.min(images.length, 4),
+            slidesToScroll: 1,
+            asNavFor: '#qv-main-slider',
+            dots: false,
+            arrows: images.length > 4,
+            centerMode: false,
+            focusOnSelect: true,
+            responsive: [
+                {
+                    breakpoint: 576,
+                    settings: {
+                        slidesToShow: Math.min(images.length, 3)
+                    }
+                }
+            ]
+        });
+
+        updateActiveThumbnail();
+
+        mainSlider.on('afterChange', function (event, slick, currentSlide) {
+            updateActiveThumbnail(currentSlide);
+        });
+    }
+
+    function loadQuickViewVariants(data) {
+        productColor.innerHTML = '';
+        productSize.innerHTML = '';
+
+        let variants = [];
+
+        try {
+            variants = JSON.parse(data.productVariants || '[]');
+        } catch (error) {
+            variants = [];
+        }
+
+        if (!variants.length) {
+            productColor.innerHTML =
+                '<span class="text-muted">No color available</span>';
+
+            productSize.innerHTML =
+                '<span class="text-muted">No size available</span>';
+
+            return;
+        }
+
+        const colors = new Map();
+        const sizes = new Map();
+
+        variants.forEach(function (variant) {
+            if (!variant.values) {
+                return;
+            }
+
+            variant.values.forEach(function (item) {
+                const attributeName = (item.attribute_name || '').toLowerCase();
+                const value = item.value;
+
+                if (!value) {
+                    return;
+                }
+
+                if (attributeName === 'color') {
+                    colors.set(item.attribute_value_id, value);
+                }
+
+                if (attributeName === 'size') {
+                    sizes.set(item.attribute_value_id, value);
+                }
+            });
+        });
+
+        if (colors.size) {
+            colors.forEach(function (value, id) {
+                const button = document.createElement('button');
+
+                button.type = 'button';
+                button.className = 'btn btn-outline-secondary';
+                button.textContent = value;
+                button.dataset.attributeValueId = id;
+
+                productColor.appendChild(button);
+            });
+        } else {
+            productColor.innerHTML =
+                '<span class="text-muted">No color available</span>';
+        }
+
+        if (sizes.size) {
+            sizes.forEach(function (value, id) {
+                const button = document.createElement('button');
+
+                button.type = 'button';
+                button.className = 'btn btn-outline-secondary';
+                button.textContent = value;
+                button.dataset.attributeValueId = id;
+
+                productSize.appendChild(button);
+            });
+        } else {
+            productSize.innerHTML =
+                '<span class="text-muted">No size available</span>';
+        }
+    }
+
+    function updateActiveThumbnail(activeIndex = 0) {
+        $('#qv-thumb-slider .qv-thumb').removeClass('active');
+        $('#qv-thumb-slider .slick-slide')
+            .eq(activeIndex)
+            .find('.qv-thumb')
+            .addClass('active');
+    }
+
+    function destroySliders() {
+        if (mainSlider.hasClass('slick-initialized')) {
+            mainSlider.slick('unslick');
+        }
+
+        if (thumbSlider.hasClass('slick-initialized')) {
+            thumbSlider.slick('unslick');
+        }
+
+        mainSlider.empty();
+        thumbSlider.empty();
+    }
+
+    function escapeHtml(text) {
+        return $('<div>').text(text).html();
+    }
 });
 
 /*-------------------
@@ -173,8 +359,17 @@ $(document).on('click', '.wishlist-btn', function (e) {
             _token: $('meta[name="csrf-token"]').attr('content')
         },
         success: function (response) {
+            if (!response.status) {
+                return;
+            }
+
+            // Update wishlist count immediately
+            $('.wishlist-badge').text(response.wishlist_count);
+
+            // Update heart icon
             if (response.added) {
                 button.addClass('active');
+
                 button.find('i')
                     .removeClass('fa-regular')
                     .addClass('fa-solid');
@@ -182,12 +377,16 @@ $(document).on('click', '.wishlist-btn', function (e) {
                 button.attr('aria-label', 'Remove from wishlist');
             } else {
                 button.removeClass('active');
+
                 button.find('i')
                     .removeClass('fa-solid')
                     .addClass('fa-regular');
 
                 button.attr('aria-label', 'Add to wishlist');
             }
+
+            // Show message
+            showWishlistAlert(response.message);
         },
         error: function (xhr) {
             if (xhr.status === 401 && xhr.responseJSON?.redirect) {
@@ -199,6 +398,25 @@ $(document).on('click', '.wishlist-btn', function (e) {
         }
     });
 });
+
+function showWishlistAlert(message) {
+    const alert = $(`
+        <div class="alert alert-success alert-dismissible fade show wishlist-alert"
+             role="alert">
+            ${message}
+            <button type="button"
+                    class="btn-close"
+                    data-bs-dismiss="alert"
+                    aria-label="Close"></button>
+        </div>
+    `);
+
+    $('#ajaxAlertContainer').html(alert);
+
+    setTimeout(function () {
+        alert.alert('close');
+    }, 2500);
+}
 
 /*-------------------
     Add to Cart

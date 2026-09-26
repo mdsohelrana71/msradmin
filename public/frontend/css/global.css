@@ -259,6 +259,7 @@ a{
 
 
 /* Quick View Modal Styling */
+
 .quick-view-offcanvas {
     width: 100% !important;
     max-width: 450px;
@@ -266,14 +267,131 @@ a{
 
 .quick-view-offcanvas .offcanvas-title {
     font-size: 20px;
+    color: #fff;
 }
 
-.quick-view-offcanvas .main-product-img{
-    width:100%;
-    height:400px;
-    object-fit:cover;
-    border:1px solid #eee;
+/* Main Image Slider */
+
+.quick-view-main-slider {
+    width: 100%;
 }
+
+.quick-view-main-slider .qv-main-slide {
+    width: 100%;
+    height: 400px;
+    overflow: hidden;
+    border: 1px solid #eee;
+    border-radius: 8px;
+    background: #fff;
+}
+
+.quick-view-main-slider .qv-main-slide img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+}
+
+/* Main Slider Arrows */
+
+.quick-view-main-slider .slick-prev,
+.quick-view-main-slider .slick-next {
+    z-index: 5;
+    width: 34px;
+    height: 34px;
+    border-radius: 50%;
+    background: var(--primary);
+}
+
+.quick-view-main-slider .slick-prev {
+    left: 10px;
+}
+
+.quick-view-main-slider .slick-next {
+    right: 10px;
+}
+
+.quick-view-main-slider .slick-prev:hover,
+.quick-view-main-slider .slick-next:hover {
+    background: var(--secondary);
+}
+
+.quick-view-main-slider .slick-prev:before,
+.quick-view-main-slider .slick-next:before {
+    font-size: 15px;
+    opacity: 1;
+}
+
+/* Thumbnail Slider */
+
+.quick-view-thumb-slider {
+    position: relative;
+    padding: 0 25px;
+}
+
+.quick-view-thumb-slider .qv-thumb-slide {
+    padding: 0 4px;
+    cursor: pointer;
+}
+
+.quick-view-thumb-slider .qv-thumb {
+    width: 100%;
+    height: 75px;
+    padding: 0;
+    overflow: hidden;
+    border: 2px solid #ddd;
+    border-radius: 8px;
+    background: #fff;
+    cursor: pointer;
+    transition: border-color 0.3s ease;
+}
+
+.quick-view-thumb-slider .qv-thumb:hover {
+    border-color: var(--primary);
+}
+
+.quick-view-thumb-slider .qv-thumb.active {
+    border-color: var(--primary);
+}
+
+.quick-view-thumb-slider .qv-thumb img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+}
+
+/* Thumbnail Arrows */
+
+.quick-view-thumb-slider .slick-prev,
+.quick-view-thumb-slider .slick-next {
+    z-index: 5;
+    width: 26px;
+    height: 26px;
+    border-radius: 50%;
+    background: var(--primary);
+}
+
+.quick-view-thumb-slider .slick-prev {
+    left: -22px;
+}
+
+.quick-view-thumb-slider .slick-next {
+    right: -22px;
+}
+
+.quick-view-thumb-slider .slick-prev:hover,
+.quick-view-thumb-slider .slick-next:hover {
+    background: var(--secondary);
+}
+
+.quick-view-thumb-slider .slick-prev:before,
+.quick-view-thumb-slider .slick-next:before {
+    font-size: 12px;
+    opacity: 1;
+}
+
+/* Product Details */
 
 .quick-view-offcanvas .product-details {
     font-size: 14px;
@@ -320,15 +438,20 @@ a{
     color: #fff;
 }
 
+/* Cart Footer */
+
 .quick-view-offcanvas .cart-footer {
     border-top: 1px solid #e0e0e0;
     background-color: #f9f9f9;
 }
 
+.quick-view-offcanvas .cart-buttons {
+    display: flex;
+    gap: 10px;
+}
+
 .quick-view-offcanvas .cart-buttons .btn {
-    display: inline-block;
-    width: 48%;
-    margin-right: 2%;
+    flex: 1;
     padding: 10px;
     text-align: center;
     background-color: var(--primary);
@@ -341,13 +464,27 @@ a{
     transition: all 0.3s ease;
 }
 
-.quick-view-offcanvas .cart-buttons .btn:last-child {
-    margin-right: 0;
-}
-
 .quick-view-offcanvas .cart-buttons .btn:hover {
     background-color: var(--secondary);
     border-color: var(--secondary);
+}
+
+/* Mobile */
+
+@media (max-width: 576px) {
+
+    .quick-view-offcanvas {
+        max-width: 100%;
+    }
+
+    .quick-view-main-slider .qv-main-slide {
+        height: 320px;
+    }
+
+    .quick-view-thumb-slider .qv-thumb {
+        height: 65px;
+    }
+
 }
 
 
@@ -471,6 +608,7 @@ a{
 
 .offcanvas-title{
     font-size: 20px;
+    color: #fff;
 }
 
 .offcanvas .btn-close {
@@ -645,122 +783,6 @@ a{
     display: flex;
     align-items: center;
     gap: 12px;
-}
-
-
-/* Quick View Modal Styling */
-.quick-view-offcanvas {
-    width: 100% !important;
-    max-width: 450px;
-}
-
-.quick-view-offcanvas .offcanvas-title {
-    font-size: 20px;
-}
-
-.quick-view-offcanvas .main-product-img{
-    width:100%;
-    height:400px;
-    object-fit:cover;
-    border:1px solid #eee;
-}
-
-.quick-view-offcanvas .product-thumbnails{
-    overflow-x:auto;
-}
-
-.quick-view-offcanvas .thumb-img{
-    width:75px;
-    height:75px;
-    object-fit:cover;
-    border:2px solid #ddd;
-    border-radius:8px;
-    cursor:pointer;
-    transition:.3s;
-    flex-shrink:0;
-}
-
-.quick-view-offcanvas .thumb-img:hover{
-    border-color:var(--primary);
-}
-
-.quick-view-offcanvas .thumb-img.active{
-    border-color:var(--primary);
-}
-
-.quick-view-offcanvas .product-details {
-    font-size: 14px;
-    line-height: 1.6;
-}
-
-.quick-view-offcanvas .product-details label {
-    font-weight: 600;
-    color: #888;
-    margin-bottom: 0;
-}
-
-.quick-view-offcanvas .product-details p {
-    color: #333;
-    font-size: 14px;
-    margin-bottom: 0;
-}
-
-.quick-view-offcanvas #qv-product-price {
-    font-size: 18px !important;
-}
-
-.quick-view-offcanvas #qv-product-price .currency {
-    font-weight: 800;
-    margin-right: 2px;
-}
-
-.quick-view-offcanvas #qv-product-size .btn {
-    min-width: 45px;
-    height: 40px;
-    padding: 6px 8px;
-    font-size: 13px;
-    font-weight: 500;
-}
-
-.quick-view-offcanvas #qv-product-size .btn-outline-secondary {
-    color: #666;
-    border-color: #ddd;
-}
-
-.quick-view-offcanvas #qv-product-size .btn-outline-secondary:hover {
-    background-color: var(--primary);
-    border-color: var(--primary);
-    color: #fff;
-}
-
-.quick-view-offcanvas .cart-footer {
-    border-top: 1px solid #e0e0e0;
-    background-color: #f9f9f9;
-}
-
-.quick-view-offcanvas .cart-buttons .btn {
-    display: inline-block;
-    width: 48%;
-    margin-right: 2%;
-    padding: 10px;
-    text-align: center;
-    background-color: var(--primary);
-    color: #fff;
-    border: 1px solid var(--primary);
-    border-radius: 4px;
-    text-decoration: none;
-    font-size: 14px;
-    font-weight: 600;
-    transition: all 0.3s ease;
-}
-
-.quick-view-offcanvas .cart-buttons .btn:last-child {
-    margin-right: 0;
-}
-
-.quick-view-offcanvas .cart-buttons .btn:hover {
-    background-color: var(--secondary);
-    border-color: var(--secondary);
 }
 
 

@@ -33,4 +33,13 @@ class WishlistService
             ->where('product_id', $productId)
             ->exists();
     }
+
+    public function count(): int
+    {
+        if (!Auth::check()) {
+            return 0;
+        }
+
+        return ProductWishlist::where('user_id', Auth::id())->count();
+    }
 }
