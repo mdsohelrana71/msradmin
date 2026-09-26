@@ -3,8 +3,8 @@
 namespace App\Services\Admin;
 
 use App\Models\Option;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\DB;
 
 class StoreSettingService
 {
@@ -21,6 +21,8 @@ class StoreSettingService
                 'tax_value' => Option::getOption('tax_value', 0),
                 'show_out_of_stock_products' => Option::getOption('show_out_of_stock_products', true),
                 'price_symbol' => Option::getOption('price_symbol', '৳'),
+                'back_to_top_enabled' => Option::getOption('back_to_top_enabled', true),
+                'floating_cart_enabled' => Option::getOption('floating_cart_enabled', true),
             ],
         ];
     }

@@ -62,6 +62,12 @@ class StoreSettingRequest extends FormRequest
                     '﷼',
                 ]),
             ],
+            'back_to_top_enabled' => [
+                'boolean',
+            ],
+            'floating_cart_enabled' => [
+                'boolean',
+            ],
         ];
     }
 }

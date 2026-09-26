@@ -46,6 +46,8 @@ class AppServiceProvider extends ServiceProvider
             'linkedin_url',
             'price_symbol',
             'show_out_of_stock_products',
+            'back_to_top_enabled',
+            'floating_cart_enabled',
         ];
 
         $defaults = [
@@ -65,6 +67,8 @@ class AppServiceProvider extends ServiceProvider
             'linkedin_url' => '',
             'price_symbol' => '৳',
             'show_out_of_stock_products' => true,
+            'back_to_top_enabled' => true,
+            'floating_cart_enabled' => true,
         ];
 
         try {

@@ -37,22 +37,34 @@
 
 <body>
     {!! $designManager->render('header') !!}
+
     <div id="ajaxAlertContainer"></div>
+
     @yield('content')
 
     @include('frontend.partials.quick-view')
     @include('frontend.partials.cart')
 
-    <button id="backToTop" class="back-to-top" type="button">
-        <i class="fas fa-arrow-up"></i>
-    </button>
-
-    <div class="cart-floating-btn">
-        <button class="cart-btn" data-bs-toggle="offcanvas" data-bs-target="#cartModal">
-            <i class="fas fa-shopping-cart"></i>
-            <span class="cart-badge">{{ $cartCount }}</span>
+    @if ($settings->back_to_top_enabled)
+        <button id="backToTop" class="back-to-top" type="button">
+            <i class="fas fa-arrow-up"></i>
         </button>
-    </div>
+    @endif
+
+    @if ($settings->floating_cart_enabled)
+        <div class="cart-floating-btn">
+            <button
+                class="cart-btn"
+                type="button"
+                data-bs-toggle="offcanvas"
+                data-bs-target="#cartModal"
+                aria-controls="cartModal"
+            >
+                <i class="fas fa-shopping-cart"></i>
+                <span class="cart-badge">{{ $cartCount }}</span>
+            </button>
+        </div>
+    @endif
 
     {!! $designManager->render('footer') !!}
 

@@ -249,6 +249,62 @@
                             </div>
                         </div>
                     </div>
+
+                    {{-- ===================== Frontend Feature Settings ===================== --}}
+                    <div class="col-lg-4 mb-4">
+                        <div class="card border-0 shadow-sm h-100">
+                            <div class="card-body p-4">
+                                <div class="d-flex align-items-center mb-4">
+                                    <div class="rounded-circle bg-secondary text-white d-flex align-items-center justify-content-center me-3"
+                                        style="width: 42px; height: 42px;">
+                                        <i class="fas fa-sliders-h"></i>
+                                    </div>
+                                    <div>
+                                        <h5 class="fw-bold mb-0">Frontend Features</h5>
+                                        <small class="text-muted">Control floating frontend buttons</small>
+                                    </div>
+                                </div>
+
+                                <div class="mb-3">
+                                    <div class="form-check form-switch">
+                                        <input type="hidden" name="back_to_top_enabled" value="0">
+                                        <input
+                                            type="checkbox"
+                                            name="back_to_top_enabled"
+                                            value="1"
+                                            id="back_to_top_enabled"
+                                            class="form-check-input"
+                                            @checked(old('back_to_top_enabled', $storeSettings['back_to_top_enabled']))
+                                        >
+                                        <label class="form-check-label" for="back_to_top_enabled">
+                                            Enable Back to Top Button
+                                        </label>
+                                    </div>
+                                </div>
+
+                                <div>
+                                    <div class="form-check form-switch">
+                                        <input type="hidden" name="floating_cart_enabled" value="0">
+                                        <input
+                                            type="checkbox"
+                                            name="floating_cart_enabled"
+                                            value="1"
+                                            id="floating_cart_enabled"
+                                            class="form-check-input"
+                                            @checked(old('floating_cart_enabled', $storeSettings['floating_cart_enabled']))
+                                        >
+                                        <label class="form-check-label" for="floating_cart_enabled">
+                                            Enable Floating Cart Button
+                                        </label>
+                                    </div>
+                                </div>
+
+                                <small class="text-muted d-block mt-2">
+                                    Enable or disable floating buttons displayed on the frontend.
+                                </small>
+                            </div>
+                        </div>
+                    </div>
                 </div>
 
                 {{-- ===================== Save Button ===================== --}}
