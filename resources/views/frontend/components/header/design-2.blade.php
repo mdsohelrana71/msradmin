@@ -295,19 +295,27 @@
                         <li>
                             <a href="#">
                                 <i class="fa fa-heart"></i>
-                                <span>0</span>
+                                <span class="cart-badge">0</span>
                             </a>
                         </li>
                         <li>
-                            <a href="#">
+                            <a
+                                href="javascript:void(0)"
+                                data-bs-toggle="offcanvas"
+                                data-bs-target="#cartModal"
+                                aria-controls="cartModal"
+                            >
                                 <i class="fa fa-shopping-bag"></i>
-                                <span>0</span>
+                                <span class="cart-badge">{{ $cartCount }}</span>
                             </a>
                         </li>
                     </ul>
 
                     <div class="header__cart__price">
-                        item: <span>$0.00</span>
+                        item:
+                        <span>
+                            {{ $settings->price_symbol }}{{ number_format($cartSubtotal, 2) }}
+                        </span>
                     </div>
                 </div>
             </div>
